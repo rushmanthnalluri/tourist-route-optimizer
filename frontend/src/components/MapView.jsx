@@ -24,11 +24,15 @@ function MapClickPicker({ active, onPick }) {
   return null
 }
 
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
+import iconUrl from 'leaflet/dist/images/marker-icon.png'
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
+
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl:       'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
 })
 
 function makeNumberIcon(n, color = '#4f46e5', isStart = false, isGoal = false) {
