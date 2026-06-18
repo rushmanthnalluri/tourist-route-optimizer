@@ -31,7 +31,7 @@ class SearchAlgorithm(str, Enum):
 
 class SearchRequest(BaseModel):
     start_id: int
-    goal_ids: List[int] = Field(..., min_length=1, max_length=15)
+    goal_ids: List[int] = Field(..., min_length=1, max_length=30)
     budget_inr: float = Field(2000.0, gt=0)
     max_time_min: float = Field(480.0, gt=0)
     start_hour: float = 9.0
