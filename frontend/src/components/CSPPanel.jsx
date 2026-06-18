@@ -74,12 +74,12 @@ export default function CSPPanel({ attractions, goalIds, startId, setLoading, se
 
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="text-xs text-slate-400">Budget (₹)</label>
+            <div className="text-xs text-slate-400">Budget (₹)</div>
             <input title="Input field" aria-label="Input field" id="inp-8067ca" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
-            <label className="text-xs text-slate-400">Max Time (min)</label>
+            <div className="text-xs text-slate-400">Max Time (min)</div>
             <input title="Input field" aria-label="Input field" id="inp-5346bd" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>

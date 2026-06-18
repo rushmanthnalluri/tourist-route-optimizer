@@ -112,11 +112,11 @@ export default function CO4Page() {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Budget (₹)</label>
+            <div className="text-xs font-medium text-gray-500 mb-1 block">Budget (₹)</div>
             <input title="Input field" aria-label="Input field" id="inp-d647ac" type="number" value={budget} onChange={e => setBudget(+e.target.value)} className="inp text-sm" />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Max Time (min)</label>
+            <div className="text-xs font-medium text-gray-500 mb-1 block">Max Time (min)</div>
             <input title="Input field" aria-label="Input field" id="inp-5ccafc" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)} className="inp text-sm" />
           </div>
         </div>
@@ -175,7 +175,7 @@ export default function CO4Page() {
           Tourist (MAX) selects best attraction vs. Nature (MIN) that disrupts with crowds/weather.
         </p>
         <div>
-          <label className="text-xs font-medium text-gray-500 mb-1 block">Depth Limit: {depthLimit}</label>
+          <div className="text-xs font-medium text-gray-500 mb-1 block">Depth Limit: {depthLimit}</div>
           <input title="Input field" aria-label="Input field" id="inp-160b08" type="range" min={2} max={6} value={depthLimit}
             onChange={e => setDepthLimit(+e.target.value)}
             className="w-full accent-amber-500" />
@@ -222,7 +222,7 @@ export default function CO4Page() {
           EU = P(sunny) · U(sunny) + P(rain) · U(rain). Uses Bayesian probability from CO5.
         </p>
         <div>
-          <label className="text-xs font-medium text-gray-500 mb-1 block">Probability of Rain: {(rainProb * 100).toFixed(0)}%</label>
+          <div className="text-xs font-medium text-gray-500 mb-1 block">Probability of Rain: {(rainProb * 100).toFixed(0)}%</div>
           <input title="Input field" aria-label="Input field" id="inp-42348b" type="range" min={0} max={1} step={0.05} value={rainProb}
             onChange={e => setRainProb(+e.target.value)}
             className="w-full accent-amber-500" />

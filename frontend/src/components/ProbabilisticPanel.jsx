@@ -93,7 +93,7 @@ export default function ProbabilisticPanel({ attractions, routePath, setLoading,
           ['Day Type', dayType, setDayType, ['weekday','weekend','holiday']]].map(([label, val, setter, opts]) => (
           <div key={label}>
             <div className="flex justify-between items-center">
-              <label className="text-xs text-slate-400">{label}</label>
+              <div className="text-xs text-slate-400">{label}</div>
               {label === 'Weather' && (
                 <button onClick={fetchLiveWeather} className="text-[9px] bg-slate-700 hover:bg-slate-600 px-1 rounded text-slate-300">Live</button>
               )}
@@ -110,7 +110,7 @@ export default function ProbabilisticPanel({ attractions, routePath, setLoading,
       <div className="border border-slate-700 rounded p-3 space-y-2">
         <div className="text-xs font-semibold text-purple-400">1. Bayes' Rule — Crowd Estimation</div>
         <div>
-          <label className="text-xs text-slate-400">Attraction</label>
+          <div className="text-xs text-slate-400">Attraction</div>
           <select title="Select dropdown" aria-label="Select dropdown" id="sel-945d22" value={attractionId} onChange={e => setAttrId(+e.target.value)}
             className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
             {attractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}

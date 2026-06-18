@@ -69,20 +69,20 @@ export default function CO6Page() {
         <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Pipeline Configuration</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Budget (₹)</label>
+            <div className="text-xs font-medium text-gray-500 mb-1 block">Budget (₹)</div>
             <input title="Input field" aria-label="Input field" id="inp-0822cf" type="number" value={budget} onChange={e => setBudget(+e.target.value)} className="inp text-sm" />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Max Time (min)</label>
+            <div className="text-xs font-medium text-gray-500 mb-1 block">Max Time (min)</div>
             <input title="Input field" aria-label="Input field" id="inp-f082ca" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)} className="inp text-sm" />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Start Hour</label>
+            <div className="text-xs font-medium text-gray-500 mb-1 block">Start Hour</div>
             <input title="Input field" aria-label="Input field" id="inp-2d164d" type="number" min={6} max={18} value={startHour}
               onChange={e => setStartHour(+e.target.value)} className="inp text-sm" />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Cost Mode</label>
+            <div className="text-xs font-medium text-gray-500 mb-1 block">Cost Mode</div>
             <select title="Select dropdown" aria-label="Select dropdown" id="sel-1c3e07" value={costMode} onChange={e => setCostMode(e.target.value)} className="inp text-sm">
               <option value="distance">Distance</option>
               <option value="cost">Cost</option>
@@ -90,7 +90,7 @@ export default function CO6Page() {
             </select>
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Weather</label>
+            <div className="text-xs font-medium text-gray-500 mb-1 block">Weather</div>
             <select title="Select dropdown" aria-label="Select dropdown" id="sel-df80f7" value={weather} onChange={e => setWeather(e.target.value)} className="inp text-sm">
               <option value="sunny">Sunny</option>
               <option value="cloudy">Cloudy</option>
@@ -98,7 +98,7 @@ export default function CO6Page() {
             </select>
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Day Type</label>
+            <div className="text-xs font-medium text-gray-500 mb-1 block">Day Type</div>
             <select title="Select dropdown" aria-label="Select dropdown" id="sel-7ea988" value={dayType} onChange={e => setDayType(e.target.value)} className="inp text-sm">
               <option value="weekday">Weekday</option>
               <option value="weekend">Weekend</option>

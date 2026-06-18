@@ -90,7 +90,7 @@ export default function CO5Page() {
             ['Day Type', dayType, setDayType, ['weekday', 'weekend', 'holiday']],
           ].map(([label, val, setter, opts]) => (
             <div key={label}>
-              <label className="text-xs font-medium text-gray-500 mb-1 block">{label}</label>
+              <div className="text-xs font-medium text-gray-500 mb-1 block">{label}</div>
               <select title="Select dropdown" aria-label="Select dropdown" id="sel-665735" value={val} onChange={e => setter(e.target.value)}
                 className="inp text-sm">
                 {opts.map(o => <option key={o}>{o}</option>)}
@@ -109,7 +109,7 @@ export default function CO5Page() {
           P(crowd | evidence) = P(evidence | crowd) · P(crowd) / P(evidence)
         </p>
         <div>
-          <label className="text-xs font-medium text-gray-500 mb-1 block">Attraction</label>
+          <div className="text-xs font-medium text-gray-500 mb-1 block">Attraction</div>
           <select title="Select dropdown" aria-label="Select dropdown" id="sel-40fd7c" value={attractionId} onChange={e => setAttrId(+e.target.value)}
             className="inp text-sm">
             {attractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}

@@ -58,36 +58,36 @@ export default function HybridPanel({ attractions, startId, goalIds, onResult, s
       <div className="space-y-2">
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="text-xs text-slate-400">Budget (₹)</label>
+            <div className="text-xs text-slate-400">Budget (₹)</div>
             <input title="Input field" aria-label="Input field" id="inp-307576" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
-            <label className="text-xs text-slate-400">Max Time (min)</label>
+            <div className="text-xs text-slate-400">Max Time (min)</div>
             <input title="Input field" aria-label="Input field" id="inp-5712fa" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
-            <label className="text-xs text-slate-400">Start Hour</label>
+            <div className="text-xs text-slate-400">Start Hour</div>
             <input title="Input field" aria-label="Input field" id="inp-6f27d1" type="number" min={6} max={18} value={startHour} onChange={e => setStartHour(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
-            <label className="text-xs text-slate-400">Cost Mode</label>
+            <div className="text-xs text-slate-400">Cost Mode</div>
             <select title="Select dropdown" aria-label="Select dropdown" id="sel-a269c2" value={costMode} onChange={e => setCostMode(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
               <option>distance</option><option>cost</option><option>time</option>
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-400">Weather</label>
+            <div className="text-xs text-slate-400">Weather</div>
             <select title="Select dropdown" aria-label="Select dropdown" id="sel-74e9a4" value={weather} onChange={e => setWeather(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
               <option>sunny</option><option>cloudy</option><option>rain</option>
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-400">Day Type</label>
+            <div className="text-xs text-slate-400">Day Type</div>
             <select title="Select dropdown" aria-label="Select dropdown" id="sel-7d4e67" value={dayType} onChange={e => setDayType(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
               <option>weekday</option><option>weekend</option><option>holiday</option>

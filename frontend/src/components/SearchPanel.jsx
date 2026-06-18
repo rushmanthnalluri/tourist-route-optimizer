@@ -76,7 +76,7 @@ export default function SearchPanel({ attractions, startId, goalIds, onResult, s
       </div>
 
       <div className="space-y-2">
-        <label className="text-xs text-slate-400">Algorithm</label>
+        <div className="text-xs text-slate-400">Algorithm</div>
         <div className="grid grid-cols-3 gap-1">
           {ALGORITHMS.map(a => (
             <button key={a} onClick={() => setAlgorithm(a)}
@@ -88,7 +88,7 @@ export default function SearchPanel({ attractions, startId, goalIds, onResult, s
           ))}
         </div>
 
-        <label className="text-xs text-slate-400">Cost Mode</label>
+        <div className="text-xs text-slate-400">Cost Mode</div>
         <div className="flex gap-1">
           {COST_MODES.map(m => (
             <button key={m} onClick={() => setCostMode(m)}
@@ -101,12 +101,12 @@ export default function SearchPanel({ attractions, startId, goalIds, onResult, s
 
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="text-xs text-slate-400">Budget (₹)</label>
+            <div className="text-xs text-slate-400">Budget (₹)</div>
             <input title="Input field" aria-label="Input field" id="inp-2e8bc8" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none focus:border-orange-500 mt-0.5" />
           </div>
           <div>
-            <label className="text-xs text-slate-400">Max Time (min)</label>
+            <div className="text-xs text-slate-400">Max Time (min)</div>
             <input title="Input field" aria-label="Input field" id="inp-5c6602" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none focus:border-orange-500 mt-0.5" />
           </div>

@@ -96,7 +96,7 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
       </div>
 
       <div className="space-y-2">
-        <label className="text-xs text-slate-400">Preferred Categories</label>
+        <div className="text-xs text-slate-400">Preferred Categories</div>
         <div className="flex flex-wrap gap-1">
           {CATEGORIES.map(c => (
             <button key={c} onClick={() => toggleCat(c)}
@@ -108,24 +108,24 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="text-xs text-slate-400">Budget (₹)</label>
+            <div className="text-xs text-slate-400">Budget (₹)</div>
             <input title="Input field" aria-label="Input field" id="inp-2b9a02" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
-            <label className="text-xs text-slate-400">Time Slot</label>
+            <div className="text-xs text-slate-400">Time Slot</div>
             <select title="Select dropdown" aria-label="Select dropdown" id="sel-14e91f" value={timeSlot} onChange={e => setTimeSlot(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
               <option>morning</option><option>afternoon</option><option>evening</option>
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-400">Route Cost (₹)</label>
+            <div className="text-xs text-slate-400">Route Cost (₹)</div>
             <input title="Input field" aria-label="Input field" id="inp-c316ee" type="number" value={totalCost} onChange={e => setTotalCost(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
-            <label className="text-xs text-slate-400">Route Time (min)</label>
+            <div className="text-xs text-slate-400">Route Time (min)</div>
             <input title="Input field" aria-label="Input field" id="inp-e018ec" type="number" value={totalTime} onChange={e => setTotalTime(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
@@ -168,7 +168,7 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
         <div className="text-xs font-semibold text-yellow-400">2. Minimax + Alpha-Beta Pruning</div>
         <div className="text-xs text-slate-400">Tourist (MAX) vs. Nature (MIN, disrupts attractions)</div>
         <div>
-          <label className="text-xs text-slate-400">Depth Limit: {depthLimit}</label>
+          <div className="text-xs text-slate-400">Depth Limit: {depthLimit}</div>
           <input title="Input field" aria-label="Input field" id="inp-6cd4ed" type="range" min={2} max={6} value={depthLimit} onChange={e => setDepthLimit(+e.target.value)}
             className="w-full accent-yellow-500 mt-0.5" />
         </div>
@@ -202,7 +202,7 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
         <div className="text-xs font-semibold text-yellow-400">3. Expected Utility (Weather Uncertainty)</div>
         <div className="text-xs text-slate-400">EU = P(sunny)·U(sunny) + P(rain)·U(rain)</div>
         <div className="flex justify-between items-center">
-          <label className="text-xs text-slate-400">P(rain) = {rainProb.toFixed(2)}</label>
+          <div className="text-xs text-slate-400">P(rain) = {rainProb.toFixed(2)}</div>
           <button onClick={fetchLiveWeather} className="text-[9px] bg-slate-700 hover:bg-slate-600 px-1 rounded text-slate-300">Live</button>
         </div>
         <div>
