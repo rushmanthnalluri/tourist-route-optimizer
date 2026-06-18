@@ -39,7 +39,8 @@ export default function NavSidebar() {
       const data = await api.getLiveWeather()
       setLiveEnv(prev => ({
         ...prev,
-        weather: data.weather
+        weather: data.weather,
+        prob_rain: data.prob_rain
       }))
       setStatus(`✅ Live weather fetched: ${data.weather} (Rain prob: ${(data.prob_rain * 100).toFixed(0)}%)`)
     } catch (e) {

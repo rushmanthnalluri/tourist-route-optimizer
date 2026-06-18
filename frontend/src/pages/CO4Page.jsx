@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts'
 import PageLayout from '../components/PageLayout'
 import TraceViewer from '../components/TraceViewer'
@@ -9,7 +9,7 @@ import { Scale, Swords, CloudRain, Users } from 'lucide-react'
 const CATEGORIES = ['historical', 'nature', 'religious', 'museum', 'entertainment', 'cultural', 'shopping', 'modern']
 
 export default function CO4Page() {
-  const { attractions, routePath, setLoading, setStatus, loading, resolveRoutingIds, startId, goalIds } = useApp()
+  const { attractions, routePath, setLoading, setStatus, loading, resolveRoutingIds, startId, goalIds, liveEnv } = useApp()
   const [budget, setBudget]         = useState(600)
   const [maxTime, setMaxTime]       = useState(400)
   const [totalCost, setTotalCost]   = useState(200)
@@ -22,6 +22,12 @@ export default function CO4Page() {
   const [minimaxResult, setMinimaxResult] = useState(null)
   const [euResult, setEuResult]     = useState(null)
   const [negResult, setNegResult]   = useState(null)
+
+  useEffect(() => {
+    if (liveEnv && liveEnv.prob_rain !== undefined) {
+      setRainProb(liveEnv.prob_rain)
+    }
+  }, [liveEnv])
 
   function toggleCat(cat) {
     setPrefCats(c => c.includes(cat) ? c.filter(x => x !== cat) : [...c, cat])
@@ -253,7 +259,9 @@ export default function CO4Page() {
           EU = P(sunny) · U(sunny) + P(rain) · U(rain). Uses Bayesian probability from CO5.
         </p>
         <div>
-          <div className="text-xs font-medium text-gray-500 mb-1 block">Probability of Rain: {(rainProb * 100).toFixed(0)}%</div>
+          <div className="text-xs font-medium text-gray-500 mb-1 block">
+            Probability of Rain: {(rainProb * 100).toFixed(0)}% | Probability of Sunny: {((1 - rainProb) * 100).toFixed(0)}%
+          </div>
           <input title="Input field" aria-label="Input field" id="inp-42348b" type="range" min={0} max={1} step={0.05} value={rainProb}
             onChange={e => setRainProb(+e.target.value)}
             className="w-full accent-amber-500" />
