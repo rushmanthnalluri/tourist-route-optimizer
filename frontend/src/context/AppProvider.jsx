@@ -30,6 +30,7 @@ export function AppProvider({ children }) {
   const [loading, setLoading]                       = useState(false)
   const [statusMsg, setStatusMsg]                   = useState('Ready')
   const [backendOk, setBackendOk]                   = useState(null)
+  const [liveEnv, setLiveEnv]                       = useState(null)
   const [mapPickActive, setMapPickActive]           = useState(false)
   const mapPickHandler = useRef(null)
 
@@ -159,6 +160,8 @@ export function AppProvider({ children }) {
     setStatusMsg,
     setStatus: setStatusMsg,
     backendOk,
+    liveEnv,
+    setLiveEnv,
     getAttraction,
     routingPayload,
     resolveRoutingId,
@@ -171,7 +174,7 @@ export function AppProvider({ children }) {
     handleMapPick,
   }), [
     attractions, graph, startId, goalIds, routePath, traceSteps, loading, 
-    statusMsg, backendOk, mapPickActive, getAttraction, routingPayload, 
+    statusMsg, backendOk, liveEnv, mapPickActive, getAttraction, routingPayload, 
     resolveRoutingId, resolveRoutingIds
   ])
 

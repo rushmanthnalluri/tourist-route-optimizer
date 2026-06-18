@@ -78,7 +78,10 @@ class LiveCrowdService:
         return {
             "message": f"Crowds: {status} ({day_str} {time_str}, {condition.capitalize()})",
             "avg_crowd": round(avg_crowd, 2),
-            "details": f"Time slot: {time_slot}, Weather: {condition}, Rain Prob: {prob_rain*100}%"
+            "details": f"Time slot: {time_slot}, Weather: {condition}, Rain Prob: {prob_rain*100}%",
+            "weather": condition,
+            "time_slot": time_slot,
+            "day_type": "weekend" if is_weekend else "weekday"
         }
 
 live_crowd_service = LiveCrowdService()

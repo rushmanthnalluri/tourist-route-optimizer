@@ -27,7 +27,7 @@ const CO_COLORS = {
 }
 
 export default function NavSidebar() {
-  const { startId, goalIds, routePath, backendOk, statusMsg, getAttraction, setStatus, setLoading } = useApp()
+  const { startId, goalIds, routePath, backendOk, statusMsg, getAttraction, setStatus, setLoading, setLiveEnv } = useApp()
   const location = useLocation()
 
   const startAttr = getAttraction(startId)
@@ -36,6 +36,10 @@ export default function NavSidebar() {
     setLoading(true); setStatus('Fetching live weather...')
     try {
       const data = await api.getLiveWeather()
+      setLiveEnv(prev => ({
+        ...prev,
+        weather: data.weather
+      }))
       setStatus(`✅ Live weather fetched: ${data.weather} (Rain prob: ${(data.prob_rain * 100).toFixed(0)}%)`)
     } catch (e) {
       setStatus('⚠ Failed to fetch live weather')
@@ -58,6 +62,11 @@ export default function NavSidebar() {
     setLoading(true); setStatus('Simulating Live Crowds...')
     try {
       const data = await api.getLiveCrowds()
+      setLiveEnv({
+        weather: data.weather,
+        time_slot: data.time_slot,
+        day_type: data.day_type
+      })
       setStatus(`✅ ${data.message}`)
     } catch (e) {
       setStatus('⚠ Failed to fetch live crowds')

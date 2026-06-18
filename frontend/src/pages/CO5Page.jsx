@@ -1,18 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import PageLayout from '../components/PageLayout'
 import { useApp } from '../context/AppContext'
 import { api } from '../utils/api'
-import { Brain, Sigma, GitBranch } from 'lucide-react'
+import { Brain, Sigma, GitBranch, RefreshCw } from 'lucide-react'
 
 const HMM_OBS = ['gps_stationary', 'gps_moving', 'ticket_scanned', 'photo_taken']
 
 export default function CO5Page() {
-  const { attractions, setLoading, setStatus, loading } = useApp()
+  const { attractions, setLoading, setStatus, loading, liveEnv } = useApp()
   const [weather, setWeather]     = useState('sunny')
   const [timeSlot, setTimeSlot]   = useState('afternoon')
   const [dayType, setDayType]     = useState('weekday')
   const [attractionId, setAttrId] = useState(0)
+
+  useEffect(() => {
+    if (liveEnv) {
+      setWeather(liveEnv.weather)
+      setTimeSlot(liveEnv.time_slot)
+      setDayType(liveEnv.day_type)
+    }
+  }, [liveEnv])
   const [method, setMethod]       = useState('exact')
   const [hmmObs, setHmmObs]       = useState([...HMM_OBS])
   const [bayesResult, setBayesResult]   = useState(null)
@@ -82,7 +90,14 @@ export default function CO5Page() {
       </div>
 
       <div className="card p-4">
-        <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Common Evidence</p>
+        <div className="flex justify-between items-center mb-3">
+          <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Common Evidence</p>
+          {liveEnv && (
+            <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+              <RefreshCw size={10} /> Synced with Live Data
+            </span>
+          )}
+        </div>
         <div className="grid grid-cols-3 gap-3">
           {[
             ['Weather', weather, setWeather, ['sunny', 'cloudy', 'rain']],
