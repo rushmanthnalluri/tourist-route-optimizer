@@ -115,7 +115,18 @@ export default function MapView({
     const controller = new AbortController()
 
     if (hasFullRoute && routeCoords.length >= 2) {
-      const coordString = routeCoords.map(c => `${c[1]},${c[0]}`).join(';')
+      // OSRM fails if consecutive coordinates are exactly the same
+      const dedupedCoords = routeCoords.filter((c, i, arr) => {
+        if (i === 0) return true
+        return c[0] !== arr[i - 1][0] || c[1] !== arr[i - 1][1]
+      })
+
+      if (dedupedCoords.length < 2) {
+        setRoadCoords(routeCoords)
+        return
+      }
+
+      const coordString = dedupedCoords.map(c => `${c[1]},${c[0]}`).join(';')
       fetch(`https://router.project-osrm.org/route/v1/driving/${coordString}?overview=full&geometries=geojson`, {
         signal: controller.signal
       })
@@ -125,11 +136,11 @@ export default function MapView({
         })
         .then(data => {
           if (!isMounted) return
-          if (data.routes && data.routes.length > 0) {
-            
+          if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
             const roadLine = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]])
             setRoadCoords(roadLine)
           } else {
+            console.warn('OSRM returned non-Ok code:', data)
             setRoadCoords(routeCoords)
           }
         })
