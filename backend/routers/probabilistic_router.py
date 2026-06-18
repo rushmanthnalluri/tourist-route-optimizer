@@ -5,6 +5,7 @@ from backend.algorithms.co5_probabilistic import (
     rejection_sampling,
     likelihood_weighting,
 )
+from backend.data.weather_service import weather_service
 from fastapi import APIRouter
 from typing import Optional, Dict
 from pydantic import BaseModel
@@ -59,3 +60,11 @@ async def infer_crowd(
 @router.post("/hmm")
 async def hmm_track(req: HMMRequest):
     return _hmm.sensor_fusion(req.observations)
+
+@router.get("/live-weather")
+async def get_live_weather():
+    condition, prob_rain = await weather_service.get_live_weather()
+    return {
+        "weather": condition,
+        "prob_rain": prob_rain
+    }

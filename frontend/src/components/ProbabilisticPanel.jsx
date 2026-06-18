@@ -46,6 +46,18 @@ export default function ProbabilisticPanel({ attractions, routePath, setLoading,
     setLoading(false)
   }
 
+  async function fetchLiveWeather() {
+    setLoading(true); setStatus('Fetching live weather...')
+    try {
+      const data = await api.getLiveWeather()
+      setWeather(data.weather)
+      setStatus(`✅ Live weather fetched: ${data.weather} (Rain prob: ${(data.prob_rain * 100).toFixed(0)}%)`)
+    } catch {
+      setStatus('⚠ Failed to fetch live weather')
+    }
+    setLoading(false)
+  }
+
   function toggleObs(obs) {
     setHmmObs(o => o.includes(obs) ? o.filter(x => x !== obs) : [...o, obs])
   }
@@ -80,7 +92,12 @@ export default function ProbabilisticPanel({ attractions, routePath, setLoading,
           ['Time Slot', timeSlot, setTimeSlot, ['morning','afternoon','evening']],
           ['Day Type', dayType, setDayType, ['weekday','weekend','holiday']]].map(([label, val, setter, opts]) => (
           <div key={label}>
-            <label className="text-xs text-slate-400">{label}</label>
+            <div className="flex justify-between items-center">
+              <label className="text-xs text-slate-400">{label}</label>
+              {label === 'Weather' && (
+                <button onClick={fetchLiveWeather} className="text-[9px] bg-slate-700 hover:bg-slate-600 px-1 rounded text-slate-300">Live</button>
+              )}
+            </div>
             <select value={val} onChange={e => setter(e.target.value)}
               className="w-full bg-slate-800 text-xs px-1.5 py-1.5 rounded border border-slate-700 mt-0.5">
               {opts.map(o => <option key={o}>{o}</option>)}

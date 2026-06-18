@@ -65,6 +65,18 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
     setLoading(false)
   }
 
+  async function fetchLiveWeather() {
+    setLoading(true); setStatus('Fetching live weather...')
+    try {
+      const data = await api.getLiveWeather()
+      setRainProb(data.prob_rain)
+      setStatus(`✅ Live weather fetched: ${data.weather} (Rain prob: ${(data.prob_rain * 100).toFixed(0)}%)`)
+    } catch {
+      setStatus('⚠ Failed to fetch live weather')
+    }
+    setLoading(false)
+  }
+
   const radarData = React.useMemo(() => utilResult?.components ? [
     { axis: 'Rating', val: +(utilResult.components.rating_score * 100).toFixed(1) },
     { axis: 'Cost Eff', val: +(utilResult.components.cost_efficiency * 100).toFixed(1) },
@@ -189,8 +201,11 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
       <div className="border border-slate-700 rounded p-3 space-y-2">
         <div className="text-xs font-semibold text-yellow-400">3. Expected Utility (Weather Uncertainty)</div>
         <div className="text-xs text-slate-400">EU = P(sunny)·U(sunny) + P(rain)·U(rain)</div>
+        <div className="flex justify-between items-center">
+          <label className="text-xs text-slate-400">P(rain) = {rainProb.toFixed(2)}</label>
+          <button onClick={fetchLiveWeather} className="text-[9px] bg-slate-700 hover:bg-slate-600 px-1 rounded text-slate-300">Live</button>
+        </div>
         <div>
-          <label className="text-xs text-slate-400">P(rain) = {rainProb}</label>
           <input type="range" min={0} max={1} step={0.05} value={rainProb} onChange={e => setRainProb(+e.target.value)}
             className="w-full accent-yellow-500 mt-0.5" />
         </div>
