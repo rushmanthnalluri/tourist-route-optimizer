@@ -15,7 +15,7 @@ const STAGES = [
 ]
 
 export default function CO6Page() {
-  const { attractions, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
+  const { attractions, routePath, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
   const [budget, setBudget]         = useState(600)
   const [maxTime, setMaxTime]       = useState(400)
   const [startHour, setStartHour]   = useState(9)
