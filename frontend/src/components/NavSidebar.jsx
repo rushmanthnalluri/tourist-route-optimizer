@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   Home, Cpu, Calendar, GitMerge, Brain, Zap, MapPin,
-  CheckCircle, Circle, AlertCircle,
+  CheckCircle, Circle, AlertCircle, Menu, X
 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { api } from '../utils/api'
@@ -29,6 +29,7 @@ const CO_COLORS = {
 export default function NavSidebar() {
   const { startId, goalIds, routePath, backendOk, statusMsg, getAttraction, setStatus, setLoading, setLiveEnv } = useApp()
   const location = useLocation()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const startAttr = getAttraction(startId)
 
@@ -75,10 +76,32 @@ export default function NavSidebar() {
   }
 
   return (
-    <aside className="w-72 flex flex-col bg-white border-r border-gray-200 h-screen shrink-0 overflow-hidden">
-      
-      <div className="px-4 py-3 border-b border-gray-100 shrink-0">
+    <>
+      {/* Mobile Top Bar */}
+      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shrink-0 z-20">
         <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center shrink-0">
+            <MapPin size={16} className="text-white" />
+          </div>
+          <span className="font-bold text-gray-900">HydAI</span>
+        </div>
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 text-gray-600 rounded-lg hover:bg-gray-100">
+          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
+
+      <aside className={`${mobileOpen ? 'flex absolute inset-0 z-50' : 'hidden'} md:flex w-full md:w-72 flex-col bg-white border-r border-gray-200 h-screen shrink-0 overflow-hidden`}>
+        
+        {mobileOpen && (
+          <div className="md:hidden px-4 py-3 border-b border-gray-100 shrink-0 flex justify-between items-center bg-gray-50">
+            <span className="font-bold text-gray-900">Menu</span>
+            <button onClick={() => setMobileOpen(false)} className="p-2 text-gray-600 rounded-lg hover:bg-gray-200">
+              <X size={20} />
+            </button>
+          </div>
+        )}
+
+        <div className="hidden md:flex px-4 py-3 border-b border-gray-100 shrink-0 items-center gap-2.5">
           <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center shrink-0">
             <MapPin size={16} className="text-white" />
           </div>
@@ -87,7 +110,6 @@ export default function NavSidebar() {
             <p className="text-[10px] text-gray-400 mt-0.5">Tourist Route Optimizer</p>
           </div>
         </div>
-      </div>
 
       <div className="mx-3 mt-2 space-y-1 shrink-0">
         <div
@@ -192,7 +214,8 @@ export default function NavSidebar() {
             </div>
           )}
         </div>
-      </div>
-    </aside>
+        </div>
+      </aside>
+    </>
   )
 }

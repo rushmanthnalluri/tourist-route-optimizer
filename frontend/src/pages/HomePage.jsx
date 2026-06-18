@@ -115,9 +115,9 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="flex flex-1 min-h-0 overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden">
         
-        <div className="flex flex-col w-64 shrink-0 border-r border-gray-200 bg-white p-4 gap-3">
+        <div className="flex flex-col w-full md:w-64 shrink-0 border-b md:border-r border-gray-200 bg-white p-4 gap-3 md:overflow-y-auto z-0">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Select Attractions</p>
           <div className="relative">
             <Search size={13} className="absolute left-3 top-2.5 text-gray-400" />
@@ -219,8 +219,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
+        <div className="flex-1 md:overflow-y-auto p-4 z-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
             {filtered.map(a => {
               const isStart = a.id === startId
               const isGoal  = goalIds.includes(a.id)

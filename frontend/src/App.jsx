@@ -14,9 +14,9 @@ import CO6Page    from './pages/CO6Page'
 export default function App() {
   return (
     <AppProvider>
-      <div className="flex h-screen overflow-hidden bg-gray-50">
+      <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-gray-50">
         <NavSidebar />
-        <main className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <main className="flex flex-col flex-1 min-w-0 overflow-y-auto md:overflow-hidden relative z-0">
           <ErrorBoundary>
             <Routes>
               <Route path="/"    element={<HomePage />} />

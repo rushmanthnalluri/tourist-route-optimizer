@@ -20,9 +20,9 @@ export default function PageLayout({ children, title, subtitle, accentClass = 't
         )}
       </header>
 
-      <div className="flex flex-1 min-h-0 overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden">
         
-        <div className="flex-[55] min-w-0 relative p-3">
+        <div className="flex-none md:flex-[55] min-w-0 relative p-3 h-64 md:h-auto border-b md:border-b-0 border-gray-200 z-0">
           <MapView
             attractions={attractions}
             routePath={routePath}
@@ -33,10 +33,10 @@ export default function PageLayout({ children, title, subtitle, accentClass = 't
           />
         </div>
 
-        <div className="w-px bg-gray-200 shrink-0" />
+        <div className="hidden md:block w-px bg-gray-200 shrink-0" />
 
-        <div className="flex-[45] min-w-0 overflow-y-auto bg-gray-50">
-          <div className="p-5 space-y-5">
+        <div className="flex-1 md:flex-[45] min-w-0 md:overflow-y-auto bg-gray-50 z-0">
+          <div className="p-4 md:p-5 space-y-5">
             {children}
           </div>
         </div>
