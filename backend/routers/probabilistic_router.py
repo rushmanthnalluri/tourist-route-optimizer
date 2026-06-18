@@ -6,6 +6,7 @@ from backend.algorithms.co5_probabilistic import (
     likelihood_weighting,
 )
 from backend.data.weather_service import weather_service
+from backend.data.live_crowd_service import live_crowd_service
 from fastapi import APIRouter
 from typing import Optional, Dict
 from pydantic import BaseModel
@@ -68,3 +69,7 @@ async def get_live_weather():
         "weather": condition,
         "prob_rain": prob_rain
     }
+
+@router.get("/live-crowds")
+async def get_live_crowds():
+    return await live_crowd_service.update_live_crowds()

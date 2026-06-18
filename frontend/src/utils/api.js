@@ -56,6 +56,7 @@ export const api = {
   infer:          (payload)  => apiClient.post(`/api/probabilistic/infer`, payload).then(r => r.data),
   hmmTrack:       (payload)  => apiClient.post(`/api/probabilistic/hmm`, payload).then(r => r.data),
   getLiveWeather: ()         => apiClient.get(`/api/probabilistic/live-weather`).then(r => r.data),
+  getLiveCrowds:  ()         => apiClient.get(`/api/probabilistic/live-crowds`).then(r => r.data),
 
   hybridPlan: (payload) => apiClient.post(`/api/hybrid/plan`, payload).then(r => r.data),
 }

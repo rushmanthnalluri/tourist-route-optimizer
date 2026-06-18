@@ -54,6 +54,17 @@ export default function NavSidebar() {
     setLoading(false)
   }
 
+  async function handleLiveCrowds() {
+    setLoading(true); setStatus('Simulating Live Crowds...')
+    try {
+      const data = await api.getLiveCrowds()
+      setStatus(`✅ ${data.message}`)
+    } catch (e) {
+      setStatus('⚠ Failed to fetch live crowds')
+    }
+    setLoading(false)
+  }
+
   return (
     <aside className="w-72 flex flex-col bg-white border-r border-gray-200 h-screen shrink-0 overflow-hidden">
       
@@ -138,8 +149,9 @@ export default function NavSidebar() {
           Live Environment Data
         </p>
         <div className="flex gap-2">
-           <button onClick={handleLiveWeather} className="flex-1 bg-blue-50 text-blue-600 hover:bg-blue-100 text-[10px] py-1.5 rounded-lg font-medium transition-colors text-center shadow-sm">⛅ Fetch Weather</button>
-           <button onClick={handleLiveTraffic} className="flex-1 bg-teal-50 text-teal-600 hover:bg-teal-100 text-[10px] py-1.5 rounded-lg font-medium transition-colors text-center shadow-sm">📡 Fetch Traffic</button>
+           <button onClick={handleLiveWeather} className="flex-1 bg-blue-50 text-blue-600 hover:bg-blue-100 text-[10px] py-1.5 rounded-lg font-medium transition-colors text-center shadow-sm">⛅ Weather</button>
+           <button onClick={handleLiveTraffic} className="flex-1 bg-teal-50 text-teal-600 hover:bg-teal-100 text-[10px] py-1.5 rounded-lg font-medium transition-colors text-center shadow-sm">📡 Traffic</button>
+           <button onClick={handleLiveCrowds} className="flex-1 bg-orange-50 text-orange-600 hover:bg-orange-100 text-[10px] py-1.5 rounded-lg font-medium transition-colors text-center shadow-sm">👥 Crowds</button>
         </div>
       </div>
       

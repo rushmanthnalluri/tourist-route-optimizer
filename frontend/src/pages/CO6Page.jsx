@@ -49,6 +49,17 @@ export default function CO6Page() {
     setLoading(false)
   }
 
+  async function fetchLiveCrowds() {
+    setLoading(true); setStatus('Simulating Live Crowds...')
+    try {
+      const data = await api.getLiveCrowds()
+      setStatus(`✅ ${data.message}`)
+    } catch (e) {
+      setStatus('⚠ Failed to fetch live crowds')
+    }
+    setLoading(false)
+  }
+
   async function runHybrid() {
     if (!goalIds.length) { setStatus('⚠ Select goals first'); return }
     setLoading(true); setStatus('Running full hybrid pipeline...')
@@ -141,13 +152,17 @@ export default function CO6Page() {
         <div className="flex gap-2">
           <button onClick={fetchLiveTraffic} disabled={loading}
             className="btn-secondary flex-1 text-teal-700 border-teal-200 bg-teal-50 hover:bg-teal-100">
-            📡 Fetch Live Traffic
+            📡 Live Traffic
           </button>
-          <button onClick={runHybrid} disabled={loading}
-            className="btn-primary flex-1">
-            <Zap size={16} /> Run Full Hybrid Pipeline
+          <button onClick={fetchLiveCrowds} disabled={loading}
+            className="btn-secondary flex-1 text-orange-700 border-orange-200 bg-orange-50 hover:bg-orange-100">
+            👥 Live Crowds
           </button>
         </div>
+        <button onClick={runHybrid} disabled={loading}
+          className="btn-primary w-full mt-2">
+          <Zap size={16} /> Run Full Hybrid Pipeline
+        </button>
       </div>
 
       {result && (
