@@ -24,8 +24,9 @@ export default function CO3Page() {
   const [result, setResult]         = useState(null)
 
   async function runCSP() {
+    if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
     const ids = resolveRoutingIds([startId, ...goalIds])
-    if (ids.length < 2) { setStatus('⚠ Select goals first'); return }
+    if (ids.length < 2) { setStatus('⚠ Select at least 1 goal on the Home page'); return }
     setLoading(true); setStatus('Running CSP...')
     try {
       const data = await api.scheduleCSP({

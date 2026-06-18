@@ -27,7 +27,7 @@ const ALG_COLORS = {
 }
 
 export default function CO2Page() {
-  const { attractions, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
+  const { attractions, startId, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
   const [algorithm, setAlgorithm] = useState('astar')
   const [costMode, setCostMode]   = useState('distance')
   const [budget, setBudget]       = useState(600)
@@ -36,7 +36,8 @@ export default function CO2Page() {
   const [profile, setProfile]     = useState(null)
 
   async function runSearch() {
-    if (!goalIds.length) { setStatus('⚠ Select at least 1 goal'); return }
+    if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
+    if (!goalIds.length) { setStatus('⚠ Select at least 1 goal on the Home page'); return }
     setLoading(true); setStatus(`Running ${algorithm.toUpperCase()}...`)
     try {
       const data = await api.runSearch(routingPayload({
@@ -56,7 +57,8 @@ export default function CO2Page() {
   }
 
   async function compareAll() {
-    if (!goalIds.length) { setStatus('⚠ Select at least 1 goal'); return }
+    if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
+    if (!goalIds.length) { setStatus('⚠ Select at least 1 goal on the Home page'); return }
     setLoading(true); setStatus('Comparing all algorithms...')
     try {
       const data = await api.compareSearch(routingPayload({
