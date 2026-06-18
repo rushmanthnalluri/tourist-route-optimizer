@@ -11,6 +11,9 @@ class RoutingService:
         Fetches a 25x25 routing matrix from OSRM public API and updates the global GRAPH.
         Returns True if successful, False otherwise.
         """
+        import datetime
+        from zoneinfo import ZoneInfo
+
         # Build coordinates string for OSRM: "lon1,lat1;lon2,lat2;..."
         coords_list = []
         for a in ATTRACTIONS:
@@ -31,6 +34,21 @@ class RoutingService:
 
                 distances = data["distances"] # in meters
                 durations = data["durations"] # in seconds
+                
+                # Real-time live traffic simulation based on IST
+                ist = ZoneInfo("Asia/Kolkata")
+                now = datetime.datetime.now(ist)
+                hour = now.hour
+                
+                traffic_mult = 1.0
+                if 8 <= hour <= 11:
+                    traffic_mult = 1.5 # Morning rush hour
+                elif 17 <= hour <= 20:
+                    traffic_mult = 1.8 # Evening rush hour
+                elif 13 <= hour <= 15:
+                    traffic_mult = 1.2 # Afternoon mild rush
+                elif hour >= 22 or hour <= 6:
+                    traffic_mult = 0.8 # Night clear roads
 
                 new_graph: Dict[int, List[Tuple[int, float, float, float]]] = {
                     a.id: [] for a in ATTRACTIONS
@@ -52,7 +70,7 @@ class RoutingService:
                             continue
 
                         road_km = round(dist_m / 1000.0, 2)
-                        time_min = round(dur_s / 60.0, 1)
+                        time_min = round((dur_s / 60.0) * traffic_mult, 1)
                         cost_inr = round(road_km * auto_cost_per_km, 0)
 
                         new_graph[src.id].append((dst.id, road_km, time_min, cost_inr))
@@ -60,7 +78,7 @@ class RoutingService:
                 # Update the global GRAPH in place so existing imports in co2_search.py see the new values
                 GRAPH.clear()
                 GRAPH.update(new_graph)
-                logger.info("Successfully updated global GRAPH with live OSRM traffic data.")
+                logger.info(f"Successfully updated global GRAPH with live OSRM traffic data. Traffic multiplier: {traffic_mult}x at {hour}:00 IST")
                 return True
 
         except Exception as e:

@@ -7,6 +7,8 @@ class LiveCrowdService:
     def __init__(self):
         # We store the original crowd_probs to allow resetting or consistent updates
         self.original_probs = {a.id: dict(a.crowd_probs) for a in ATTRACTIONS}
+        # Store original ratings to compute live ratings dynamically
+        self.original_ratings = {a.id: a.rating for a in ATTRACTIONS}
 
     async def update_live_crowds(self):
         # 1. Get current time in IST
@@ -32,7 +34,7 @@ class LiveCrowdService:
         weather_mult_indoor = 1.0
         weather_mult_outdoor = 1.0
         
-        if condition == "rain":
+        if condition == "rainy":
             weather_mult_outdoor = 0.3
             weather_mult_indoor = 1.3
         elif condition == "sunny":
@@ -60,7 +62,23 @@ class LiveCrowdService:
                     a.crowd_probs[ts] = round(new_prob, 2)
                 else:
                     a.crowd_probs[ts] = round(min(0.99, self.original_probs[a.id].get(ts, 0.5) * weekend_mult), 2)
-                    
+            
+            # Mutate live rating
+            base_rating = self.original_ratings[a.id]
+            new_rating = base_rating
+            
+            if condition == "sunny" and a.weather_sensitivity > 0.5:
+                new_rating += 0.2
+            elif condition == "rainy" and a.weather_sensitivity > 0.5:
+                new_rating -= 0.4
+            elif condition == "rainy" and a.weather_sensitivity <= 0.5:
+                new_rating += 0.1
+                
+            if new_prob > 0.8:
+                new_rating -= 0.1 # Very crowded places drop slightly in rating
+                
+            a.rating = round(max(1.0, min(5.0, new_rating)), 1)
+            
             avg_crowd += new_prob
 
         avg_crowd /= len(ATTRACTIONS)
