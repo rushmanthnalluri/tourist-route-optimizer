@@ -5,6 +5,7 @@ import {
   CheckCircle, Circle, AlertCircle,
 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
+import { api } from '../utils/api'
 
 const NAV = [
   { to: '/', icon: Home, label: 'Home', sub: 'Overview' },
@@ -26,10 +27,32 @@ const CO_COLORS = {
 }
 
 export default function NavSidebar() {
-  const { startId, goalIds, routePath, backendOk, statusMsg, getAttraction } = useApp()
+  const { startId, goalIds, routePath, backendOk, statusMsg, getAttraction, setStatus, setLoading } = useApp()
   const location = useLocation()
 
   const startAttr = getAttraction(startId)
+
+  async function handleLiveWeather() {
+    setLoading(true); setStatus('Fetching live weather...')
+    try {
+      const data = await api.getLiveWeather()
+      setStatus(`✅ Live weather fetched: ${data.weather} (Rain prob: ${(data.prob_rain * 100).toFixed(0)}%)`)
+    } catch (e) {
+      setStatus('⚠ Failed to fetch live weather')
+    }
+    setLoading(false)
+  }
+
+  async function handleLiveTraffic() {
+    setLoading(true); setStatus('Fetching Live Traffic from OSRM...')
+    try {
+      const data = await api.fetchLiveTraffic()
+      setStatus('✅ ' + data.message)
+    } catch (e) {
+      setStatus('⚠ Failed to fetch live traffic')
+    }
+    setLoading(false)
+  }
 
   return (
     <aside className="w-72 flex flex-col bg-white border-r border-gray-200 h-screen shrink-0 overflow-hidden">
@@ -110,6 +133,16 @@ export default function NavSidebar() {
         </div>
       </nav>
 
+      <div className="border-t border-gray-100 p-3 shrink-0 space-y-1.5">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+          Live Environment Data
+        </p>
+        <div className="flex gap-2">
+           <button onClick={handleLiveWeather} className="flex-1 bg-blue-50 text-blue-600 hover:bg-blue-100 text-[10px] py-1.5 rounded-lg font-medium transition-colors text-center shadow-sm">⛅ Fetch Weather</button>
+           <button onClick={handleLiveTraffic} className="flex-1 bg-teal-50 text-teal-600 hover:bg-teal-100 text-[10px] py-1.5 rounded-lg font-medium transition-colors text-center shadow-sm">📡 Fetch Traffic</button>
+        </div>
+      </div>
+      
       <div className="border-t border-gray-100 p-3 shrink-0 space-y-1.5">
         <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
           Selection
