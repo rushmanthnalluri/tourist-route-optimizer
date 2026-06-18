@@ -14,6 +14,7 @@ from backend.algorithms.co2_search import (
     profile_all,
 )
 from backend.data.memory_repository import MemoryAttractionRepository
+from backend.data.routing_service import routing_service
 
 repo = MemoryAttractionRepository()
 
@@ -104,3 +105,10 @@ async def compare_algorithms(req: SearchRequest):
     problem = make_problem(req)
     profile = profile_all(problem, req.cost_mode)
     return {"comparison": profile, "cost_mode": req.cost_mode}
+
+@router.get("/live-traffic")
+async def fetch_live_traffic():
+    success = await routing_service.fetch_live_traffic()
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to fetch live traffic from OSRM")
+    return {"message": "Live traffic updated successfully"}

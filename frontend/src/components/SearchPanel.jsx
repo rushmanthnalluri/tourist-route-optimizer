@@ -48,6 +48,17 @@ export default function SearchPanel({ attractions, startId, goalIds, onResult, s
     setLoading(false)
   }
 
+  async function fetchLiveTraffic() {
+    setLoading(true); setStatus('Fetching Live Traffic from OSRM...')
+    try {
+      const data = await api.fetchLiveTraffic()
+      setStatus('✅ ' + data.message)
+    } catch (e) {
+      setStatus('⚠ Failed to fetch live traffic')
+    }
+    setLoading(false)
+  }
+
   const chartData = React.useMemo(() => profile ? Object.entries(profile).map(([alg, d]) => ({
     alg, expanded: d.nodes_expanded, time: d.runtime_ms, dist: d.total_distance_km,
     success: d.success,
@@ -107,10 +118,14 @@ export default function SearchPanel({ attractions, startId, goalIds, onResult, s
             ▶ Run {algorithm.toUpperCase()}
           </button>
           <button onClick={compareAll}
-            className="flex-1 bg-slate-700 hover:bg-slate-600 text-xs font-semibold py-2 rounded transition-colors">
+            className="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold py-2 rounded transition-colors">
             Compare All
           </button>
         </div>
+        <button onClick={fetchLiveTraffic}
+          className="w-full bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold py-2 rounded transition-colors">
+          📡 Fetch Live Traffic (OSRM)
+        </button>
       </div>
 
       {result && (

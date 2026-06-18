@@ -44,6 +44,7 @@ export const api = {
 
   runSearch: (payload) => apiClient.post(`/api/search/run`, payload).then(r => r.data),
   compareSearch: (payload) => apiClient.post(`/api/search/compare`, payload).then(r => r.data),
+  fetchLiveTraffic: () => apiClient.get(`/api/search/live-traffic`).then(r => r.data),
 
   scheduleCSP: (payload) => apiClient.post(`/api/csp/schedule`, payload).then(r => r.data),
 
