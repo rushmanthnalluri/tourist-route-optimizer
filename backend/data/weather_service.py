@@ -27,42 +27,41 @@ class WeatherService:
         weather_condition: 'sunny', 'rainy', 'cloudy'
         prob_rain: 0.0 to 1.0
         """
-        # If no API key is set, use fallback logic immediately
-        if not OWM_API_KEY:
-            logger.warning("No OWM_API_KEY found, using mock weather data.")
-            return "sunny", 0.1
-
         # Check cache
         if time.time() - self._cache_time < CACHE_DURATION and "condition" in self._cache:
             return self._cache["condition"], self._cache["prob_rain"]
 
         try:
-            url = f"https://api.openweathermap.org/data/2.5/weather?lat={LAT}&lon={LON}&appid={OWM_API_KEY}&units=metric"
+            url = f"https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&current=precipitation,weather_code&timezone=Asia/Kolkata"
             async with httpx.AsyncClient() as client:
                 response = await client.get(url, timeout=5.0)
                 response.raise_for_status()
                 data = response.json()
 
-                # Parse the weather condition
-                weather_id = data["weather"][0]["id"]
+                current = data.get("current", {})
+                weather_code = current.get("weather_code", 0)
+                precipitation = current.get("precipitation", 0.0)
                 
-                # OpenWeatherMap condition codes: https://openweathermap.org/weather-conditions
-                # 2xx Thunderstorm, 3xx Drizzle, 5xx Rain
-                if 200 <= weather_id <= 531:
-                    condition = "rainy"
-                    prob_rain = 0.8
-                # 800 Clear
-                elif weather_id == 800:
+                # WMO Weather interpretation codes
+                # 0: Clear sky
+                # 1, 2, 3: Mainly clear, partly cloudy, and overcast
+                # 51, 53, 55: Drizzle
+                # 61, 63, 65: Rain
+                # 80, 81, 82: Rain showers
+                # 95, 96, 99: Thunderstorm
+                
+                if weather_code == 0:
                     condition = "sunny"
                     prob_rain = 0.05
-                # 801-804 Clouds
-                elif 801 <= weather_id <= 804:
+                elif 1 <= weather_code <= 3 or 45 <= weather_code <= 48:
                     condition = "cloudy"
                     prob_rain = 0.2
                 else:
-                    # Fallback for mist, snow, etc.
-                    condition = "cloudy"
-                    prob_rain = 0.3
+                    condition = "rainy"
+                    # If it's actively raining, probability is high
+                    prob_rain = 0.8
+                    if precipitation > 2.0:
+                        prob_rain = 0.95
 
                 # Update cache
                 self._cache["condition"] = condition
@@ -72,7 +71,7 @@ class WeatherService:
                 return condition, prob_rain
 
         except Exception as e:
-            logger.error(f"Failed to fetch live weather: {e}")
+            logger.error(f"Failed to fetch live weather from Open-Meteo: {e}")
             # Fallback on failure
             return "sunny", 0.1
 
