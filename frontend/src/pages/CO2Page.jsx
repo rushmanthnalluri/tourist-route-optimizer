@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import PageLayout from '../components/PageLayout'
 import TraceViewer from '../components/TraceViewer'
@@ -34,6 +34,28 @@ export default function CO2Page() {
   const [maxTime, setMaxTime]     = useState(400)
   const [result, setResult]       = useState(null)
   const [profile, setProfile]     = useState(null)
+
+  const bestAlgorithm = useMemo(() => {
+    if (!profile) return null;
+    const successful = Object.entries(profile).filter(([_, d]) => d.success);
+    if (!successful.length) return null;
+    
+    // Find min distance
+    const minDist = Math.min(...successful.map(([_, d]) => d.total_distance_km));
+    
+    // Filter optimal ones
+    const optimal = successful.filter(([_, d]) => Math.abs(d.total_distance_km - minDist) < 0.01);
+    
+    // Sort by nodes expanded, then by runtime
+    optimal.sort((a, b) => {
+      if (a[1].nodes_expanded !== b[1].nodes_expanded) {
+        return a[1].nodes_expanded - b[1].nodes_expanded;
+      }
+      return a[1].runtime_ms - b[1].runtime_ms;
+    });
+    
+    return optimal[0];
+  }, [profile]);
 
   async function runSearch() {
     if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
@@ -188,7 +210,17 @@ export default function CO2Page() {
 
       {profile && chartData.length > 0 && (
         <div className="card p-4 space-y-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+          {bestAlgorithm && (
+            <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 rounded-lg text-xs flex items-center justify-between">
+              <div>
+                <strong className="font-bold text-sm">🏆 Best Performer: {bestAlgorithm[0]}</strong>
+                <p className="mt-0.5 text-emerald-600">
+                  Optimal path found while expanding only <b>{bestAlgorithm[1].nodes_expanded} nodes</b> in <b>{bestAlgorithm[1].runtime_ms?.toFixed(1)} ms</b>.
+                </p>
+              </div>
+            </div>
+          )}
+          <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mt-2">
             Algorithm Comparison — Nodes Expanded (lower = better)
           </p>
           <ResponsiveContainer width="100%" height={130}>
