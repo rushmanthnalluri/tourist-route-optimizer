@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.23% </span>
+                <span class="strong">82.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>45/51</span>
+                <span class='fraction'>47/57</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.23% </span>
+                <span class="strong">70.21% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>27/39</span>
+                <span class='fraction'>33/47</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.12% </span>
+                <span class="strong">95.34% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/41</span>
+                <span class='fraction'>41/43</span>
             </div>
         
             
@@ -301,7 +301,9 @@
 <a name='L236'></a><a href='#L236'>236</a>
 <a name='L237'></a><a href='#L237'>237</a>
 <a name='L238'></a><a href='#L238'>238</a>
-<a name='L239'></a><a href='#L239'>239</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L239'></a><a href='#L239'>239</a>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -339,6 +341,7 @@
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -359,6 +362,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -568,7 +572,7 @@ const ALG_COLORS = {
 }
 &nbsp;
 export default function CO2Page() {
-  const { attractions, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
+  const { attractions, startId, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
   const [algorithm, setAlgorithm] = useState('astar')
   const [costMode, setCostMode]   = useState('distance')
   const [budget, setBudget]       = useState(600)
@@ -577,7 +581,8 @@ export default function CO2Page() {
   const [profile, setProfile]     = useState(null)
 &nbsp;
   async function runSearch() {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!goalIds.length) { <span class="cstat-no" title="statement not covered" >setStatus('⚠ Select at least 1 goal'); <span class="cstat-no" title="statement not covered" >r</span>eturn }</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (startId === null || startId === undefined) { <span class="cstat-no" title="statement not covered" >setStatus('⚠ Select Start on the Home page first'); <span class="cstat-no" title="statement not covered" >r</span>eturn }</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!goalIds.length) { <span class="cstat-no" title="statement not covered" >setStatus('⚠ Select at least 1 goal on the Home page'); <span class="cstat-no" title="statement not covered" >r</span>eturn }</span>
     setLoading(true); setStatus(`Running ${algorithm.toUpperCase()}...`)
     try {
       const data = await api.runSearch(routingPayload({
@@ -597,7 +602,8 @@ export default function CO2Page() {
   }
 &nbsp;
   async function compareAll() {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!goalIds.length) { <span class="cstat-no" title="statement not covered" >setStatus('⚠ Select at least 1 goal'); <span class="cstat-no" title="statement not covered" >r</span>eturn }</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (startId === null || startId === undefined) { <span class="cstat-no" title="statement not covered" >setStatus('⚠ Select Start on the Home page first'); <span class="cstat-no" title="statement not covered" >r</span>eturn }</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!goalIds.length) { <span class="cstat-no" title="statement not covered" >setStatus('⚠ Select at least 1 goal on the Home page'); <span class="cstat-no" title="statement not covered" >r</span>eturn }</span>
     setLoading(true); setStatus('Comparing all algorithms...')
     try {
       const data = await api.compareSearch(routingPayload({
@@ -662,13 +668,13 @@ export default function CO2Page() {
 &nbsp;
       &lt;div className="grid grid-cols-2 gap-3"&gt;
         &lt;div&gt;
-          &lt;label className="text-xs font-medium text-gray-500 mb-1 block"&gt;Budget (₹)&lt;/label&gt;
-          &lt;input type="number" value={budget} onChange={e =&gt; setBudget(+e.target.value)}
+          &lt;div className="text-xs font-medium text-gray-500 mb-1 block"&gt;Budget (₹)&lt;/div&gt;
+          &lt;input title="Input field" aria-label="Input field" id="inp-cc3826" type="number" value={budget} onChange={e =&gt; setBudget(+e.target.value)}
             className="inp text-sm" /&gt;
         &lt;/div&gt;
         &lt;div&gt;
-          &lt;label className="text-xs font-medium text-gray-500 mb-1 block"&gt;Max Time (min)&lt;/label&gt;
-          &lt;input type="number" value={maxTime} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setMaxTime(+e.target.value)}</span>
+          &lt;div className="text-xs font-medium text-gray-500 mb-1 block"&gt;Max Time (min)&lt;/div&gt;
+          &lt;input title="Input field" aria-label="Input field" id="inp-393d39" type="number" value={maxTime} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setMaxTime(+e.target.value)}</span>
             className="inp text-sm" /&gt;
         &lt;/div&gt;
       &lt;/div&gt;
@@ -784,7 +790,7 @@ export default function CO2Page() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T06:08:52.141Z
+                at 2026-06-18T12:28:28.699Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.66% </span>
+                <span class="strong">80.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>55/60</span>
+                <span class='fraction'>55/68</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">95.23% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>20/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94% </span>
+                <span class="strong">82.45% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>47/50</span>
+                <span class='fraction'>47/57</span>
             </div>
         
             
@@ -302,7 +302,22 @@
 <a name='L237'></a><a href='#L237'>237</a>
 <a name='L238'></a><a href='#L238'>238</a>
 <a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a>
+<a name='L247'></a><a href='#L247'>247</a>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -367,6 +382,18 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">13x</span>
@@ -495,6 +522,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -608,6 +638,18 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
     setLoading(false)
   }
 &nbsp;
+  async function <span class="fstat-no" title="function not covered" >fetchLiveWeather() {</span>
+<span class="cstat-no" title="statement not covered" >    setLoading(true); <span class="cstat-no" title="statement not covered" >s</span>etStatus('Fetching live weather...')</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const data = <span class="cstat-no" title="statement not covered" >await api.getLiveWeather()</span>
+<span class="cstat-no" title="statement not covered" >      setRainProb(data.prob_rain)</span>
+<span class="cstat-no" title="statement not covered" >      setStatus(`✅ Live weather fetched: ${data.weather} (Rain prob: ${(data.prob_rain * 100).toFixed(0)}%)`)</span>
+    } catch {
+<span class="cstat-no" title="statement not covered" >      setStatus('⚠ Failed to fetch live weather')</span>
+    }
+<span class="cstat-no" title="statement not covered" >    setLoading(false)</span>
+  }
+&nbsp;
   const radarData = React.useMemo(() =&gt; utilResult?.components ? [
     { axis: 'Rating', val: +(utilResult.components.rating_score * 100).toFixed(1) },
     { axis: 'Cost Eff', val: +(utilResult.components.cost_efficiency * 100).toFixed(1) },
@@ -627,7 +669,7 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
       &lt;/div&gt;
 &nbsp;
       &lt;div className="space-y-2"&gt;
-        &lt;label className="text-xs text-slate-400"&gt;Preferred Categories&lt;/label&gt;
+        &lt;div className="text-xs text-slate-400"&gt;Preferred Categories&lt;/div&gt;
         &lt;div className="flex flex-wrap gap-1"&gt;
           {CATEGORIES.map(c =&gt; (
             &lt;button key={c} onClick={() =&gt; toggleCat(c)}
@@ -639,25 +681,25 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
         &lt;/div&gt;
         &lt;div className="grid grid-cols-2 gap-2"&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Budget (₹)&lt;/label&gt;
-            &lt;input type="number" value={budget} onChange={e =&gt; setBudget(+e.target.value)}
+            &lt;div className="text-xs text-slate-400"&gt;Budget (₹)&lt;/div&gt;
+            &lt;input title="Input field" aria-label="Input field" id="inp-2b9a02" type="number" value={budget} onChange={e =&gt; setBudget(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" /&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Time Slot&lt;/label&gt;
-            &lt;select value={timeSlot} onChange={e =&gt; setTimeSlot(e.target.value)}
+            &lt;div className="text-xs text-slate-400"&gt;Time Slot&lt;/div&gt;
+            &lt;select title="Select dropdown" aria-label="Select dropdown" id="sel-14e91f" value={timeSlot} onChange={e =&gt; setTimeSlot(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5"&gt;
               &lt;option&gt;morning&lt;/option&gt;&lt;option&gt;afternoon&lt;/option&gt;&lt;option&gt;evening&lt;/option&gt;
             &lt;/select&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Route Cost (₹)&lt;/label&gt;
-            &lt;input type="number" value={totalCost} onChange={e =&gt; setTotalCost(+e.target.value)}
+            &lt;div className="text-xs text-slate-400"&gt;Route Cost (₹)&lt;/div&gt;
+            &lt;input title="Input field" aria-label="Input field" id="inp-c316ee" type="number" value={totalCost} onChange={e =&gt; setTotalCost(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" /&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Route Time (min)&lt;/label&gt;
-            &lt;input type="number" value={totalTime} onChange={e =&gt; setTotalTime(+e.target.value)}
+            &lt;div className="text-xs text-slate-400"&gt;Route Time (min)&lt;/div&gt;
+            &lt;input title="Input field" aria-label="Input field" id="inp-e018ec" type="number" value={totalTime} onChange={e =&gt; setTotalTime(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" /&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -699,8 +741,8 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
         &lt;div className="text-xs font-semibold text-yellow-400"&gt;2. Minimax + Alpha-Beta Pruning&lt;/div&gt;
         &lt;div className="text-xs text-slate-400"&gt;Tourist (MAX) vs. Nature (MIN, disrupts attractions)&lt;/div&gt;
         &lt;div&gt;
-          &lt;label className="text-xs text-slate-400"&gt;Depth Limit: {depthLimit}&lt;/label&gt;
-          &lt;input type="range" min={2} max={6} value={depthLimit} onChange={e =&gt; setDepthLimit(+e.target.value)}
+          &lt;div className="text-xs text-slate-400"&gt;Depth Limit: {depthLimit}&lt;/div&gt;
+          &lt;input title="Input field" aria-label="Input field" id="inp-6cd4ed" type="range" min={2} max={6} value={depthLimit} onChange={e =&gt; setDepthLimit(+e.target.value)}
             className="w-full accent-yellow-500 mt-0.5" /&gt;
         &lt;/div&gt;
         &lt;button onClick={runMinimax}
@@ -732,9 +774,12 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
       &lt;div className="border border-slate-700 rounded p-3 space-y-2"&gt;
         &lt;div className="text-xs font-semibold text-yellow-400"&gt;3. Expected Utility (Weather Uncertainty)&lt;/div&gt;
         &lt;div className="text-xs text-slate-400"&gt;EU = P(sunny)·U(sunny) + P(rain)·U(rain)&lt;/div&gt;
+        &lt;div className="flex justify-between items-center"&gt;
+          &lt;div className="text-xs text-slate-400"&gt;P(rain) = {rainProb.toFixed(2)}&lt;/div&gt;
+          &lt;button onClick={fetchLiveWeather} className="text-[9px] bg-slate-700 hover:bg-slate-600 px-1 rounded text-slate-300"&gt;Live&lt;/button&gt;
+        &lt;/div&gt;
         &lt;div&gt;
-          &lt;label className="text-xs text-slate-400"&gt;P(rain) = {rainProb}&lt;/label&gt;
-          &lt;input type="range" min={0} max={1} step={0.05} value={rainProb} onChange={e =&gt; setRainProb(+e.target.value)}
+          &lt;input title="Input field" aria-label="Input field" id="inp-d86adf" type="range" min={0} max={1} step={0.05} value={rainProb} onChange={e =&gt; setRainProb(+e.target.value)}
             className="w-full accent-yellow-500 mt-0.5" /&gt;
         &lt;/div&gt;
         &lt;button onClick={runEU}
@@ -787,7 +832,7 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T06:08:52.141Z
+                at 2026-06-18T12:28:28.699Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">83.6% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>49/56</span>
+                <span class='fraction'>51/61</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.5% </span>
+                <span class="strong">61.53% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>30/48</span>
+                <span class='fraction'>32/52</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">68.18% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>14/21</span>
+                <span class='fraction'>15/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.75% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>43/49</span>
+                <span class='fraction'>45/54</span>
             </div>
         
             
@@ -344,7 +344,22 @@
 <a name='L279'></a><a href='#L279'>279</a>
 <a name='L280'></a><a href='#L280'>280</a>
 <a name='L281'></a><a href='#L281'>281</a>
-<a name='L282'></a><a href='#L282'>282</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -359,6 +374,14 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -414,6 +437,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -625,21 +655,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState } from 'react'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import PageLayout from '../components/PageLayout'
 import { useApp } from '../context/AppContext'
 import { api } from '../utils/api'
-import { Brain, Sigma, GitBranch } from 'lucide-react'
+import { Brain, Sigma, GitBranch, RefreshCw } from 'lucide-react'
 &nbsp;
 const HMM_OBS = ['gps_stationary', 'gps_moving', 'ticket_scanned', 'photo_taken']
 &nbsp;
 export default function CO5Page() {
-  const { attractions, setLoading, setStatus, loading } = useApp()
+  const { attractions, setLoading, setStatus, loading, liveEnv } = useApp()
   const [weather, setWeather]     = useState('sunny')
   const [timeSlot, setTimeSlot]   = useState('afternoon')
   const [dayType, setDayType]     = useState('weekday')
   const [attractionId, setAttrId] = useState(0)
+&nbsp;
+  useEffect(() =&gt; {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (liveEnv) {
+<span class="cstat-no" title="statement not covered" >      setWeather(liveEnv.weather)</span>
+<span class="cstat-no" title="statement not covered" >      setTimeSlot(liveEnv.time_slot)</span>
+<span class="cstat-no" title="statement not covered" >      setDayType(liveEnv.day_type)</span>
+    }
+  }, [liveEnv])
   const [method, setMethod]       = useState('exact')
   const [hmmObs, setHmmObs]       = useState([...HMM_OBS])
   const [bayesResult, setBayesResult]   = useState(null)
@@ -709,7 +747,14 @@ export default function CO5Page() {
       &lt;/div&gt;
 &nbsp;
       &lt;div className="card p-4"&gt;
-        &lt;p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3"&gt;Common Evidence&lt;/p&gt;
+        &lt;div className="flex justify-between items-center mb-3"&gt;
+          &lt;p className="text-xs font-bold uppercase tracking-wider text-gray-400"&gt;Common Evidence&lt;/p&gt;
+          {liveEnv &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >            &lt;span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100"&gt;</span>
+              &lt;RefreshCw size={10} /&gt; Synced with Live Data
+            &lt;/span&gt;
+          )}
+        &lt;/div&gt;
         &lt;div className="grid grid-cols-3 gap-3"&gt;
           {[
             ['Weather', weather, setWeather, ['sunny', 'cloudy', 'rain']],
@@ -717,8 +762,8 @@ export default function CO5Page() {
             ['Day Type', dayType, setDayType, ['weekday', 'weekend', 'holiday']],
           ].map(([label, val, setter, opts]) =&gt; (
             &lt;div key={label}&gt;
-              &lt;label className="text-xs font-medium text-gray-500 mb-1 block"&gt;{label}&lt;/label&gt;
-              &lt;select value={val} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setter(e.target.value)}</span>
+              &lt;div className="text-xs font-medium text-gray-500 mb-1 block"&gt;{label}&lt;/div&gt;
+              &lt;select title="Select dropdown" aria-label="Select dropdown" id="sel-665735" value={val} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setter(e.target.value)}</span>
                 className="inp text-sm"&gt;
                 {opts.map(o =&gt; &lt;option key={o}&gt;{o}&lt;/option&gt;)}
               &lt;/select&gt;
@@ -736,8 +781,8 @@ export default function CO5Page() {
           P(crowd | evidence) = P(evidence | crowd) · P(crowd) / P(evidence)
         &lt;/p&gt;
         &lt;div&gt;
-          &lt;label className="text-xs font-medium text-gray-500 mb-1 block"&gt;Attraction&lt;/label&gt;
-          &lt;select value={attractionId} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setAttrId(+e.target.value)}</span>
+          &lt;div className="text-xs font-medium text-gray-500 mb-1 block"&gt;Attraction&lt;/div&gt;
+          &lt;select title="Select dropdown" aria-label="Select dropdown" id="sel-40fd7c" value={attractionId} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setAttrId(+e.target.value)}</span>
             className="inp text-sm"&gt;
             {attractions.map(a =&gt; &lt;option key={a.id} value={a.id}&gt;{a.name}&lt;/option&gt;)}
           &lt;/select&gt;
@@ -913,7 +958,7 @@ export default function CO5Page() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T06:08:52.141Z
+                at 2026-06-18T12:28:28.699Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -16,7 +16,7 @@ def test_chaos_empty_payload():
 def test_chaos_malformed_json():
     headers = {"Content-Type": "application/json"}
     for path in ["/api/search/run", "/api/csp/schedule", "/api/hybrid/plan"]:
-        response = client.post(path, data="this is not valid json", headers=headers)
+        response = client.post(path, content=b"this is not valid json", headers=headers)
         assert response.status_code == 400 or response.status_code == 422
 
 def test_chaos_extreme_goals_list():

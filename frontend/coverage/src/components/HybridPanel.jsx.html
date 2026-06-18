@@ -635,44 +635,44 @@ export default function HybridPanel({ attractions, startId, goalIds, onResult, s
       &lt;div className="space-y-2"&gt;
         &lt;div className="grid grid-cols-2 gap-2"&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Budget (₹)&lt;/label&gt;
-            &lt;input type="number" value={budget} onChange={e =&gt; setBudget(+e.target.value)}
+            &lt;div className="text-xs text-slate-400"&gt;Budget (₹)&lt;/div&gt;
+            &lt;input title="Input field" aria-label="Input field" id="inp-307576" type="number" value={budget} onChange={e =&gt; setBudget(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" /&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Max Time (min)&lt;/label&gt;
-            &lt;input type="number" value={maxTime} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setMaxTime(+e.target.value)}</span>
+            &lt;div className="text-xs text-slate-400"&gt;Max Time (min)&lt;/div&gt;
+            &lt;input title="Input field" aria-label="Input field" id="inp-5712fa" type="number" value={maxTime} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setMaxTime(+e.target.value)}</span>
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" /&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Start Hour&lt;/label&gt;
-            &lt;input type="number" min={6} max={18} value={startHour} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setStartHour(+e.target.value)}</span>
+            &lt;div className="text-xs text-slate-400"&gt;Start Hour&lt;/div&gt;
+            &lt;input title="Input field" aria-label="Input field" id="inp-6f27d1" type="number" min={6} max={18} value={startHour} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setStartHour(+e.target.value)}</span>
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" /&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Cost Mode&lt;/label&gt;
-            &lt;select value={costMode} onChange={e =&gt; setCostMode(e.target.value)}
+            &lt;div className="text-xs text-slate-400"&gt;Cost Mode&lt;/div&gt;
+            &lt;select title="Select dropdown" aria-label="Select dropdown" id="sel-a269c2" value={costMode} onChange={e =&gt; setCostMode(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5"&gt;
               &lt;option&gt;distance&lt;/option&gt;&lt;option&gt;cost&lt;/option&gt;&lt;option&gt;time&lt;/option&gt;
             &lt;/select&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Weather&lt;/label&gt;
-            &lt;select value={weather} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setWeather(e.target.value)}</span>
+            &lt;div className="text-xs text-slate-400"&gt;Weather&lt;/div&gt;
+            &lt;select title="Select dropdown" aria-label="Select dropdown" id="sel-74e9a4" value={weather} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setWeather(e.target.value)}</span>
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5"&gt;
               &lt;option&gt;sunny&lt;/option&gt;&lt;option&gt;cloudy&lt;/option&gt;&lt;option&gt;rain&lt;/option&gt;
             &lt;/select&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            &lt;label className="text-xs text-slate-400"&gt;Day Type&lt;/label&gt;
-            &lt;select value={dayType} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setDayType(e.target.value)}</span>
+            &lt;div className="text-xs text-slate-400"&gt;Day Type&lt;/div&gt;
+            &lt;select title="Select dropdown" aria-label="Select dropdown" id="sel-7d4e67" value={dayType} <span class="fstat-no" title="function not covered" >onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setDayType(e.target.value)}</span>
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5"&gt;
               &lt;option&gt;weekday&lt;/option&gt;&lt;option&gt;weekend&lt;/option&gt;&lt;option&gt;holiday&lt;/option&gt;
             &lt;/select&gt;
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer"&gt;
-          &lt;input type="checkbox" checked={avoidCrowds} onChange={e =&gt; setAvoidCrowds(e.target.checked)} className="accent-orange-500" /&gt;
+          &lt;input title="Input field" aria-label="Input field" id="inp-f2cdee" type="checkbox" checked={avoidCrowds} onChange={e =&gt; setAvoidCrowds(e.target.checked)} className="accent-orange-500" /&gt;
           Avoid Crowds (CO1 Rule)
         &lt;/label&gt;
         &lt;button onClick={runHybrid}
@@ -838,7 +838,7 @@ export default function HybridPanel({ attractions, startId, goalIds, onResult, s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T06:08:52.141Z
+                at 2026-06-18T12:28:28.699Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

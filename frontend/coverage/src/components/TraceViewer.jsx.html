@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">66.07% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>36/54</span>
+                <span class='fraction'>37/56</span>
             </div>
         
             
@@ -244,7 +244,14 @@
 <a name='L179'></a><a href='#L179'>179</a>
 <a name='L180'></a><a href='#L180'>180</a>
 <a name='L181'></a><a href='#L181'>181</a>
-<a name='L182'></a><a href='#L182'>182</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
@@ -375,10 +382,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -389,6 +392,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -552,25 +566,32 @@ export default function TraceViewer({ trace = [], title = 'Algorithm Trace' }) {
         &lt;button
           onClick={() =&gt; { setCurrent(0); setPlaying(false) }}
           className="btn-ghost px-2 py-1.5 text-xs"
+          title="Reset"
+          aria-label="Reset trace"
         &gt;
           &lt;RotateCcw size={12} /&gt;
         &lt;/button&gt;
         &lt;button
 <span class="fstat-no" title="function not covered" >          onClick={() =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >s</span>etPlaying(p</span> =&gt; <span class="cstat-no" title="statement not covered" >!p)</span>}</span>
           className="btn-primary py-1.5 px-3 text-xs flex-1"
+          title={playing ? <span class="branch-0 cbranch-no" title="branch not covered" >'Pause' : '</span>Play'}
         &gt;
           {playing ? <span class="branch-0 cbranch-no" title="branch not covered" >&lt;&gt;&lt;Pause size={12} /&gt; Pause&lt;/&gt; : &lt;&gt;&lt;</span>Play size={12} /&gt; Play&lt;/&gt;}
         &lt;/button&gt;
         &lt;button
 <span class="fstat-no" title="function not covered" >          onClick={() =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >s</span>etCurrent(c</span> =&gt; <span class="cstat-no" title="statement not covered" >Math.min(trace.length - 1, c + 1))</span>}</span>
           className="btn-secondary py-1.5 px-3 text-xs"
+          title="Step forward"
+          aria-label="Step forward"
         &gt;
           &lt;SkipForward size={12} /&gt; Step
         &lt;/button&gt;
-        &lt;select
+        &lt;select title="Select dropdown" aria-label="Select dropdown" id="sel-5b6341"
           value={speed}
 <span class="fstat-no" title="function not covered" >          onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setSpeed(+e.target.value)}</span>
           className="inp text-xs py-1.5 w-24"
+          title="Playback speed"
+          aria-label="Playback speed"
         &gt;
           &lt;option value={700}&gt;Slow&lt;/option&gt;
           &lt;option value={300}&gt;Normal&lt;/option&gt;
@@ -613,7 +634,7 @@ export default function TraceViewer({ trace = [], title = 'Algorithm Trace' }) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T06:08:52.141Z
+                at 2026-06-18T12:28:28.699Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

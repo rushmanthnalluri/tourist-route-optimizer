@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.78% </span>
+                <span class="strong">98.79% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>81/82</span>
+                <span class='fraction'>82/83</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>68/68</span>
+                <span class='fraction'>69/69</span>
             </div>
         
             
@@ -246,7 +246,10 @@
 <a name='L181'></a><a href='#L181'>181</a>
 <a name='L182'></a><a href='#L182'>182</a>
 <a name='L183'></a><a href='#L183'>183</a>
-<a name='L184'></a><a href='#L184'>184</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -268,6 +271,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-yes">25x</span>
@@ -320,19 +324,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">128x</span>
+<span class="cline-any cline-yes">58x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">78x</span>
-<span class="cline-any cline-yes">78x</span>
-<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -366,7 +370,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -390,6 +394,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -454,13 +460,14 @@ export function AppProvider({ children }) {
   const [builtinAttractions, setBuiltinAttractions] = useState([])
   const [customPlaces, setCustomPlaces]             = useState(loadCustomPlaces)
   const [graph, setGraph]                           = useState({})
-  const [startId, setStartId]                       = useState(0)
-  const [goalIds, setGoalIds]                       = useState([1, 9, 16])
+  const [startId, setStartId]                       = useState(null)
+  const [goalIds, setGoalIds]                       = useState([])
   const [routePath, setRoutePath]                   = useState([])
   const [traceSteps, setTraceSteps]                 = useState([])
   const [loading, setLoading]                       = useState(false)
   const [statusMsg, setStatusMsg]                   = useState('Ready')
   const [backendOk, setBackendOk]                   = useState(null)
+  const [liveEnv, setLiveEnv]                       = useState(null)
   const [mapPickActive, setMapPickActive]           = useState(false)
   const mapPickHandler = useRef(null)
 &nbsp;
@@ -548,7 +555,7 @@ export function AppProvider({ children }) {
     const next = customPlaces.filter(p =&gt; p.id !== id)
     setCustomPlaces(next)
     saveCustomPlaces(next)
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (startId === id) setStartId(0)
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (startId === id) setStartId(null)
     setGoalIds(g =&gt; g.filter(x =&gt; x !== id))
     setRoutePath(p =&gt; p.<span class="fstat-no" title="function not covered" >filter(x</span> =&gt; <span class="cstat-no" title="statement not covered" >x !== id)</span>)
   }
@@ -590,6 +597,8 @@ export function AppProvider({ children }) {
     setStatusMsg,
     setStatus: setStatusMsg,
     backendOk,
+    liveEnv,
+    setLiveEnv,
     getAttraction,
     routingPayload,
     resolveRoutingId,
@@ -602,7 +611,7 @@ export function AppProvider({ children }) {
     handleMapPick,
   }), [
     attractions, graph, startId, goalIds, routePath, traceSteps, loading, 
-    statusMsg, backendOk, mapPickActive, getAttraction, routingPayload, 
+    statusMsg, backendOk, liveEnv, mapPickActive, getAttraction, routingPayload, 
     resolveRoutingId, resolveRoutingIds
   ])
 &nbsp;
@@ -619,7 +628,7 @@ export function AppProvider({ children }) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T06:08:52.141Z
+                at 2026-06-18T12:28:28.699Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
