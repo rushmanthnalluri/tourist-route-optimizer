@@ -51,6 +51,7 @@ export const api = {
   computeUtility: (payload)  => apiClient.post(`/api/decision/utility`, payload).then(r => r.data),
   runMinimax:     (payload)  => apiClient.post(`/api/decision/minimax`, payload).then(r => r.data),
   expectedUtility:(payload)  => apiClient.post(`/api/decision/expected-utility`, payload).then(r => r.data),
+  negotiate:      (payload)  => apiClient.post(`/api/decision/negotiate`, payload).then(r => r.data),
 
   bayesUpdate:    (payload)  => apiClient.post(`/api/probabilistic/bayes-update`, payload).then(r => r.data),
   infer:          (payload)  => apiClient.post(`/api/probabilistic/infer`, payload).then(r => r.data),

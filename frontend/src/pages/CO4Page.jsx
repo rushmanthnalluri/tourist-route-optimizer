@@ -4,12 +4,12 @@ import PageLayout from '../components/PageLayout'
 import TraceViewer from '../components/TraceViewer'
 import { useApp } from '../context/AppContext'
 import { api } from '../utils/api'
-import { Scale, Swords, CloudRain } from 'lucide-react'
+import { Scale, Swords, CloudRain, Users } from 'lucide-react'
 
 const CATEGORIES = ['historical', 'nature', 'religious', 'museum', 'entertainment', 'cultural', 'shopping', 'modern']
 
 export default function CO4Page() {
-  const { attractions, routePath, setLoading, setStatus, loading, resolveRoutingIds } = useApp()
+  const { attractions, routePath, setLoading, setStatus, loading, resolveRoutingIds, startId, goalIds } = useApp()
   const [budget, setBudget]         = useState(600)
   const [maxTime, setMaxTime]       = useState(400)
   const [totalCost, setTotalCost]   = useState(200)
@@ -21,6 +21,7 @@ export default function CO4Page() {
   const [utilResult, setUtilResult] = useState(null)
   const [minimaxResult, setMinimaxResult] = useState(null)
   const [euResult, setEuResult]     = useState(null)
+  const [negResult, setNegResult]   = useState(null)
 
   function toggleCat(cat) {
     setPrefCats(c => c.includes(cat) ? c.filter(x => x !== cat) : [...c, cat])
@@ -67,6 +68,36 @@ export default function CO4Page() {
       setEuResult(data)
       setStatus('✅ Expected utility computed')
     } catch { setStatus('⚠ Error') }
+    setLoading(false)
+  }
+
+  async function runNegotiation() {
+    if (!startId || !goalIds.length) { setStatus('⚠ Select Start and Goal first in sidebar'); return }
+    setLoading(true); setStatus('Generating candidate routes from CO2 algorithms...')
+    try {
+      const compareData = await api.compareSearch({
+        start_id: startId, goal_ids: goalIds, cost_mode: 'distance', avoid_crowds: false
+      })
+      const candidate_routes = Object.entries(compareData.comparison || {}).map(([alg, res]) => ({
+        algorithm: alg,
+        path: res.path,
+        cost: res.cost_inr,
+        time: res.time_min
+      })).filter(r => r.path && r.path.length > 0)
+      
+      if (!candidate_routes.length) {
+         setStatus('⚠ No valid routes found to negotiate over')
+         setLoading(false); return
+      }
+
+      setStatus('Negotiating Nash Bargaining Solution...')
+      const negData = await api.negotiate({ routes: candidate_routes })
+      setNegResult(negData)
+      setStatus(`✅ Negotiation complete! Winning route: ${negData.winning_route?.algorithm}`)
+    } catch (e) {
+      console.error(e)
+      setStatus('⚠ Error during negotiation')
+    }
     setLoading(false)
   }
 
@@ -268,6 +299,68 @@ export default function CO4Page() {
               </tfoot>
             </table>
           </div>
+        )}
+      </div>
+
+      <div className="card p-4 space-y-3">
+        <div className="flex items-center gap-2 text-amber-700">
+          <Users size={16} />
+          <span className="text-sm font-bold">4. Multi-Agent Negotiation (Family Group)</span>
+        </div>
+        <p className="text-xs text-gray-500">
+          Simulates a group of tourists with conflicting preferences. Calculates the <b>Nash Bargaining Solution</b> across all candidate routes from CO2 search algorithms.
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+           <div className="bg-blue-50 border border-blue-100 p-2 rounded-lg text-[10px]">
+              <p className="font-bold text-blue-800">🎒 Alice (Backpacker)</p>
+              <p className="text-blue-600 mt-0.5">High weight on Cost. Prefers Nature.</p>
+           </div>
+           <div className="bg-purple-50 border border-purple-100 p-2 rounded-lg text-[10px]">
+              <p className="font-bold text-purple-800">📸 Bob (Luxury/History)</p>
+              <p className="text-purple-600 mt-0.5">High weight on Ratings & History.</p>
+           </div>
+           <div className="bg-green-50 border border-green-100 p-2 rounded-lg text-[10px]">
+              <p className="font-bold text-green-800">⏱ Charlie (Impatient)</p>
+              <p className="text-green-600 mt-0.5">High weight on Fast Travel & Entertainment.</p>
+           </div>
+        </div>
+
+        <button onClick={runNegotiation} disabled={loading}
+          className="btn-primary w-full">
+          Generate Routes & Run Negotiation
+        </button>
+
+        {negResult && (
+           <div className="mt-3 border rounded-xl overflow-hidden overflow-x-auto">
+             <table className="w-full text-xs text-gray-600">
+               <thead className="bg-gray-50 border-b border-gray-200 text-gray-500">
+                 <tr>
+                   <th className="py-2 px-3 text-left font-semibold whitespace-nowrap">Candidate Route</th>
+                   {negResult.agents.map(a => <th key={a} className="py-2 px-2 text-center font-semibold whitespace-nowrap">{a.split(' ')[0]}</th>)}
+                   <th className="py-2 px-3 text-right font-semibold text-indigo-700 whitespace-nowrap">Nash Product</th>
+                 </tr>
+               </thead>
+               <tbody className="divide-y divide-gray-100">
+                 {negResult.negotiated_routes.map((r, i) => (
+                   <tr key={i} className={i === 0 ? 'bg-indigo-50/50' : ''}>
+                     <td className="py-2 px-3 font-medium whitespace-nowrap">
+                       {r.algorithm}
+                       {i === 0 && <span className="ml-2 text-[10px] bg-indigo-500 text-white px-1.5 py-0.5 rounded">WINNER</span>}
+                     </td>
+                     {negResult.agents.map(a => (
+                       <td key={a} className="py-2 px-2 text-center">
+                         {r.scores[a]?.toFixed(2)}
+                       </td>
+                     ))}
+                     <td className="py-2 px-3 text-right font-bold text-indigo-700">
+                       {r.nash_product?.toFixed(4)}
+                     </td>
+                   </tr>
+                 ))}
+               </tbody>
+             </table>
+           </div>
         )}
       </div>
     </PageLayout>

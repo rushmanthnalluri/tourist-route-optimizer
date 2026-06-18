@@ -472,6 +472,50 @@ def policy_selection(
 
     return {"policy": "no_routes", "utility": 0.0, "trace": trace}
 
+def multi_agent_negotiate(candidate_routes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    # Define the 3 conflicting agents
+    agents = {
+        "Alice (Backpacker)": UtilityFunction(w_rating=0.1, w_cost=0.5, w_time=0.1, w_pref=0.1, w_crowd=0.2, preferred_categories=["nature", "religious"]),
+        "Bob (Luxury Historian)": UtilityFunction(w_rating=0.4, w_cost=0.05, w_time=0.15, w_pref=0.4, w_crowd=0.0, preferred_categories=["historical", "museum"]),
+        "Charlie (Impatient)": UtilityFunction(w_rating=0.2, w_cost=0.1, w_time=0.6, w_pref=0.1, w_crowd=0.0, preferred_categories=["entertainment", "modern"])
+    }
+    
+    evaluated_routes = []
+    
+    for idx, route in enumerate(candidate_routes):
+        path = route.get("path", [])
+        total_cost = route.get("cost", route.get("total_cost", 0))
+        total_time = route.get("time", route.get("total_time_min", 0))
+        alg_name = route.get("algorithm", f"Route {idx+1}")
+        
+        scores = {}
+        nash_product = 1.0
+        
+        for name, uf in agents.items():
+            u_res = uf.evaluate(path, total_cost, total_time)
+            # Ensure strictly positive utility for Nash product (avoid 0 wipeout)
+            u_val = max(0.01, u_res["utility"]) 
+            scores[name] = round(u_val, 4)
+            nash_product *= u_val
+            
+        evaluated_routes.append({
+            "route_id": idx,
+            "algorithm": alg_name,
+            "path": path,
+            "total_cost": total_cost,
+            "total_time": total_time,
+            "scores": scores,
+            "nash_product": round(nash_product, 6)
+        })
+        
+    evaluated_routes.sort(key=lambda x: x["nash_product"], reverse=True)
+    
+    return {
+        "agents": list(agents.keys()),
+        "negotiated_routes": evaluated_routes,
+        "winning_route": evaluated_routes[0] if evaluated_routes else None
+    }
+
 if __name__ == "__main__":
     print("=" * 65)
     print("CO4 — Decision Theory: Utility, Minimax, Alpha-Beta")

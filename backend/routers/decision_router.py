@@ -2,9 +2,10 @@ from backend.algorithms.co4_decision import (
     UtilityFunction,
     MinimaxSolver,
     expected_utility,
+    multi_agent_negotiate
 )
 from fastapi import APIRouter
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 import sys
 import os
@@ -63,10 +64,17 @@ async def run_minimax(req: MinimaxRequest):
     return solver.solve()
 
 @router.post("/expected-utility")
-async def compute_expected_utility(req: ExpectedUtilityRequest):
+async def get_expected_utility(req: ExpectedUtilityRequest):
     uf = UtilityFunction(
-        preferred_categories=req.preferred_categories or [],
+        preferred_categories=req.preferred_categories,
         budget_inr=req.budget_inr,
         max_time_min=req.max_time_min,
     )
     return expected_utility(req.attraction_ids, uf, req.weather_prob_rain)
+
+class NegotiateRequest(BaseModel):
+    routes: List[Dict[str, Any]]
+
+@router.post("/negotiate")
+async def run_negotiate(req: NegotiateRequest):
+    return multi_agent_negotiate(req.routes)
