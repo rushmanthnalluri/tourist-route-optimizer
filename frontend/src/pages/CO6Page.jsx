@@ -26,6 +26,29 @@ export default function CO6Page() {
   const [result, setResult]         = useState(null)
   const [activeStage, setActiveStage] = useState(null)
 
+  async function fetchLiveWeather() {
+    setLoading(true); setStatus('Fetching live weather...')
+    try {
+      const data = await api.getLiveWeather()
+      setWeather(data.weather)
+      setStatus(`✅ Live weather fetched: ${data.weather} (Rain prob: ${(data.prob_rain * 100).toFixed(0)}%)`)
+    } catch (e) {
+      setStatus('⚠ Failed to fetch live weather')
+    }
+    setLoading(false)
+  }
+
+  async function fetchLiveTraffic() {
+    setLoading(true); setStatus('Fetching Live Traffic from OSRM...')
+    try {
+      const data = await api.fetchLiveTraffic()
+      setStatus('✅ ' + data.message)
+    } catch (e) {
+      setStatus('⚠ Failed to fetch live traffic')
+    }
+    setLoading(false)
+  }
+
   async function runHybrid() {
     if (!goalIds.length) { setStatus('⚠ Select goals first'); return }
     setLoading(true); setStatus('Running full hybrid pipeline...')
@@ -90,7 +113,10 @@ export default function CO6Page() {
             </select>
           </div>
           <div>
-            <div className="text-xs font-medium text-gray-500 mb-1 block">Weather</div>
+            <div className="flex justify-between items-center mb-1">
+              <div className="text-xs font-medium text-gray-500 block">Weather</div>
+              <button onClick={fetchLiveWeather} className="text-[10px] bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-0.5 rounded font-semibold transition-colors">Live</button>
+            </div>
             <select title="Select dropdown" aria-label="Select dropdown" id="sel-df80f7" value={weather} onChange={e => setWeather(e.target.value)} className="inp text-sm">
               <option value="sunny">Sunny</option>
               <option value="cloudy">Cloudy</option>
@@ -106,15 +132,22 @@ export default function CO6Page() {
             </select>
           </div>
         </div>
-        <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-          <input title="Input field" aria-label="Input field" id="inp-afa75c" type="checkbox" checked={avoidCrowds}
+        <label htmlFor="wrap-3b72fe" className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+          <input id="wrap-3b72fe" title="Input field" aria-label="Input field" type="checkbox" checked={avoidCrowds}
             onChange={e => setAvoidCrowds(e.target.checked)} className="accent-orange-500 rounded" />
           Avoid Crowds (CO1 Rule-based heuristic)
         </label>
-        <button onClick={runHybrid} disabled={loading}
-          className="btn-primary w-full">
-          <Zap size={16} /> Run Full Hybrid Pipeline
-        </button>
+        
+        <div className="flex gap-2">
+          <button onClick={fetchLiveTraffic} disabled={loading}
+            className="btn-secondary flex-1 text-teal-700 border-teal-200 bg-teal-50 hover:bg-teal-100">
+            📡 Fetch Live Traffic
+          </button>
+          <button onClick={runHybrid} disabled={loading}
+            className="btn-primary flex-1">
+            <Zap size={16} /> Run Full Hybrid Pipeline
+          </button>
+        </div>
       </div>
 
       {result && (
