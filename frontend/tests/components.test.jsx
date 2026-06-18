@@ -68,7 +68,7 @@ vi.mock('../src/context/AppContext', async (importOriginal) => {
 });
 
 const Wrap = ({ children }) => (
-  <MemoryRouter>{children}</MemoryRouter>
+  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>
 );
 
 describe('Components', () => {

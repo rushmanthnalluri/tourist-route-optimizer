@@ -22,10 +22,10 @@ vi.mock('../src/utils/api', () => ({
 describe('App Test', () => {
   it('renders without crashing', () => {
     render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText(/HydAI/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/HydAI/i)[0]).toBeInTheDocument();
   });
 });

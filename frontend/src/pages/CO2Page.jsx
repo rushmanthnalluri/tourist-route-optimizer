@@ -27,7 +27,7 @@ const ALG_COLORS = {
 }
 
 export default function CO2Page() {
-  const { attractions, startId, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
+  const { attractions, startId, goalIds, routePath, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
   const [algorithm, setAlgorithm] = useState('astar')
   const [costMode, setCostMode]   = useState('distance')
   const [budget, setBudget]       = useState(600)
@@ -233,7 +233,7 @@ export default function CO2Page() {
       )}
 
       {result?.trace && (
-        <TraceViewer trace={result.trace} title={`${algorithm.toUpperCase()} Trace`} />
+        <TraceViewer trace={result.trace} title={`${algorithm.toUpperCase()} Trace`} routePath={routePath} attractions={attractions} />
       )}
     </PageLayout>
   )

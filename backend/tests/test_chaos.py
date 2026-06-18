@@ -24,7 +24,7 @@ def test_chaos_extreme_goals_list():
         "/api/search/run",
         json={
             "start_id": 0,
-            "goal_ids": list(range(1, 20)),
+            "goal_ids": list(range(1, 32)),
             "budget_inr": 2000.0,
             "max_time_min": 480.0,
         },

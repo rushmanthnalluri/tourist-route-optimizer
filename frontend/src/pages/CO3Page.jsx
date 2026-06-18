@@ -13,7 +13,7 @@ const SLOT_COLORS = {
 const SLOT_ICONS = { morning: '🌅', afternoon: '☀️', evening: '🌇' }
 
 export default function CO3Page() {
-  const { attractions, startId, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, resolveRoutingIds } = useApp()
+  const { attractions, startId, goalIds, routePath, setRoutePath, setTraceSteps, setLoading, setStatus, loading, resolveRoutingIds } = useApp()
   const [budget, setBudget]         = useState(600)
   const [maxTime, setMaxTime]       = useState(600)
   const [algorithm, setAlgorithm]   = useState('backtracking')
@@ -183,7 +183,7 @@ export default function CO3Page() {
             </div>
           )}
 
-          {result.trace && <TraceViewer trace={result.trace} title="CSP Trace" />}
+          {result.trace && <TraceViewer trace={result.trace} title="CSP Trace" routePath={routePath} attractions={attractions} />}
         </div>
       )}
     </PageLayout>

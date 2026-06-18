@@ -18,7 +18,7 @@ vi.mock('../src/utils/api.js', () => ({
 }));
 
 const Wrap = ({ children }) => (
-  <MemoryRouter>
+  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <AppProvider>
       {children}
     </AppProvider>

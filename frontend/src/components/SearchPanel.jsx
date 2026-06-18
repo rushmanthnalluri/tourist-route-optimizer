@@ -11,7 +11,7 @@ const ALG_COLORS = {
   ucs: '#a855f7', greedy: '#ec4899', idastar: '#14b8a6',
 }
 
-export default function SearchPanel({ attractions, startId, goalIds, onResult, setLoading, setStatus }) {
+export default function SearchPanel({ attractions, routePath, startId, goalIds, onResult, setLoading, setStatus }) {
   const [algorithm, setAlgorithm] = useState('astar')
   const [costMode, setCostMode]   = useState('distance')
   const [budget, setBudget]       = useState(600)
@@ -197,7 +197,7 @@ export default function SearchPanel({ attractions, startId, goalIds, onResult, s
       )}
 
       {result?.trace && (
-        <TraceViewer trace={result.trace} title={`${algorithm.toUpperCase()} Trace`} />
+        <TraceViewer trace={result.trace} title={`${algorithm.toUpperCase()} Trace`} routePath={routePath} attractions={attractions} />
       )}
     </div>
   )

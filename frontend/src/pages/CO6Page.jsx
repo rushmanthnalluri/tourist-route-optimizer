@@ -364,7 +364,7 @@ export default function CO6Page() {
           )}
           
           {result.co2_search?.astar_trace && (
-            <TraceViewer trace={result.co2_search.astar_trace} title="A* Hybrid Pipeline Trace" />
+            <TraceViewer trace={result.co2_search.astar_trace} title="A* Hybrid Pipeline Trace" routePath={routePath} attractions={attractions} />
           )}
         </div>
       )}

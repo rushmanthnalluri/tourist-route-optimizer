@@ -5,7 +5,7 @@ import { api } from '../utils/api'
 const SLOT_COLORS = { morning: 'bg-yellow-900 text-yellow-200', afternoon: 'bg-orange-900 text-orange-200', evening: 'bg-indigo-900 text-indigo-200' }
 const SLOT_ICONS  = { morning: '🌅', afternoon: '☀️', evening: '🌇' }
 
-export default function CSPPanel({ attractions, goalIds, startId, setLoading, setStatus }) {
+export default function CSPPanel({ attractions, routePath, goalIds, startId, setLoading, setStatus }) {
   const [budget, setBudget]     = useState(600)
   const [maxTime, setMaxTime]   = useState(400)
   const [algorithm, setAlgorithm] = useState('backtracking')
@@ -128,7 +128,7 @@ export default function CSPPanel({ attractions, goalIds, startId, setLoading, se
             </div>
           )}
 
-          {result.trace && <TraceViewer trace={result.trace} title="CSP Trace" />}
+          {result.trace && <TraceViewer trace={result.trace} title="CSP Trace" routePath={routePath} attractions={attractions} />}
         </div>
       )}
     </div>

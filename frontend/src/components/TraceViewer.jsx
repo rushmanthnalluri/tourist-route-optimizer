@@ -29,7 +29,7 @@ const ACTION_BG = {
   CONSTRAINT_FAIL: 'bg-orange-50',
 }
 
-export default function TraceViewer({ trace = [], title = 'Algorithm Trace' }) {
+export default function TraceViewer({ trace = [], title = 'Algorithm Trace', routePath = [], attractions = [] }) {
   const [playing, setPlaying] = useState(false)
   const [current, setCurrent] = useState(0)
   const [speed, setSpeed]     = useState(300)
@@ -183,6 +183,42 @@ export default function TraceViewer({ trace = [], title = 'Algorithm Trace' }) {
           )
         })}
       </div>
+      
+      {/* EXPORT BUTTONS */}
+      {routePath && routePath.length > 0 && (
+        <div className="flex gap-2 p-3 bg-gray-50 border-t border-gray-200 shrink-0">
+          <button
+            onClick={() => {
+              // Build Google Maps Directions URL
+              // Format: https://www.google.com/maps/dir/?api=1&origin=lat,lng&destination=lat,lng&waypoints=lat,lng|lat,lng...
+              const waypoints = routePath.map(id => {
+                const a = attractions.find(x => x.id === id)
+                return a ? `${a.lat},${a.lng}` : null
+              }).filter(Boolean)
+              
+              if (waypoints.length >= 2) {
+                const origin = waypoints[0]
+                const dest = waypoints[waypoints.length - 1]
+                const mids = waypoints.slice(1, -1).join('|')
+                let url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}`
+                if (mids) url += `&waypoints=${mids}`
+                window.open(url, '_blank')
+              }
+            }}
+            className="flex-1 btn-primary py-2 text-xs flex items-center justify-center gap-2"
+          >
+            <svg className="lucide lucide-map" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>
+            Google Maps
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="flex-1 btn-secondary py-2 text-xs flex items-center justify-center gap-2"
+          >
+            <svg className="lucide lucide-printer" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print PDF
+          </button>
+        </div>
+      )}
     </div>
   )
 }

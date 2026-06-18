@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.38% </span>
+                <span class="strong">56.96% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>45/71</span>
+                <span class='fraction'>45/79</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">49.36% </span>
+                <span class="strong">45.34% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>39/79</span>
+                <span class='fraction'>39/86</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.63% </span>
+                <span class="strong">60.86% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>14/22</span>
+                <span class='fraction'>14/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.68% </span>
+                <span class="strong">63.07% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>41/58</span>
+                <span class='fraction'>41/65</span>
             </div>
         
             
@@ -292,7 +292,22 @@
 <a name='L227'></a><a href='#L227'>227</a>
 <a name='L228'></a><a href='#L228'>228</a>
 <a name='L229'></a><a href='#L229'>229</a>
-<a name='L230'></a><a href='#L230'>230</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L230'></a><a href='#L230'>230</a>
+<a name='L231'></a><a href='#L231'>231</a>
+<a name='L232'></a><a href='#L232'>232</a>
+<a name='L233'></a><a href='#L233'>233</a>
+<a name='L234'></a><a href='#L234'>234</a>
+<a name='L235'></a><a href='#L235'>235</a>
+<a name='L236'></a><a href='#L236'>236</a>
+<a name='L237'></a><a href='#L237'>237</a>
+<a name='L238'></a><a href='#L238'>238</a>
+<a name='L239'></a><a href='#L239'>239</a>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -316,6 +331,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -405,6 +424,17 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -416,10 +446,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -547,11 +577,15 @@ function MapClickPicker({ active, onPick }) {
   return null
 }
 &nbsp;
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
+import iconUrl from 'leaflet/dist/images/marker-icon.png'
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
+&nbsp;
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl:       'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
 })
 &nbsp;
 function makeNumberIcon(n, color = '#4f46e5', isStart = false, isGoal = false) {
@@ -634,7 +668,18 @@ export default function MapView({
     const controller = new AbortController()
 &nbsp;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (hasFullRoute &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >routeCoords.length &gt;= 2) {</span>
-      const coordString = <span class="cstat-no" title="statement not covered" >routeCoords.<span class="fstat-no" title="function not covered" >map(c</span> =&gt; <span class="cstat-no" title="statement not covered" >`${c[1]},${c[0]}`)</span>.join(';')</span>
+      // OSRM fails if consecutive coordinates are exactly the same
+      const dedupedCoords = <span class="cstat-no" title="statement not covered" >routeCoords.<span class="fstat-no" title="function not covered" >filter((c</span>, i, arr) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        if (i === 0) <span class="cstat-no" title="statement not covered" >return true</span></span>
+<span class="cstat-no" title="statement not covered" >        return c[0] !== arr[i - 1][0] || c[1] !== arr[i - 1][1]</span>
+      })
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (dedupedCoords.length &lt; 2) {</span>
+<span class="cstat-no" title="statement not covered" >        setRoadCoords(routeCoords)</span>
+<span class="cstat-no" title="statement not covered" >        return</span>
+      }
+&nbsp;
+      const coordString = <span class="cstat-no" title="statement not covered" >dedupedCoords.<span class="fstat-no" title="function not covered" >map(c</span> =&gt; <span class="cstat-no" title="statement not covered" >`${c[1]},${c[0]}`)</span>.join(';')</span>
 <span class="cstat-no" title="statement not covered" >      fetch(`https://router.project-osrm.org/route/v1/driving/${coordString}?overview=full&amp;geometries=geojson`, {</span>
         signal: controller.signal
       })
@@ -644,11 +689,11 @@ export default function MapView({
         })
         .<span class="fstat-no" title="function not covered" >then(d</span>ata =&gt; {
 <span class="cstat-no" title="statement not covered" >          if (!isMounted) <span class="cstat-no" title="statement not covered" >return</span></span>
-<span class="cstat-no" title="statement not covered" >          if (data.routes &amp;&amp; data.routes.length &gt; 0) {</span>
-            
+<span class="cstat-no" title="statement not covered" >          if (data.code === 'Ok' &amp;&amp; data.routes &amp;&amp; data.routes.length &gt; 0) {</span>
             const roadLine = <span class="cstat-no" title="statement not covered" >data.routes[0].geometry.coordinates.<span class="fstat-no" title="function not covered" >map(c</span> =&gt; <span class="cstat-no" title="statement not covered" >[c[1], c[0]])</span></span>
 <span class="cstat-no" title="statement not covered" >            setRoadCoords(roadLine)</span>
           } else {
+<span class="cstat-no" title="statement not covered" >            console.warn('OSRM returned non-Ok code:', data)</span>
 <span class="cstat-no" title="statement not covered" >            setRoadCoords(routeCoords)</span>
           }
         })
@@ -674,8 +719,8 @@ export default function MapView({
       style={{ width: '100%', height: '100%', borderRadius: '12px' }}
     &gt;
       &lt;TileLayer
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-        attribution='© OpenStreetMap © CARTO'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&amp;copy; &lt;a href="https://www.openstreetmap.org/copyright"&gt;OpenStreetMap&lt;/a&gt; contributors'
       /&gt;
 &nbsp;
       &lt;MapClickPicker active={mapPickActive} onPick={onMapPick} /&gt;
@@ -757,7 +802,7 @@ export default function MapView({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T12:28:28.699Z
+                at 2026-06-18T13:02:57.626Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

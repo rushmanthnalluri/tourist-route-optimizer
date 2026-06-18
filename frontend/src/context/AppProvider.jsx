@@ -35,17 +35,21 @@ export function AppProvider({ children }) {
   const mapPickHandler = useRef(null)
 
   useEffect(() => {
+    let isMounted = true
     Promise.all([api.getAttractions(), api.getGraph()])
       .then(([atts, g]) => {
+        if (!isMounted) return
         setBuiltinAttractions(atts)
         setGraph(g)
         setBackendOk(true)
         setStatusMsg('Ready')
       })
       .catch(() => {
+        if (!isMounted) return
         setBackendOk(false)
         setStatusMsg('⚠ Backend offline — run: uvicorn main:app --reload --port 8000')
       })
+    return () => { isMounted = false }
   }, [])
 
   const enrichCustom = useCallback(
