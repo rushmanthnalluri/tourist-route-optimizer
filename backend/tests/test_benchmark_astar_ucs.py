@@ -2,10 +2,10 @@ import random
 from backend.data.hyderabad_attractions import ATTRACTIONS
 from backend.algorithms.co2_search import TouristProblem, astar, ucs
 
+
 def test_run_benchmark(iterations=20, max_goals=3):
     attraction_ids = [a.id for a in ATTRACTIONS]
 
-    cases_run = 0
     mismatches = 0
     valid_paths = 0
 
@@ -56,7 +56,7 @@ def test_run_benchmark(iterations=20, max_goals=3):
                 print(f"UCS Path: {ucs_res.path}")
                 mismatches += 1
 
-    print(f"Benchmark completed.")
+    print("Benchmark completed.")
     print(f"Total cases: {iterations}")
     print(f"Valid paths found: {valid_paths}")
     print(f"Mismatches: {mismatches}")
@@ -65,6 +65,7 @@ def test_run_benchmark(iterations=20, max_goals=3):
         mismatches == 0
     ), f"Benchmark failed: found {mismatches} mismatches between A* and UCS!"
     print("A* Optimality verified.")
+
 
 if __name__ == "__main__":
     test_run_benchmark(1000, 4)

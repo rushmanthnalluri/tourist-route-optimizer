@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator, ValidationInfo
 
+
 class AttractionModel(BaseModel):
     id: int
     name: str

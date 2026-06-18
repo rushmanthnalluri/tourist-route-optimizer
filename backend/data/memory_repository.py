@@ -3,6 +3,7 @@ from backend.data.repository import AbstractAttractionRepository
 from backend.data.attraction_models import AttractionModel
 from backend.data.hyderabad_attractions import ATTRACTION_MAP, get_neighbors
 
+
 class MemoryAttractionRepository(AbstractAttractionRepository):
     def get_all_attractions(self) -> List[AttractionModel]:
         return [AttractionModel(**a.__dict__) for a in ATTRACTION_MAP.values()]

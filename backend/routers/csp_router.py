@@ -10,9 +10,11 @@ repo = MemoryAttractionRepository()
 
 router = APIRouter(prefix="/api/csp", tags=["CO3 CSP"])
 
+
 class CSPAlgorithm(str, Enum):
     backtracking = "backtracking"
     min_conflicts = "min_conflicts"
+
 
 class CSPRequest(BaseModel):
     attraction_ids: List[int] = Field(..., min_length=1, max_length=30)
@@ -36,6 +38,7 @@ class CSPRequest(BaseModel):
                 raise ValueError(f"attraction_id {aid} does not exist")
         return v
 
+
 @router.post("/schedule")
 async def schedule(req: CSPRequest):
     if req.algorithm.value == "min_conflicts":
@@ -56,6 +59,7 @@ async def schedule(req: CSPRequest):
         use_ac3=req.use_ac3,
     )
     return result
+
 
 @router.get("/domains/{attraction_id}")
 async def get_domains(attraction_id: int):

@@ -3,6 +3,7 @@ import math
 from dataclasses import dataclass, field
 from typing import Dict, List, Tuple
 
+
 @dataclass
 class Attraction:
     id: int
@@ -24,6 +25,7 @@ class Attraction:
 
     def __repr__(self) -> str:
         return f"Attraction({self.id}: {self.name})"
+
 
 ATTRACTIONS: List[Attraction] = [
     Attraction(
@@ -405,6 +407,7 @@ ATTRACTIONS: List[Attraction] = [
 
 ATTRACTION_MAP: Dict[int, Attraction] = {a.id: a for a in ATTRACTIONS}
 
+
 def haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     R = 6371.0
     phi1, phi2 = math.radians(lat1), math.radians(lat2)
@@ -416,6 +419,7 @@ def haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     )
     a = max(0.0, min(1.0, a))
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
 
 def build_graph(
     attractions: List[Attraction],
@@ -445,17 +449,22 @@ def build_graph(
                 graph[dst.id].append((src.id, road_km, time_min, cost_inr))
     return graph
 
+
 GRAPH: Dict[int, List[Tuple[int, float, float, float]]] = build_graph(ATTRACTIONS)
+
 
 def straight_line_distance(a_id: int, b_id: int) -> float:
     a, b = ATTRACTION_MAP[a_id], ATTRACTION_MAP[b_id]
     return haversine(a.lat, a.lng, b.lat, b.lng)
 
+
 def get_neighbors(node_id: int) -> List[Tuple[int, float, float, float]]:
     return GRAPH.get(node_id, [])
 
+
 def get_attraction(a_id: int) -> Attraction:
     return ATTRACTION_MAP[a_id]
+
 
 if __name__ == "__main__":
     print("=" * 60)

@@ -35,6 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.middleware("http")
 async def add_security_headers(request: Request, call_next):
     response = await call_next(request)
@@ -46,6 +47,7 @@ async def add_security_headers(request: Request, call_next):
     )
     return response
 
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
@@ -53,11 +55,13 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"message": "Internal server error occurred.", "details": str(exc)},
     )
 
+
 app.include_router(search_router)
 app.include_router(csp_router)
 app.include_router(decision_router)
 app.include_router(prob_router)
 app.include_router(hybrid_router)
+
 
 @app.get("/api/attractions", tags=["Data"])
 async def get_attractions():
@@ -80,6 +84,7 @@ async def get_attractions():
         for a in ATTRACTIONS
     ]
 
+
 @app.get("/api/attractions/{attraction_id}", tags=["Data"])
 async def get_attraction(attraction_id: int):
     a = ATTRACTION_MAP.get(attraction_id)
@@ -98,6 +103,7 @@ async def get_attraction(attraction_id: int):
         "crowd_probs": a.crowd_probs,
     }
 
+
 @app.get("/api/graph", tags=["Data"])
 async def get_graph():
     result = {}
@@ -108,6 +114,7 @@ async def get_graph():
         ]
     return result
 
+
 @app.get("/api/distance/{id1}/{id2}", tags=["Data"])
 async def get_distance(id1: int, id2: int):
     if id1 not in ATTRACTION_MAP or id2 not in ATTRACTION_MAP:
@@ -117,6 +124,7 @@ async def get_distance(id1: int, id2: int):
         "to": id2,
         "straight_line_km": round(straight_line_distance(id1, id2), 3),
     }
+
 
 @app.get("/", tags=["Health"])
 async def root():

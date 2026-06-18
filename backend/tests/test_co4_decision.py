@@ -6,6 +6,7 @@ from backend.algorithms.co4_decision import (
     expected_utility,
 )
 
+
 def test_utility_function_weights():
     uf = UtilityFunction(w_rating=1, w_cost=1, w_time=1, w_pref=1, w_crowd=1)
     assert math.isclose(uf.w_rating, 0.2)
@@ -14,11 +15,13 @@ def test_utility_function_weights():
     assert math.isclose(uf.w_pref, 0.2)
     assert math.isclose(uf.w_crowd, 0.2)
 
+
 def test_utility_function_evaluate():
     uf = UtilityFunction()
     res = uf.evaluate([0], total_cost=25, total_time_min=60)
     assert "utility" in res
     assert res["utility"] >= 0
+
 
 def test_minimax_solver():
     uf = UtilityFunction()
@@ -26,6 +29,7 @@ def test_minimax_solver():
     result = solver.solve()
     assert result["minimax_value"] >= 0
     assert result["optimal_first_choice"] in ["Charminar", "Golconda Fort", "None"]
+
 
 def test_expected_utility():
     uf = UtilityFunction()

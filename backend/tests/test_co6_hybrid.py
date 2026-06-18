@@ -1,5 +1,5 @@
-
 from backend.algorithms.co6_hybrid import HybridTouristPlanner
+
 
 def test_hybrid_planner_success():
     planner = HybridTouristPlanner(

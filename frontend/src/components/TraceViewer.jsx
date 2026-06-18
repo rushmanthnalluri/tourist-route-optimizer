@@ -145,7 +145,7 @@ export default function TraceViewer({ trace = [], title = 'Algorithm Trace', rou
         >
           <SkipForward size={12} /> Step
         </button>
-        <select title="Select dropdown" aria-label="Select dropdown" id="sel-5b6341"
+        <select id="sel-5b6341"
           value={speed}
           onChange={e => setSpeed(+e.target.value)}
           className="inp text-xs py-1.5 w-24"

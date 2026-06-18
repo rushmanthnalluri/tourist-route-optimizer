@@ -14,17 +14,21 @@ from backend.data.attraction_models import AttractionModel
 from backend.models.state import TouristState, SearchNode
 from backend.data.memory_repository import MemoryAttractionRepository
 
+
 def test_attraction_repr():
     a = Attraction(999, "Test", 0.0, 0.0, 0, 0, "Test", 5.0, 0, 24, "Desc")
     assert repr(a) == "Attraction(999: Test)"
+
 
 def test_get_travel_time_zero_speed():
     with pytest.raises(ValueError, match="avg_speed_kmh must be strictly positive"):
         build_graph([], avg_speed_kmh=0.0)
 
+
 def test_get_attraction():
     a = get_attraction(0)
     assert a.id == 0
+
 
 def test_attraction_model_closing_time():
     with pytest.raises(ValueError, match="closing_time must be after opening_time"):
@@ -42,9 +46,11 @@ def test_attraction_model_closing_time():
             description="Desc",
         )
 
+
 def test_state_repr():
     s = TouristState(0, frozenset([0]), 0.0, 0.0, 10.0)
     assert repr(s) == "State(at=0, visited=[0], time=0min, cost=Rs0)"
+
 
 def test_search_node_lt():
     s1 = TouristState(0, frozenset([0]), 0.0, 0.0, 10.0)
@@ -54,6 +60,7 @@ def test_search_node_lt():
     assert n1 < n2
     assert not n2 < n1
 
+
 def test_memory_repo():
     repo = MemoryAttractionRepository()
     all_attr = repo.get_all_attractions()
@@ -62,6 +69,7 @@ def test_memory_repo():
     assert isinstance(nbrs, list)
     all_nbrs = repo.get_graph()
     assert isinstance(all_nbrs, dict)
+
 
 def test_co2_modes():
     p = TouristProblem(start_id=0, goal_ids=[1], budget_inr=5000, max_time_min=5000)
@@ -78,10 +86,12 @@ def test_co2_modes():
     prof = profile_all(p, mode="cost")
     assert "A*" in prof
 
+
 def test_haversine_boundary():
     from backend.data.hyderabad_attractions import haversine
 
     assert haversine(0.0, 0.0, 0.0, 0.0) == 0.0
+
 
 def test_csp_coverage():
     from backend.algorithms.co3_csp import TouristCSP, min_conflicts
@@ -91,6 +101,7 @@ def test_csp_coverage():
     csp.solve(use_mrv=True, use_lcv=False, use_forward_checking=True, use_ac3=False)
     csp.solve(use_mrv=False, use_lcv=True, use_forward_checking=False, use_ac3=True)
     min_conflicts([0, 1, 2], budget_inr=10, max_time_min=10, max_steps=5)
+
 
 def test_decision_prob_coverage():
     from backend.algorithms.co4_decision import (

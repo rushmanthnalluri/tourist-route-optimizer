@@ -20,6 +20,7 @@ repo = MemoryAttractionRepository()
 
 router = APIRouter(prefix="/api/search", tags=["CO2 Search"])
 
+
 class SearchAlgorithm(str, Enum):
     astar = "astar"
     bfs = "bfs"
@@ -28,6 +29,7 @@ class SearchAlgorithm(str, Enum):
     greedy = "greedy"
     idastar = "idastar"
     all = "all"
+
 
 class SearchRequest(BaseModel):
     start_id: int
@@ -55,6 +57,7 @@ class SearchRequest(BaseModel):
             raise ValueError(f"start_id {v} does not exist")
         return v
 
+
 def make_problem(req: SearchRequest) -> TouristProblem:
     return TouristProblem(
         start_id=req.start_id,
@@ -64,6 +67,7 @@ def make_problem(req: SearchRequest) -> TouristProblem:
         max_time_min=req.max_time_min,
         start_hour=req.start_hour,
     )
+
 
 @router.post("/run")
 async def run_search(req: SearchRequest):
@@ -100,15 +104,19 @@ async def run_search(req: SearchRequest):
         "failure_reason": result.failure_reason,
     }
 
+
 @router.post("/compare")
 async def compare_algorithms(req: SearchRequest):
     problem = make_problem(req)
     profile = profile_all(problem, req.cost_mode)
     return {"comparison": profile, "cost_mode": req.cost_mode}
 
+
 @router.get("/live-traffic")
 async def fetch_live_traffic():
     success = await routing_service.fetch_live_traffic()
     if not success:
-        raise HTTPException(status_code=500, detail="Failed to fetch live traffic from OSRM")
+        raise HTTPException(
+            status_code=500, detail="Failed to fetch live traffic from OSRM"
+        )
     return {"message": "Live traffic updated successfully"}

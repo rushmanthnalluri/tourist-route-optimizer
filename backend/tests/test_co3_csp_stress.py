@@ -1,10 +1,11 @@
-
 from backend.algorithms.co3_csp import TouristCSP, min_conflicts
+
 
 def test_csp_empty_domain():
     csp = TouristCSP(attraction_ids=[], budget_inr=1000, max_time_min=600)
     res = csp.solve()
     assert res["success"] is True
+
 
 def test_csp_impossible_budget():
     csp = TouristCSP(attraction_ids=[0, 5], budget_inr=100, max_time_min=600)
@@ -12,11 +13,13 @@ def test_csp_impossible_budget():
     assert res["success"] is False
     assert "Budget exceeded" in res["failure_reason"]
 
+
 def test_csp_impossible_time():
     csp = TouristCSP(attraction_ids=[0, 5], budget_inr=5000, max_time_min=100)
     res = csp.solve()
     assert res["success"] is False
     assert "Time exceeded" in res["failure_reason"]
+
 
 def test_csp_must_morning_conflict():
     csp = TouristCSP(
@@ -25,14 +28,17 @@ def test_csp_must_morning_conflict():
     res = csp.solve()
     assert res["success"] is False
 
+
 def test_min_conflicts_failure():
     res = min_conflicts([0, 5], budget_inr=10, max_time_min=600, max_steps=10)
     assert res["success"] is False
+
 
 def test_csp_all_variables():
     csp = TouristCSP(attraction_ids=[0, 1, 2], budget_inr=1000, max_time_min=600)
     res = csp.solve()
     assert res["success"] is True
+
 
 def test_is_consistent_edge_cases():
     csp = TouristCSP(attraction_ids=[0, 1, 2], budget_inr=1000, max_time_min=600)

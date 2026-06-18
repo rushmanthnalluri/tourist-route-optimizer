@@ -8,6 +8,7 @@ repo = MemoryAttractionRepository()
 
 router = APIRouter(prefix="/api/hybrid", tags=["CO6 Hybrid"])
 
+
 class HybridRequest(BaseModel):
     start_id: int
     goal_ids: List[int] = Field(..., min_length=1, max_length=30)
@@ -36,6 +37,7 @@ class HybridRequest(BaseModel):
         if repo.get_attraction(v) is None:
             raise ValueError(f"start_id {v} does not exist")
         return v
+
 
 @router.post("/plan")
 async def hybrid_plan(req: HybridRequest):

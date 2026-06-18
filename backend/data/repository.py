@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Optional, Tuple
 from backend.data.attraction_models import AttractionModel
 
+
 class AbstractAttractionRepository(ABC):
     @abstractmethod
     def get_all_attractions(self) -> List[AttractionModel]:

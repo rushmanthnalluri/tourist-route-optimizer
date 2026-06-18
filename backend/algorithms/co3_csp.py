@@ -18,6 +18,7 @@ SLOT_HOURS: Dict[str, Tuple[int, int]] = {
 
 SLOT_START: Dict[str, float] = {"morning": 9.0, "afternoon": 12.0, "evening": 17.0}
 
+
 class TouristCSP:
     def __init__(
         self,
@@ -497,6 +498,7 @@ class TouristCSP:
             "runtime_ms": round(runtime_ms, 3),
         }
 
+
 def min_conflicts(
     attraction_ids: List[int],
     budget_inr: float = 2000.0,
@@ -672,6 +674,7 @@ def min_conflicts(
             f"Failed with {final_conflicts} conflicts" if not success else None
         ),
     }
+
 
 if __name__ == "__main__":
     print("=" * 65)

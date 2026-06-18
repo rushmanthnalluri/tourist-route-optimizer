@@ -10,6 +10,7 @@ from backend.data.hyderabad_attractions import (
 )
 from backend.models.state import TouristState, TouristProblem
 
+
 @dataclass
 class PEAS:
     performance_measures: List[str]
@@ -35,6 +36,7 @@ class PEAS:
                 lines.append(f"    • {item}")
         lines.append("=" * 65)
         return "\n".join(lines)
+
 
 TOURIST_AGENT_PEAS = PEAS(
     performance_measures=[
@@ -69,30 +71,37 @@ TOURIST_AGENT_PEAS = PEAS(
     ],
 )
 
+
 class ObservabilityType(Enum):
     FULLY_OBSERVABLE = auto()
     PARTIALLY_OBSERVABLE = auto()
+
 
 class DeterminismType(Enum):
     DETERMINISTIC = auto()
     STOCHASTIC = auto()
 
+
 class EpisodicType(Enum):
     EPISODIC = auto()
     SEQUENTIAL = auto()
+
 
 class DynamismType(Enum):
     STATIC = auto()
     DYNAMIC = auto()
     SEMIDYNAMIC = auto()
 
+
 class DiscreteType(Enum):
     DISCRETE = auto()
     CONTINUOUS = auto()
 
+
 class AgentType(Enum):
     SINGLE = auto()
     MULTI = auto()
+
 
 @dataclass
 class EnvironmentClassification:
@@ -130,6 +139,7 @@ class EnvironmentClassification:
             lines.append(f"  {name:<16}: {val:<25} — {just}")
         return "\n".join(lines)
 
+
 TOURIST_ENV = EnvironmentClassification(
     observability=ObservabilityType.PARTIALLY_OBSERVABLE,
     determinism=DeterminismType.STOCHASTIC,
@@ -146,6 +156,7 @@ TOURIST_ENV = EnvironmentClassification(
         "agents": "Single tourist agent; no adversaries (CO4 adds adversarial weather)",
     },
 )
+
 
 class KnowledgeBase:
     def __init__(self):
@@ -229,6 +240,7 @@ class KnowledgeBase:
             lines.append(f"  [{name}]: {expr}")
         return "\n".join(lines)
 
+
 class TouristAgent:
     def __init__(self, problem: TouristProblem):
         self.problem = problem
@@ -274,6 +286,7 @@ class TouristAgent:
             "justifications": env.justifications,
         }
 
+
 if __name__ == "__main__":
     print(TOURIST_AGENT_PEAS.describe())
     print(TOURIST_ENV.describe())
@@ -288,7 +301,11 @@ if __name__ == "__main__":
     agent = TouristAgent(problem)
 
     state = TouristState(
-        current_id=0, visited=frozenset([0]), time_elapsed_min=0, cost_spent=0, day_hour=9.0
+        current_id=0,
+        visited=frozenset([0]),
+        time_elapsed_min=0,
+        cost_spent=0,
+        day_hour=9.0,
     )
     perception = agent.perceive(state)
     print("\n  AGENT PERCEPTION AT START")
@@ -297,7 +314,11 @@ if __name__ == "__main__":
         print(f"  {k:<25}: {v}")
 
     state2 = TouristState(
-        current_id=0, visited=frozenset([0]), time_elapsed_min=250, cost_spent=430, day_hour=13.5
+        current_id=0,
+        visited=frozenset([0]),
+        time_elapsed_min=250,
+        cost_spent=430,
+        day_hour=13.5,
     )
     advice = agent.kb.get_rule_advice(state2, problem)
     print("\n  RULE FIRING (stressed state)")

@@ -5,6 +5,7 @@ from backend.data.hyderabad_attractions import ATTRACTIONS, GRAPH
 
 logger = logging.getLogger(__name__)
 
+
 class RoutingService:
     async def fetch_live_traffic(self) -> bool:
         """
@@ -18,7 +19,7 @@ class RoutingService:
         coords_list = []
         for a in ATTRACTIONS:
             coords_list.append(f"{a.lng},{a.lat}")
-        
+
         coords_str = ";".join(coords_list)
         url = f"http://router.project-osrm.org/table/v1/driving/{coords_str}?annotations=duration,distance"
 
@@ -32,23 +33,23 @@ class RoutingService:
                     logger.error(f"OSRM returned non-Ok code: {data.get('code')}")
                     return False
 
-                distances = data["distances"] # in meters
-                durations = data["durations"] # in seconds
-                
+                distances = data["distances"]  # in meters
+                durations = data["durations"]  # in seconds
+
                 # Real-time live traffic simulation based on IST
                 ist = ZoneInfo("Asia/Kolkata")
                 now = datetime.datetime.now(ist)
                 hour = now.hour
-                
+
                 traffic_mult = 1.0
                 if 8 <= hour <= 11:
-                    traffic_mult = 1.5 # Morning rush hour
+                    traffic_mult = 1.5  # Morning rush hour
                 elif 17 <= hour <= 20:
-                    traffic_mult = 1.8 # Evening rush hour
+                    traffic_mult = 1.8  # Evening rush hour
                 elif 13 <= hour <= 15:
-                    traffic_mult = 1.2 # Afternoon mild rush
+                    traffic_mult = 1.2  # Afternoon mild rush
                 elif hour >= 22 or hour <= 6:
-                    traffic_mult = 0.8 # Night clear roads
+                    traffic_mult = 0.8  # Night clear roads
 
                 new_graph: Dict[int, List[Tuple[int, float, float, float]]] = {
                     a.id: [] for a in ATTRACTIONS
@@ -60,11 +61,11 @@ class RoutingService:
                     for j, dst in enumerate(ATTRACTIONS):
                         if i == j:
                             continue
-                        
+
                         dist_m = distances[i][j]
                         dur_s = durations[i][j]
 
-                        # If OSRM can't find a route, it might return None or 0. 
+                        # If OSRM can't find a route, it might return None or 0.
                         # Fallback to straight line if something goes wrong.
                         if dist_m is None or dur_s is None:
                             continue
@@ -78,11 +79,14 @@ class RoutingService:
                 # Update the global GRAPH in place so existing imports in co2_search.py see the new values
                 GRAPH.clear()
                 GRAPH.update(new_graph)
-                logger.info(f"Successfully updated global GRAPH with live OSRM traffic data. Traffic multiplier: {traffic_mult}x at {hour}:00 IST")
+                logger.info(
+                    f"Successfully updated global GRAPH with live OSRM traffic data. Traffic multiplier: {traffic_mult}x at {hour}:00 IST"
+                )
                 return True
 
         except Exception as e:
             logger.error(f"Failed to fetch live traffic from OSRM: {e}")
             return False
+
 
 routing_service = RoutingService()

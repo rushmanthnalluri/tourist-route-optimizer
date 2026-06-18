@@ -2,6 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 
+
 @dataclass
 class TouristState:
     current_id: int
@@ -33,6 +34,7 @@ class TouristState:
         else:
             return "evening"
 
+
 @dataclass
 class Action:
     from_id: int
@@ -43,6 +45,7 @@ class Action:
 
     def __repr__(self) -> str:
         return f"Action({self.from_id} -> {self.to_id}, {self.travel_km:.1f}km, {self.travel_time_min:.0f}min, Rs{self.travel_cost:.0f})"
+
 
 @dataclass
 class SearchNode:
@@ -78,6 +81,7 @@ class SearchNode:
             node = node.parent
         return list(reversed(actions))
 
+
 @dataclass
 class TouristProblem:
     start_id: int
@@ -91,6 +95,7 @@ class TouristProblem:
 
     def initial_state(self) -> TouristState:
         from backend.data.hyderabad_attractions import ATTRACTION_MAP
+
         attr = ATTRACTION_MAP.get(self.start_id)
         entry_cost = attr.entry_cost if attr else 0.0
         duration = attr.duration_min if attr else 0.0
@@ -117,6 +122,7 @@ class TouristProblem:
             f"TouristProblem(start={self.start_id}, goals={self.goal_ids}, "
             f"budget=Rs{self.budget_inr}, time={self.max_time_min}min)"
         )
+
 
 @dataclass
 class SearchResult:
@@ -152,6 +158,7 @@ class SearchResult:
             f"Runtime    : {self.runtime_ms:.2f} ms\n"
             f"{'='*60}"
         )
+
 
 if __name__ == "__main__":
     print("CO1 — State / Problem Formulation Demo")

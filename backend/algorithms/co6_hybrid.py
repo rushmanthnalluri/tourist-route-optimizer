@@ -1,5 +1,9 @@
 from __future__ import annotations
-from backend.algorithms.co5_probabilistic import BayesianNetwork, TouristHMM, bayes_update_crowd
+from backend.algorithms.co5_probabilistic import (
+    BayesianNetwork,
+    TouristHMM,
+    bayes_update_crowd,
+)
 from backend.algorithms.co4_decision import (
     UtilityFunction,
     MinimaxSolver,
@@ -21,6 +25,7 @@ import time
 from typing import List, Dict, Any, Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 class HybridTouristPlanner:
     def __init__(
@@ -151,6 +156,7 @@ class HybridTouristPlanner:
                 "runtime_ms": round(res.runtime_ms, 2),
                 "optimality_gap_pct": None,
             }
+
         def get_metric_value(res: SearchResult, mode: str) -> float:
             if mode == "distance":
                 return res.total_distance_km
@@ -504,6 +510,7 @@ class HybridTouristPlanner:
                 ],
             },
         }
+
 
 if __name__ == "__main__":
     print("=" * 65)

@@ -25,7 +25,9 @@ except Exception as e:
 
 # Test CSP with 25 variables
 try:
-    csp = TouristCSP(attraction_ids=list(range(25)), budget_inr=10000, max_time_min=6000)
+    csp = TouristCSP(
+        attraction_ids=list(range(25)), budget_inr=10000, max_time_min=6000
+    )
     csp.solve()
     print("CSP solved successfully")
 except RecursionError:
@@ -37,7 +39,7 @@ except Exception as e:
 try:
     problem = TouristProblem(
         start_id=0,
-        goal_ids=[15, 20, 24], # some goals
+        goal_ids=[15, 20, 24],  # some goals
         must_visit=[15, 20, 24],
         budget_inr=6000,
         max_time_min=4000,

@@ -1,5 +1,11 @@
 from __future__ import annotations
-from backend.models.state import TouristState, Action, SearchNode, TouristProblem, SearchResult
+from backend.models.state import (
+    TouristState,
+    Action,
+    SearchNode,
+    TouristProblem,
+    SearchResult,
+)
 from backend.data.hyderabad_attractions import (
     ATTRACTION_MAP,
     get_neighbors,
@@ -16,6 +22,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 COST_MODES = ("distance", "cost", "time")
 
+
 def edge_cost(nbr: Tuple[int, float, float, float], mode: str) -> float:
     _, road_km, time_min, cost_inr = nbr
     if mode == "distance":
@@ -24,6 +31,7 @@ def edge_cost(nbr: Tuple[int, float, float, float], mode: str) -> float:
         return cost_inr
     else:
         return time_min
+
 
 def visit_cost(attr_id: int, mode: str) -> float:
     attr = ATTRACTION_MAP.get(attr_id)
@@ -34,6 +42,7 @@ def visit_cost(attr_id: int, mode: str) -> float:
     elif mode == "time":
         return attr.duration_min
     return 0.0
+
 
 def heuristic(state: TouristState, problem: TouristProblem, mode: str) -> float:
     unvisited_goals = [g for g in problem.goal_ids if g not in state.visited]
@@ -48,6 +57,7 @@ def heuristic(state: TouristState, problem: TouristProblem, mode: str) -> float:
         return max(0.0, max_dist * 12.0 - 0.5)
     else:
         return (max_dist / 20.0) * 60.0
+
 
 def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchNode]:
     successors: List[SearchNode] = []
@@ -110,6 +120,7 @@ def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchN
 
     return successors
 
+
 def make_trace_entry(
     step: int,
     algorithm: str,
@@ -135,6 +146,7 @@ def make_trace_entry(
     if extra:
         entry.update(extra)
     return entry
+
 
 def build_result(
     algorithm: str,
@@ -185,6 +197,7 @@ def build_result(
         trace=trace,
         success=True,
     )
+
 
 def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
     start_ns = time.perf_counter_ns()
@@ -270,6 +283,7 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         trace,
         mode,
     )
+
 
 def dfs(
     problem: TouristProblem, mode: str = "distance", depth_limit: int = 15
@@ -361,6 +375,7 @@ def dfs(
         mode,
     )
 
+
 def ucs(problem: TouristProblem, mode: str = "cost") -> SearchResult:
     start_ns = time.perf_counter_ns()
     trace: List[Dict] = []
@@ -445,6 +460,7 @@ def ucs(problem: TouristProblem, mode: str = "cost") -> SearchResult:
         mode,
     )
 
+
 def greedy(problem: TouristProblem, mode: str = "distance") -> SearchResult:
     start_ns = time.perf_counter_ns()
     trace: List[Dict] = []
@@ -517,6 +533,7 @@ def greedy(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         trace,
         mode,
     )
+
 
 def astar(problem: TouristProblem, mode: str = "distance") -> SearchResult:
     start_ns = time.perf_counter_ns()
@@ -606,6 +623,7 @@ def astar(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         mode,
     )
 
+
 def _ida_search(
     node: SearchNode,
     bound: float,
@@ -644,6 +662,7 @@ def _ida_search(
         minimum = min(minimum, t)
 
     return None, minimum
+
 
 def idastar(
     problem: TouristProblem, mode: str = "distance", max_iterations: int = 2000
@@ -703,6 +722,7 @@ def idastar(
         "IDA*", None, counts["expanded"], counts["generated"], 0, start_ns, trace, mode
     )
 
+
 def profile_all(problem: TouristProblem, mode: str = "distance") -> Dict[str, Any]:
     algorithms = [
         ("BFS", lambda: bfs(problem, mode)),
@@ -740,6 +760,7 @@ def profile_all(problem: TouristProblem, mode: str = "distance") -> Dict[str, An
             results[name]["optimality_gap_pct"] = None
 
     return results
+
 
 if __name__ == "__main__":
     print("=" * 65)

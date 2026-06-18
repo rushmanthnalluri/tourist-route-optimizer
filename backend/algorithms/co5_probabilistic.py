@@ -7,10 +7,12 @@ from typing import Dict, List, Tuple, Any, Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+
 def bayes_rule(prior: float, likelihood: float, evidence_prob: float) -> float:
     if evidence_prob == 0:
         return 0.0
     return (likelihood * prior) / evidence_prob
+
 
 def bayes_update_crowd(
     time_slot: str, day_type: str, weather: str, attraction_id: int
@@ -52,6 +54,7 @@ def bayes_update_crowd(
         "P(crowd=high | long_wait)": round(p_crowd_high_given_wait, 4),
         "recommendation": "AVOID" if p_crowd_high > 0.7 else "VISIT_OK",
     }
+
 
 class BayesianNetwork:
     def __init__(self):
@@ -274,6 +277,7 @@ class BayesianNetwork:
 
         return crowd_total
 
+
 def rejection_sampling(
     bn: BayesianNetwork,
     query: str,
@@ -337,6 +341,7 @@ def rejection_sampling(
         "acceptance_rate": round(accepted / n_samples, 4),
         "n_samples": n_samples,
     }
+
 
 def likelihood_weighting(
     bn: BayesianNetwork,
@@ -429,6 +434,7 @@ def likelihood_weighting(
         "n_samples": n_samples,
         "method": "likelihood_weighting",
     }
+
 
 class TouristHMM:
     STATES = ["resting", "traveling", "visiting"]
@@ -550,6 +556,7 @@ class TouristHMM:
                 viterbi_path[-1] if viterbi_path else "unknown"
             ),
         }
+
 
 if __name__ == "__main__":
     print("=" * 65)

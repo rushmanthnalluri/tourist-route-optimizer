@@ -10,6 +10,7 @@ from typing import List, Dict, Optional, Any
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+
 class UtilityFunction:
     def __init__(
         self,
@@ -49,9 +50,7 @@ class UtilityFunction:
 
         if total_cost > 0:
             total_rating_pts = sum(a.rating for a in attrs)
-            cost_efficiency = min(
-                1.0, total_rating_pts / (total_cost / 100)
-            )
+            cost_efficiency = min(1.0, total_rating_pts / (total_cost / 100))
         else:
             cost_efficiency = 1.0
 
@@ -94,6 +93,7 @@ class UtilityFunction:
             },
         }
 
+
 class GameNode:
     def __init__(
         self,
@@ -125,6 +125,7 @@ class GameNode:
             f"collected={self.collected}, disrupted={self.nature_disrupted})"
         )
 
+
 def eval_fn(
     node: GameNode,
     utility_fn: UtilityFunction,
@@ -147,6 +148,7 @@ def eval_fn(
     result = utility_fn.evaluate(node.collected, total_cost, total_time, "afternoon")
     base = result["utility"]
     return max(0.0, base - disruption_penalty)
+
 
 class MinimaxSolver:
     def __init__(
@@ -368,6 +370,7 @@ class MinimaxSolver:
             "trace": self.trace[:80],
         }
 
+
 def expected_utility(
     attraction_ids: List[int],
     utility_fn: UtilityFunction,
@@ -414,6 +417,7 @@ def expected_utility(
 
     results.sort(key=lambda x: x["expected_utility"], reverse=True)
     return {"results": results, "trace": trace, "weather_prob_rain": weather_prob_rain}
+
 
 def policy_selection(
     candidate_routes: List[Dict[str, Any]],
@@ -472,68 +476,93 @@ def policy_selection(
 
     return {"policy": "no_routes", "utility": 0.0, "trace": trace}
 
+
 def multi_agent_negotiate(candidate_routes: List[Dict[str, Any]]) -> Dict[str, Any]:
     # Define the 3 conflicting agents
     agents = {
-        "Alice (Backpacker)": UtilityFunction(w_rating=0.1, w_cost=0.5, w_time=0.1, w_pref=0.1, w_crowd=0.2, preferred_categories=["nature", "religious"]),
-        "Bob (Luxury Historian)": UtilityFunction(w_rating=0.4, w_cost=0.05, w_time=0.15, w_pref=0.4, w_crowd=0.0, preferred_categories=["historical", "museum"]),
-        "Charlie (Impatient)": UtilityFunction(w_rating=0.2, w_cost=0.1, w_time=0.6, w_pref=0.1, w_crowd=0.0, preferred_categories=["entertainment", "modern"])
+        "Alice (Backpacker)": UtilityFunction(
+            w_rating=0.1,
+            w_cost=0.5,
+            w_time=0.1,
+            w_pref=0.1,
+            w_crowd=0.2,
+            preferred_categories=["nature", "religious"],
+        ),
+        "Bob (Luxury Historian)": UtilityFunction(
+            w_rating=0.4,
+            w_cost=0.05,
+            w_time=0.15,
+            w_pref=0.4,
+            w_crowd=0.0,
+            preferred_categories=["historical", "museum"],
+        ),
+        "Charlie (Impatient)": UtilityFunction(
+            w_rating=0.2,
+            w_cost=0.1,
+            w_time=0.6,
+            w_pref=0.1,
+            w_crowd=0.0,
+            preferred_categories=["entertainment", "modern"],
+        ),
     }
-    
+
     evaluated_routes = []
-    
+
     for idx, route in enumerate(candidate_routes):
         path = route.get("path", [])
         total_cost = route.get("cost", route.get("total_cost", 0))
         total_time = route.get("time", route.get("total_time_min", 0))
         alg_name = route.get("algorithm", f"Route {idx+1}")
-        
+
         # Inject deterministic variance for the Expo Demo so algorithms show distinct tradeoffs
         # even if they found the same baseline path on the small demo graph.
         alg_upper = alg_name.upper()
         if "DFS" in alg_upper:
             total_time *= 1.35
-            total_cost *= 0.85 # Scenic/deep route: takes longer but cheaper
+            total_cost *= 0.85  # Scenic/deep route: takes longer but cheaper
         elif "BFS" in alg_upper:
             total_cost *= 1.25
-            total_time *= 1.10 # Shallow edges: more expensive transfers
+            total_time *= 1.10  # Shallow edges: more expensive transfers
         elif "GREEDY" in alg_upper:
             total_time *= 0.80
-            total_cost *= 1.30 # Fast but expensive
+            total_cost *= 1.30  # Fast but expensive
         elif "UCS" in alg_upper:
             total_time *= 1.15
-            total_cost *= 0.90 # Focuses strictly on cheapest edges
+            total_cost *= 0.90  # Focuses strictly on cheapest edges
         elif "IDA*" in alg_upper:
             total_time *= 0.95
-            total_cost *= 1.05 # Close to optimal
-            
+            total_cost *= 1.05  # Close to optimal
+
         scores = {}
         nash_product = 1.0
-        
+
         for name, uf in agents.items():
             u_res = uf.evaluate(path, total_cost, total_time)
             # Ensure strictly positive utility for Nash product (avoid 0 wipeout)
-            u_val = max(0.01, u_res["utility"]) 
+            u_val = max(0.01, u_res["utility"])
             scores[name] = round(u_val, 4)
             nash_product *= u_val
-            
-        evaluated_routes.append({
-            "route_id": idx,
-            "algorithm": alg_name,
-            "path": path,
-            "total_cost": total_cost,
-            "total_time": total_time,
-            "scores": scores,
-            "nash_product": round(nash_product, 6)
-        })
-        
+
+        evaluated_routes.append(
+            {
+                "route_id": idx,
+                "algorithm": alg_name,
+                "path": path,
+                "total_cost": total_cost,
+                "total_time": total_time,
+                "scores": scores,
+                "nash_product": round(nash_product, 6),
+            }
+        )
+
     evaluated_routes.sort(key=lambda x: x["nash_product"], reverse=True)
-    
+
     return {
         "agents": list(agents.keys()),
         "negotiated_routes": evaluated_routes,
-        "winning_route": evaluated_routes[0] if evaluated_routes else None
+        "winning_route": evaluated_routes[0] if evaluated_routes else None,
     }
+
 
 if __name__ == "__main__":
     print("=" * 65)

@@ -7,6 +7,7 @@ from backend.models.state import (
 )
 from backend.data.repository import AbstractAttractionRepository
 
+
 def test_repository_abc():
     class DummyRepo(AbstractAttractionRepository):
         def get_all_attractions(self):
@@ -26,6 +27,7 @@ def test_repository_abc():
     d.get_attraction(1)
     d.get_neighbors(1)
     d.get_graph()
+
 
 def test_state_missing():
     s = TouristState(

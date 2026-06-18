@@ -3,9 +3,11 @@ from backend.main import app
 
 client = TestClient(app)
 
+
 def test_rate_limit_and_root():
     res = client.get("/")
     assert res.status_code == 200
+
 
 def test_search_router_missing():
     res = client.post(
@@ -48,6 +50,7 @@ def test_search_router_missing():
     )
     assert res.status_code == 200
 
+
 def test_csp_router_missing():
     res = client.post("/api/csp/schedule", json={"attraction_ids": [999]})
     assert res.status_code == 422
@@ -56,6 +59,7 @@ def test_csp_router_missing():
 
     res = client.get("/api/csp/domains/1")
     assert res.status_code == 200
+
 
 def test_decision_router_missing():
     res = client.post("/api/decision/utility", json={"path": [999, 1]})
@@ -69,6 +73,7 @@ def test_decision_router_missing():
     res = client.post("/api/decision/expected-utility", json={"attraction_ids": [1, 2]})
     assert res.status_code == 200
 
+
 def test_hybrid_router_missing():
     res = client.post("/api/hybrid/plan", json={"start_id": 1, "goal_ids": [2, 2]})
     assert res.status_code == 422
@@ -76,6 +81,7 @@ def test_hybrid_router_missing():
     assert res.status_code == 422
     res = client.post("/api/hybrid/plan", json={"start_id": 1, "goal_ids": [999]})
     assert res.status_code == 422
+
 
 def test_probabilistic_router_missing():
     res = client.post("/api/probabilistic/bayes-update", json={"measurements": [999]})

@@ -1,7 +1,7 @@
 import os
 import time
 import httpx
-import asyncio
+
 import logging
 from typing import Dict, Any, Tuple
 from dotenv import load_dotenv
@@ -16,6 +16,7 @@ CACHE_DURATION = 900  # 15 minutes in seconds
 
 logger = logging.getLogger(__name__)
 
+
 class WeatherService:
     def __init__(self):
         self._cache: Dict[str, Any] = {}
@@ -28,7 +29,10 @@ class WeatherService:
         prob_rain: 0.0 to 1.0
         """
         # Check cache
-        if time.time() - self._cache_time < CACHE_DURATION and "condition" in self._cache:
+        if (
+            time.time() - self._cache_time < CACHE_DURATION
+            and "condition" in self._cache
+        ):
             return self._cache["condition"], self._cache["prob_rain"]
 
         try:
@@ -41,7 +45,7 @@ class WeatherService:
                 current = data.get("current", {})
                 weather_code = current.get("weather_code", 0)
                 precipitation = current.get("precipitation", 0.0)
-                
+
                 # WMO Weather interpretation codes
                 # 0: Clear sky
                 # 1, 2, 3: Mainly clear, partly cloudy, and overcast
@@ -49,7 +53,7 @@ class WeatherService:
                 # 61, 63, 65: Rain
                 # 80, 81, 82: Rain showers
                 # 95, 96, 99: Thunderstorm
-                
+
                 if weather_code == 0:
                     condition = "sunny"
                     prob_rain = 0.05
@@ -74,5 +78,6 @@ class WeatherService:
             logger.error(f"Failed to fetch live weather from Open-Meteo: {e}")
             # Fallback on failure
             return "sunny", 0.1
+
 
 weather_service = WeatherService()

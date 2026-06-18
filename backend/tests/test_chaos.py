@@ -3,6 +3,7 @@ from backend.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
 
+
 def test_chaos_empty_payload():
     for path in [
         "/api/search/run",
@@ -13,11 +14,13 @@ def test_chaos_empty_payload():
         response = client.post(path, json={})
         assert response.status_code == 422
 
+
 def test_chaos_malformed_json():
     headers = {"Content-Type": "application/json"}
     for path in ["/api/search/run", "/api/csp/schedule", "/api/hybrid/plan"]:
         response = client.post(path, content=b"this is not valid json", headers=headers)
         assert response.status_code == 400 or response.status_code == 422
+
 
 def test_chaos_extreme_goals_list():
     response = client.post(
@@ -31,6 +34,7 @@ def test_chaos_extreme_goals_list():
     )
     assert response.status_code == 422
 
+
 def test_chaos_negative_numeric_inputs():
     response = client.post(
         "/api/search/run",
@@ -42,6 +46,7 @@ def test_chaos_negative_numeric_inputs():
         },
     )
     assert response.status_code == 422
+
 
 def test_chaos_huge_budget_time():
     response = client.post(
@@ -55,6 +60,7 @@ def test_chaos_huge_budget_time():
     )
     assert response.status_code in [200, 422]
 
+
 def test_chaos_invalid_id_boundaries():
     response = client.post(
         "/api/search/run",
@@ -66,6 +72,7 @@ def test_chaos_invalid_id_boundaries():
         },
     )
     assert response.status_code == 422
+
 
 def test_chaos_duplicate_goals():
     response = client.post(
@@ -79,6 +86,7 @@ def test_chaos_duplicate_goals():
     )
     assert response.status_code == 422
 
+
 def test_chaos_decision_extreme_values():
     response = client.post(
         "/api/decision/utility",
@@ -91,6 +99,7 @@ def test_chaos_decision_extreme_values():
         },
     )
     assert response.status_code == 422
+
 
 def test_chaos_non_existent_route():
     response = client.get("/api/not-a-real-endpoint")
