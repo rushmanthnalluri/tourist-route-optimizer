@@ -102,7 +102,7 @@ export default function DestinationSearch() {
         </p>
         <div className="relative">
           <Search size={13} className="absolute left-2.5 top-2.5 text-gray-400 pointer-events-none" />
-          <input
+          <input title="Input field" aria-label="Input field" id="inp-9baeb2"
             ref={inputRef}
             type="search"
             className="inp pl-8 text-xs w-full"
@@ -122,7 +122,7 @@ export default function DestinationSearch() {
             </button>
           )}
         </div>
-        <select
+        <select title="Select dropdown" aria-label="Select dropdown" id="sel-4a1702"
           className="inp text-[11px] mt-1.5 w-full py-1.5"
           value={catFilter}
           onChange={e => setCatFilter(e.target.value)}
@@ -231,20 +231,20 @@ export default function DestinationSearch() {
 
         {showAdd && (
           <form onSubmit={submitCustom} className="space-y-2 bg-gray-50 rounded-lg p-2 border border-gray-100">
-            <input
+            <input title="Input field" aria-label="Input field" id="inp-9a45bd"
               className="inp text-xs w-full"
               placeholder="Place name"
               value={customName}
               onChange={e => setCustomName(e.target.value)}
             />
             <div className="grid grid-cols-2 gap-1.5">
-              <input
+              <input title="Input field" aria-label="Input field" id="inp-d2c6a0"
                 className="inp text-xs"
                 placeholder="Latitude"
                 value={customLat}
                 onChange={e => setCustomLat(e.target.value)}
               />
-              <input
+              <input title="Input field" aria-label="Input field" id="inp-6f3e84"
                 className="inp text-xs"
                 placeholder="Longitude"
                 value={customLng}

@@ -59,43 +59,43 @@ export default function HybridPanel({ attractions, startId, goalIds, onResult, s
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="text-xs text-slate-400">Budget (₹)</label>
-            <input type="number" value={budget} onChange={e => setBudget(+e.target.value)}
+            <input title="Input field" aria-label="Input field" id="inp-307576" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
             <label className="text-xs text-slate-400">Max Time (min)</label>
-            <input type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
+            <input title="Input field" aria-label="Input field" id="inp-5712fa" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
             <label className="text-xs text-slate-400">Start Hour</label>
-            <input type="number" min={6} max={18} value={startHour} onChange={e => setStartHour(+e.target.value)}
+            <input title="Input field" aria-label="Input field" id="inp-6f27d1" type="number" min={6} max={18} value={startHour} onChange={e => setStartHour(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
             <label className="text-xs text-slate-400">Cost Mode</label>
-            <select value={costMode} onChange={e => setCostMode(e.target.value)}
+            <select title="Select dropdown" aria-label="Select dropdown" id="sel-a269c2" value={costMode} onChange={e => setCostMode(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
               <option>distance</option><option>cost</option><option>time</option>
             </select>
           </div>
           <div>
             <label className="text-xs text-slate-400">Weather</label>
-            <select value={weather} onChange={e => setWeather(e.target.value)}
+            <select title="Select dropdown" aria-label="Select dropdown" id="sel-74e9a4" value={weather} onChange={e => setWeather(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
               <option>sunny</option><option>cloudy</option><option>rain</option>
             </select>
           </div>
           <div>
             <label className="text-xs text-slate-400">Day Type</label>
-            <select value={dayType} onChange={e => setDayType(e.target.value)}
+            <select title="Select dropdown" aria-label="Select dropdown" id="sel-7d4e67" value={dayType} onChange={e => setDayType(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
               <option>weekday</option><option>weekend</option><option>holiday</option>
             </select>
           </div>
         </div>
         <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-          <input type="checkbox" checked={avoidCrowds} onChange={e => setAvoidCrowds(e.target.checked)} className="accent-orange-500" />
+          <input title="Input field" aria-label="Input field" id="inp-f2cdee" type="checkbox" checked={avoidCrowds} onChange={e => setAvoidCrowds(e.target.checked)} className="accent-orange-500" />
           Avoid Crowds (CO1 Rule)
         </label>
         <button onClick={runHybrid}

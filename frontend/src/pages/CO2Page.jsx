@@ -122,12 +122,12 @@ export default function CO2Page() {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">Budget (₹)</label>
-          <input type="number" value={budget} onChange={e => setBudget(+e.target.value)}
+          <input title="Input field" aria-label="Input field" id="inp-cc3826" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
             className="inp text-sm" />
         </div>
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">Max Time (min)</label>
-          <input type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
+          <input title="Input field" aria-label="Input field" id="inp-393d39" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
             className="inp text-sm" />
         </div>
       </div>

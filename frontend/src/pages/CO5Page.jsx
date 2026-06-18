@@ -91,7 +91,7 @@ export default function CO5Page() {
           ].map(([label, val, setter, opts]) => (
             <div key={label}>
               <label className="text-xs font-medium text-gray-500 mb-1 block">{label}</label>
-              <select value={val} onChange={e => setter(e.target.value)}
+              <select title="Select dropdown" aria-label="Select dropdown" id="sel-665735" value={val} onChange={e => setter(e.target.value)}
                 className="inp text-sm">
                 {opts.map(o => <option key={o}>{o}</option>)}
               </select>
@@ -110,7 +110,7 @@ export default function CO5Page() {
         </p>
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">Attraction</label>
-          <select value={attractionId} onChange={e => setAttrId(+e.target.value)}
+          <select title="Select dropdown" aria-label="Select dropdown" id="sel-40fd7c" value={attractionId} onChange={e => setAttrId(+e.target.value)}
             className="inp text-sm">
             {attractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
           </select>

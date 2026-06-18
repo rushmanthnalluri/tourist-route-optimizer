@@ -70,20 +70,20 @@ export default function CO6Page() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">Budget (₹)</label>
-            <input type="number" value={budget} onChange={e => setBudget(+e.target.value)} className="inp text-sm" />
+            <input title="Input field" aria-label="Input field" id="inp-0822cf" type="number" value={budget} onChange={e => setBudget(+e.target.value)} className="inp text-sm" />
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">Max Time (min)</label>
-            <input type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)} className="inp text-sm" />
+            <input title="Input field" aria-label="Input field" id="inp-f082ca" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)} className="inp text-sm" />
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">Start Hour</label>
-            <input type="number" min={6} max={18} value={startHour}
+            <input title="Input field" aria-label="Input field" id="inp-2d164d" type="number" min={6} max={18} value={startHour}
               onChange={e => setStartHour(+e.target.value)} className="inp text-sm" />
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">Cost Mode</label>
-            <select value={costMode} onChange={e => setCostMode(e.target.value)} className="inp text-sm">
+            <select title="Select dropdown" aria-label="Select dropdown" id="sel-1c3e07" value={costMode} onChange={e => setCostMode(e.target.value)} className="inp text-sm">
               <option value="distance">Distance</option>
               <option value="cost">Cost</option>
               <option value="time">Time</option>
@@ -91,7 +91,7 @@ export default function CO6Page() {
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">Weather</label>
-            <select value={weather} onChange={e => setWeather(e.target.value)} className="inp text-sm">
+            <select title="Select dropdown" aria-label="Select dropdown" id="sel-df80f7" value={weather} onChange={e => setWeather(e.target.value)} className="inp text-sm">
               <option value="sunny">Sunny</option>
               <option value="cloudy">Cloudy</option>
               <option value="rain">Rain</option>
@@ -99,7 +99,7 @@ export default function CO6Page() {
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">Day Type</label>
-            <select value={dayType} onChange={e => setDayType(e.target.value)} className="inp text-sm">
+            <select title="Select dropdown" aria-label="Select dropdown" id="sel-7ea988" value={dayType} onChange={e => setDayType(e.target.value)} className="inp text-sm">
               <option value="weekday">Weekday</option>
               <option value="weekend">Weekend</option>
               <option value="holiday">Holiday</option>
@@ -107,7 +107,7 @@ export default function CO6Page() {
           </div>
         </div>
         <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-          <input type="checkbox" checked={avoidCrowds}
+          <input title="Input field" aria-label="Input field" id="inp-afa75c" type="checkbox" checked={avoidCrowds}
             onChange={e => setAvoidCrowds(e.target.checked)} className="accent-orange-500 rounded" />
           Avoid Crowds (CO1 Rule-based heuristic)
         </label>

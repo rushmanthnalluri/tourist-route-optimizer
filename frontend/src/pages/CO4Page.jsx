@@ -113,11 +113,11 @@ export default function CO4Page() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">Budget (₹)</label>
-            <input type="number" value={budget} onChange={e => setBudget(+e.target.value)} className="inp text-sm" />
+            <input title="Input field" aria-label="Input field" id="inp-d647ac" type="number" value={budget} onChange={e => setBudget(+e.target.value)} className="inp text-sm" />
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">Max Time (min)</label>
-            <input type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)} className="inp text-sm" />
+            <input title="Input field" aria-label="Input field" id="inp-5ccafc" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)} className="inp text-sm" />
           </div>
         </div>
         {!hasRoute && (
@@ -176,7 +176,7 @@ export default function CO4Page() {
         </p>
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">Depth Limit: {depthLimit}</label>
-          <input type="range" min={2} max={6} value={depthLimit}
+          <input title="Input field" aria-label="Input field" id="inp-160b08" type="range" min={2} max={6} value={depthLimit}
             onChange={e => setDepthLimit(+e.target.value)}
             className="w-full accent-amber-500" />
         </div>
@@ -223,7 +223,7 @@ export default function CO4Page() {
         </p>
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">Probability of Rain: {(rainProb * 100).toFixed(0)}%</label>
-          <input type="range" min={0} max={1} step={0.05} value={rainProb}
+          <input title="Input field" aria-label="Input field" id="inp-42348b" type="range" min={0} max={1} step={0.05} value={rainProb}
             onChange={e => setRainProb(+e.target.value)}
             className="w-full accent-amber-500" />
           <div className="flex justify-between text-[10px] text-gray-400">

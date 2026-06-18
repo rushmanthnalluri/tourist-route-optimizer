@@ -96,7 +96,7 @@ export default function CO3Page() {
               ['AC-3 (Arc Consistency)', useAC3, setUseAC3],
             ].map(([label, val, setter]) => (
               <label key={label} className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-                <input type="checkbox" checked={val} onChange={e => setter(e.target.checked)}
+                <input title="Input field" aria-label="Input field" id="inp-4d6f7d" type="checkbox" checked={val} onChange={e => setter(e.target.checked)}
                   className="accent-emerald-500 rounded" />
                 {label}
               </label>
@@ -108,12 +108,12 @@ export default function CO3Page() {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">Budget (₹)</label>
-          <input type="number" value={budget} onChange={e => setBudget(+e.target.value)}
+          <input title="Input field" aria-label="Input field" id="inp-888211" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
             className="inp text-sm" />
         </div>
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">Max Time (min)</label>
-          <input type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
+          <input title="Input field" aria-label="Input field" id="inp-6ed695" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
             className="inp text-sm" />
         </div>
       </div>

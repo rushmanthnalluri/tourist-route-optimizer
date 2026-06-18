@@ -28,14 +28,14 @@ export default function AttractionSidebar({ attractions, startId, goalIds, onSet
         <h2 className="text-sm font-semibold text-slate-300">Attractions</h2>
         <div className="relative">
           <Search size={13} className="absolute left-2 top-2 text-slate-500" />
-          <input
+          <input title="Input field" aria-label="Input field" id="inp-d06a5f"
             className="w-full bg-slate-800 text-xs pl-7 pr-2 py-1.5 rounded border border-slate-700 focus:outline-none focus:border-orange-500"
             placeholder="Search..."
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
-        <select
+        <select title="Select dropdown" aria-label="Select dropdown" id="sel-183b58"
           className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none"
           value={filter}
           onChange={e => setFilter(e.target.value)}

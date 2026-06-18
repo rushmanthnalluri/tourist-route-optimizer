@@ -125,25 +125,32 @@ export default function TraceViewer({ trace = [], title = 'Algorithm Trace' }) {
         <button
           onClick={() => { setCurrent(0); setPlaying(false) }}
           className="btn-ghost px-2 py-1.5 text-xs"
+          title="Reset"
+          aria-label="Reset trace"
         >
           <RotateCcw size={12} />
         </button>
         <button
           onClick={() => setPlaying(p => !p)}
           className="btn-primary py-1.5 px-3 text-xs flex-1"
+          title={playing ? 'Pause' : 'Play'}
         >
           {playing ? <><Pause size={12} /> Pause</> : <><Play size={12} /> Play</>}
         </button>
         <button
           onClick={() => setCurrent(c => Math.min(trace.length - 1, c + 1))}
           className="btn-secondary py-1.5 px-3 text-xs"
+          title="Step forward"
+          aria-label="Step forward"
         >
           <SkipForward size={12} /> Step
         </button>
-        <select
+        <select title="Select dropdown" aria-label="Select dropdown" id="sel-5b6341"
           value={speed}
           onChange={e => setSpeed(+e.target.value)}
           className="inp text-xs py-1.5 w-24"
+          title="Playback speed"
+          aria-label="Playback speed"
         >
           <option value={700}>Slow</option>
           <option value={300}>Normal</option>

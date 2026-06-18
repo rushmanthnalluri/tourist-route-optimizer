@@ -109,24 +109,24 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="text-xs text-slate-400">Budget (₹)</label>
-            <input type="number" value={budget} onChange={e => setBudget(+e.target.value)}
+            <input title="Input field" aria-label="Input field" id="inp-2b9a02" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
             <label className="text-xs text-slate-400">Time Slot</label>
-            <select value={timeSlot} onChange={e => setTimeSlot(e.target.value)}
+            <select title="Select dropdown" aria-label="Select dropdown" id="sel-14e91f" value={timeSlot} onChange={e => setTimeSlot(e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 mt-0.5">
               <option>morning</option><option>afternoon</option><option>evening</option>
             </select>
           </div>
           <div>
             <label className="text-xs text-slate-400">Route Cost (₹)</label>
-            <input type="number" value={totalCost} onChange={e => setTotalCost(+e.target.value)}
+            <input title="Input field" aria-label="Input field" id="inp-c316ee" type="number" value={totalCost} onChange={e => setTotalCost(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
           <div>
             <label className="text-xs text-slate-400">Route Time (min)</label>
-            <input type="number" value={totalTime} onChange={e => setTotalTime(+e.target.value)}
+            <input title="Input field" aria-label="Input field" id="inp-e018ec" type="number" value={totalTime} onChange={e => setTotalTime(+e.target.value)}
               className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none mt-0.5" />
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
         <div className="text-xs text-slate-400">Tourist (MAX) vs. Nature (MIN, disrupts attractions)</div>
         <div>
           <label className="text-xs text-slate-400">Depth Limit: {depthLimit}</label>
-          <input type="range" min={2} max={6} value={depthLimit} onChange={e => setDepthLimit(+e.target.value)}
+          <input title="Input field" aria-label="Input field" id="inp-6cd4ed" type="range" min={2} max={6} value={depthLimit} onChange={e => setDepthLimit(+e.target.value)}
             className="w-full accent-yellow-500 mt-0.5" />
         </div>
         <button onClick={runMinimax}
@@ -206,7 +206,7 @@ export default function DecisionPanel({ attractions, routePath, setLoading, setS
           <button onClick={fetchLiveWeather} className="text-[9px] bg-slate-700 hover:bg-slate-600 px-1 rounded text-slate-300">Live</button>
         </div>
         <div>
-          <input type="range" min={0} max={1} step={0.05} value={rainProb} onChange={e => setRainProb(+e.target.value)}
+          <input title="Input field" aria-label="Input field" id="inp-d86adf" type="range" min={0} max={1} step={0.05} value={rainProb} onChange={e => setRainProb(+e.target.value)}
             className="w-full accent-yellow-500 mt-0.5" />
         </div>
         <button onClick={runEU}
