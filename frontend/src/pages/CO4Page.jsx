@@ -78,7 +78,7 @@ export default function CO4Page() {
   }
 
   async function runNegotiation() {
-    if (!startId || !goalIds.length) { setStatus('⚠ Select Start and Goals on the Home page first'); return }
+    if (startId === null || startId === undefined || !goalIds.length) { setStatus('⚠ Select Start and Goals on the Home page first'); return }
     setLoading(true); setStatus('Generating candidate routes from CO2 algorithms...')
     try {
       const compareData = await api.compareSearch({
