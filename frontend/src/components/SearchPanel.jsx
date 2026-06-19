@@ -161,15 +161,15 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
         <div className="space-y-2">
           <div className="text-xs font-semibold text-slate-300">Nodes Expanded (lower = better)</div>
           <ResponsiveContainer width="100%" height={120}>
-            <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+            <BarChart data={chartData.filter(d => d.expanded > 0)} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
               <XAxis dataKey="alg" tick={{ fontSize: 10, fill: '#94a3b8' }} />
-              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} />
+              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} allowDataOverflow={false} />
               <Tooltip
                 contentStyle={{ background: '#1e293b', border: '1px solid #334155', fontSize: 11 }}
                 formatter={(v, name) => [v, name]}
               />
-              <Bar dataKey="expanded" radius={[3, 3, 0, 0]}>
-                {chartData.map((d, i) => (
+              <Bar dataKey="expanded" radius={[3, 3, 0, 0]} isAnimationActive={false}>
+                {chartData.filter(d => d.expanded > 0).map((d, i) => (
                   <Cell key={i} fill={d.success ? (ALG_COLORS[d.alg] || '#475569') : '#374151'} />
                 ))}
               </Bar>
@@ -180,6 +180,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
               <thead>
                 <tr className="border-b border-slate-700 text-slate-500">
                   <th className="text-left py-1">Alg</th>
+                  <th className="text-right">Status</th>
                   <th className="text-right">Expanded</th>
                   <th className="text-right">Dist(km)</th>
                   <th className="text-right">ms</th>
@@ -190,10 +191,11 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
                 {Object.entries(profile).map(([alg, d]) => (
                   <tr key={alg} className="border-b border-slate-800">
                     <td className="py-0.5 font-semibold" style={{ color: ALG_COLORS[alg] }}>{alg}</td>
+                    <td className="text-right">{d.success ? '✅' : '❌'}</td>
                     <td className="text-right">{d.nodes_expanded}</td>
-                    <td className="text-right">{d.total_distance_km}</td>
+                    <td className="text-right">{d.success && d.total_distance_km > 0 ? d.total_distance_km : '—'}</td>
                     <td className="text-right">{d.runtime_ms}</td>
-                    <td className="text-right">{d.optimality_gap_pct ?? 'N/A'}{d.optimality_gap_pct != null ? '%' : ''}</td>
+                    <td className="text-right">{d.optimality_gap_pct != null ? `${d.optimality_gap_pct}%` : '—'}</td>
                   </tr>
                 ))}
               </tbody>
