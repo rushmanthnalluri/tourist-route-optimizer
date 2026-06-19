@@ -436,17 +436,30 @@ def build_graph(
     graph: Dict[int, List[Tuple[int, float, float, float]]] = {
         a.id: [] for a in attractions
     }
-    for i, src in enumerate(attractions):
-        for j, dst in enumerate(attractions):
-            if i >= j:
+    
+    edges_added = set()
+
+    for src in attractions:
+        distances = []
+        for dst in attractions:
+            if src.id == dst.id:
                 continue
             sl_dist = haversine(src.lat, src.lng, dst.lat, dst.lng)
-            if sl_dist <= max_road_km:
-                road_km = round(sl_dist * road_factor, 2)
-                time_min = round((road_km / avg_speed_kmh) * 60, 1)
-                cost_inr = round(road_km * auto_cost_per_km, 0)
-                graph[src.id].append((dst.id, road_km, time_min, cost_inr))
-                graph[dst.id].append((src.id, road_km, time_min, cost_inr))
+            distances.append((sl_dist, dst))
+        
+        distances.sort(key=lambda x: x[0])
+        
+        for idx, (sl_dist, dst) in enumerate(distances):
+            if sl_dist <= max_road_km or idx < 3:
+                edge_key = tuple(sorted((src.id, dst.id)))
+                if edge_key not in edges_added:
+                    edges_added.add(edge_key)
+                    road_km = round(sl_dist * road_factor, 2)
+                    time_min = round((road_km / avg_speed_kmh) * 60, 1)
+                    cost_inr = round(road_km * auto_cost_per_km, 0)
+                    graph[src.id].append((dst.id, road_km, time_min, cost_inr))
+                    graph[dst.id].append((src.id, road_km, time_min, cost_inr))
+                    
     return graph
 
 
