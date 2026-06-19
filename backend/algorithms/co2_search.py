@@ -328,8 +328,13 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 
 
 def dfs(
-    problem: TouristProblem, mode: str = "distance", depth_limit: int = 15
+    problem: TouristProblem, mode: str = "distance", depth_limit: int = None
 ) -> SearchResult:
+    # Scale depth limit by number of goals: each goal may need ~5 hops to reach.
+    # Minimum of 20, max of 50 to avoid exponential blowup.
+    if depth_limit is None:
+        depth_limit = min(50, max(20, len(problem.goal_ids) * 6))
+
     start_ns = time.perf_counter_ns()
     trace: List[Dict] = []
     root = SearchNode(
