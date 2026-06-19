@@ -16,6 +16,10 @@ axiosRetry(apiClient, {
   retries: 3, 
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
+    // Only retry GET requests (idempotent). Never retry POSTs —
+    // they trigger expensive algorithm runs and retrying compounds server load.
+    const method = error.config?.method?.toLowerCase()
+    if (method !== 'get') return false
     return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429
   }
 })
@@ -26,8 +30,10 @@ apiClient.interceptors.response.use(
     console.error('API Request failed:', error)
     if (error.response) {
       
+      // FastAPI uses 'detail' for validation errors, 'message' for custom errors
       const { data, status } = error.response
-      throw new Error(data?.message || `API Error ${status}`)
+      const msg = data?.detail || data?.message || `API Error ${status}`
+      throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg))
     } else if (error.request) {
       
       throw new Error('Network error or request timeout')

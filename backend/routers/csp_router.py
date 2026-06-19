@@ -63,6 +63,9 @@ async def schedule(req: CSPRequest):
 
 @router.get("/domains/{attraction_id}")
 async def get_domains(attraction_id: int):
+    from fastapi import HTTPException
+    if repo.get_attraction(attraction_id) is None:
+        raise HTTPException(status_code=404, detail=f"Attraction {attraction_id} not found")
     csp = TouristCSP(attraction_ids=[attraction_id])
     return {
         "attraction_id": attraction_id,

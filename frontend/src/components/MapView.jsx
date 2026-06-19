@@ -230,7 +230,7 @@ export default function MapView({
                   </div>
                 )}
                 <div style={{ fontSize: 11, color: '#64748b' }}>
-                  ₹{a.entry_cost || 'Free'} · {a.duration_min} min
+                  ₹{a.entry_cost > 0 ? a.entry_cost : 'Free'} · {a.duration_min} min
                 </div>
                 {isStart && <div style={{ fontSize: 11, color: '#f97316', marginTop: 4, fontWeight: 600 }}>📍 Start</div>}
                 {isGoal  && <div style={{ fontSize: 11, color: '#4f46e5', marginTop: 4, fontWeight: 600 }}>🎯 Goal</div>}

@@ -87,6 +87,12 @@ async def run_search(req: SearchRequest):
     algo_func = algo_map.get(req.algorithm.value)
     if not algo_func:
         raise HTTPException(status_code=400, detail="Unknown algorithm")
+    # IDA* is memory-bounded but exponentially slow — cap it to avoid 60s timeouts
+    if req.algorithm.value == "idastar" and len(req.goal_ids) > 4:
+        raise HTTPException(
+            status_code=400,
+            detail="IDA* is limited to 4 goals to prevent server timeout. Use A* or Greedy for larger routes."
+        )
     result = algo_func(problem, req.cost_mode)
     return {
         "algorithm": req.algorithm,

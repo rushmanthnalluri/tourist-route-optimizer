@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-sys.setrecursionlimit(10000)
+sys.setrecursionlimit(3000)  # Conservative limit — avoids C-stack overflows on production
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from backend.routers.hybrid_router import router as hybrid_router
@@ -54,9 +54,14 @@ async def add_security_headers(request: Request, call_next):
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    is_debug = os.getenv("DEBUG", "false").lower() == "true"
     return JSONResponse(
         status_code=500,
-        content={"message": "Internal server error occurred.", "details": str(exc)},
+        content={
+            "message": "Internal server error occurred.",
+            # Only expose raw exception details in debug/dev mode
+            "details": str(exc) if is_debug else "Contact the administrator.",
+        },
     )
 
 
