@@ -1,5 +1,7 @@
+from algorithms import co2_search
 import httpx
 import logging
+import os
 from typing import Dict, List, Tuple
 from backend.data.hyderabad_attractions import ATTRACTIONS, GRAPH
 
