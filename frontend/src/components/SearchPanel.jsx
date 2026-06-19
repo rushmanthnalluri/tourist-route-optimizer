@@ -23,6 +23,15 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
 
   async function runSearch() {
     if (!goalIds.length) { setStatus('⚠ Select at least 1 goal'); return }
+
+    // Per-algorithm goal count safety limits
+    const GOAL_LIMITS = { dfs: 6, bfs: 10, ucs: 10, astar: 15, greedy: 20, idastar: 4 }
+    const limit = GOAL_LIMITS[algorithm]
+    if (limit && goalIds.length > limit) {
+      setStatus(`⚠ ${algorithm.toUpperCase()} supports max ${limit} goals. Select fewer or use Greedy/A*.`)
+      return
+    }
+
     setLoading(true); setStatus('Running ' + algorithm + '...')
     try {
       const payload = { start_id: startId, goal_ids: goalIds, budget_inr: budget, max_time_min: maxTime, algorithm, cost_mode: costMode }
@@ -34,7 +43,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
       } else {
         setStatus(`❌ ${data.failure_reason || 'No path found — try relaxing budget/time'}`)
       }
-    } catch (e) { setStatus('⚠ Backend error') }
+    } catch (e) { setStatus(`⚠ ${e.message || 'Backend error'}`) }
     setLoading(false)
   }
 

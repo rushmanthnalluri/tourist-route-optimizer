@@ -87,12 +87,17 @@ async def run_search(req: SearchRequest):
     algo_func = algo_map.get(req.algorithm.value)
     if not algo_func:
         raise HTTPException(status_code=400, detail="Unknown algorithm")
-    # IDA* is memory-bounded but exponentially slow — cap it to avoid 60s timeouts
-    if req.algorithm.value == "idastar" and len(req.goal_ids) > 4:
+
+    # Defence-in-depth: per-algorithm goal count caps to prevent OOM / timeout crashes
+    GOAL_LIMITS = {"idastar": 4, "dfs": 6, "bfs": 10, "ucs": 10, "astar": 15, "greedy": 20}
+    goal_cap = GOAL_LIMITS.get(req.algorithm.value)
+    if goal_cap and len(req.goal_ids) > goal_cap:
         raise HTTPException(
             status_code=400,
-            detail="IDA* is limited to 4 goals to prevent server timeout. Use A* or Greedy for larger routes."
+            detail=f"{req.algorithm.value.upper()} supports max {goal_cap} goals to prevent server overload. "
+                   f"Select fewer goals or use A* / Greedy for larger routes."
         )
+
     result = algo_func(problem, req.cost_mode)
     return {
         "algorithm": req.algorithm,

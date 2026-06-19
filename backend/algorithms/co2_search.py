@@ -330,10 +330,11 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 def dfs(
     problem: TouristProblem, mode: str = "distance", depth_limit: int = None
 ) -> SearchResult:
-    # Scale depth limit by number of goals: each goal may need ~5 hops to reach.
-    # Minimum of 20, max of 50 to avoid exponential blowup.
+    # Scale depth limit by number of goals: each goal may need ~4 hops to reach.
+    # Cap at 30 to prevent combinatorial explosion — with 30 depth, worst case is
+    # still manageable. 60s timeout acts as the final backstop.
     if depth_limit is None:
-        depth_limit = min(50, max(20, len(problem.goal_ids) * 6))
+        depth_limit = min(30, max(15, len(problem.goal_ids) * 5))
 
     start_ns = time.perf_counter_ns()
     trace: List[Dict] = []
