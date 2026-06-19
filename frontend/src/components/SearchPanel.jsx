@@ -67,9 +67,9 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
   return (
     <div className="space-y-4">
       
-      <div className="bg-blue-950 border border-blue-800 rounded p-3 text-xs text-blue-200">
-        <strong>CO2 — Search Algorithms</strong>
-        <p className="mt-1 text-blue-300 leading-relaxed">
+      <div className="co-banner border-primary-500/30">
+        <strong className="text-primary-400">CO2 — Search Algorithms</strong>
+        <p className="mt-1 text-primary-200/80 leading-relaxed">
           BFS (breadth-first) · DFS (depth-first) · UCS (uniform-cost) · A* (f=g+h) · Greedy (f=h) · IDA* (memory-bounded).
           Heuristic h(n) = straight-line distance to nearest unvisited goal (admissible + consistent).
         </p>
@@ -101,29 +101,29 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
 
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <div className="text-xs text-slate-400">Budget (₹)</div>
+            <div className="text-xs text-slate-400 mb-1">Budget (₹)</div>
             <input title="Input field" aria-label="Input field" id="inp-2e8bc8" type="number" value={budget} onChange={e => setBudget(+e.target.value)}
-              className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none focus:border-orange-500 mt-0.5" />
+              className="inp px-3 py-2" />
           </div>
           <div>
-            <div className="text-xs text-slate-400">Max Time (min)</div>
+            <div className="text-xs text-slate-400 mb-1">Max Time (min)</div>
             <input title="Input field" aria-label="Input field" id="inp-5c6602" type="number" value={maxTime} onChange={e => setMaxTime(+e.target.value)}
-              className="w-full bg-slate-800 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none focus:border-orange-500 mt-0.5" />
+              className="inp px-3 py-2" />
           </div>
         </div>
 
         <div className="flex gap-2">
           <button onClick={runSearch}
-            className="flex-1 bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold py-2 rounded transition-colors">
+            className="flex-1 btn-primary py-2.5">
             ▶ Run {algorithm.toUpperCase()}
           </button>
           <button onClick={compareAll}
-            className="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold py-2 rounded transition-colors">
+            className="flex-1 btn-secondary py-2.5">
             Compare All
           </button>
         </div>
         <button onClick={fetchLiveTraffic}
-          className="w-full bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold py-2 rounded transition-colors">
+          className="w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 text-sm font-semibold py-2.5 rounded-xl transition-all backdrop-blur-md">
           📡 Fetch Live Traffic (OSRM)
         </button>
       </div>

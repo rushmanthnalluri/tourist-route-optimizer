@@ -2,27 +2,30 @@ import React from 'react'
 import MapView from './MapView'
 import { useApp } from '../context/AppContext'
 
-export default function PageLayout({ children, title, subtitle, accentClass = 'text-primary-600' }) {
+export default function PageLayout({ children, title, subtitle, accentClass = 'text-primary-400' }) {
   const { routePath, attractions, startId, goalIds, statusMsg, loading, mapPickActive, handleMapPick } = useApp()
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden bg-dark-900 text-slate-100 relative">
       
-      <header className="shrink-0 bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between gap-3">
+      {/* Glow orb behind header */}
+      <div className="absolute top-0 left-1/4 w-96 h-32 bg-primary-500/20 rounded-full blur-[100px] pointer-events-none -z-10" />
+
+      <header className="shrink-0 bg-dark-900/40 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center justify-between gap-3 z-10 shadow-lg">
         <div>
-          <h1 className={`text-lg font-bold leading-none ${accentClass}`}>{title}</h1>
-          {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+          <h1 className={`text-xl font-bold tracking-tight leading-none ${accentClass} drop-shadow-md`}>{title}</h1>
+          {subtitle && <p className="text-sm text-dark-400 mt-1 font-medium">{subtitle}</p>}
         </div>
         {(loading || (statusMsg && statusMsg !== 'Ready')) && (
-          <p className={`text-xs shrink-0 max-w-xs text-right ${loading ? 'text-primary-600' : 'text-gray-500'}`}>
-            {loading ? 'Working…' : statusMsg}
-          </p>
+          <div className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider ${loading ? 'bg-primary-500/10 text-primary-400 animate-pulse border border-primary-500/30' : 'bg-white/5 text-dark-400 border border-white/10'}`}>
+            {loading ? 'PROCESSING...' : statusMsg}
+          </div>
         )}
       </header>
 
-      <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden z-0">
         
-        <div className="flex-none md:flex-[55] min-w-0 relative p-3 h-64 md:h-auto border-b md:border-b-0 border-gray-200 z-0">
+        <div className="flex-none md:flex-[55] min-w-0 relative p-4 h-64 md:h-auto border-b md:border-b-0 border-white/5">
           <MapView
             attractions={attractions}
             routePath={routePath}
@@ -33,10 +36,10 @@ export default function PageLayout({ children, title, subtitle, accentClass = 't
           />
         </div>
 
-        <div className="hidden md:block w-px bg-gray-200 shrink-0" />
+        <div className="hidden md:block w-px bg-white/5 shrink-0" />
 
-        <div className="flex-1 md:flex-[45] min-w-0 md:overflow-y-auto bg-gray-50 z-0">
-          <div className="p-4 md:p-5 space-y-5">
+        <div className="flex-1 md:flex-[45] min-w-0 md:overflow-y-auto bg-transparent">
+          <div className="p-4 md:p-6 space-y-6">
             {children}
           </div>
         </div>
