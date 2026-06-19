@@ -510,8 +510,8 @@ def multi_agent_negotiate(candidate_routes: List[Dict[str, Any]]) -> Dict[str, A
 
     for idx, route in enumerate(candidate_routes):
         path = route.get("path", [])
-        total_cost = route.get("cost", route.get("total_cost", 0))
-        total_time = route.get("time", route.get("total_time_min", 0))
+        total_cost = float(route.get("cost") or route.get("total_cost") or 0.0)
+        total_time = float(route.get("time") or route.get("total_time_min") or 0.0)
         alg_name = route.get("algorithm", f"Route {idx+1}")
 
         # Inject deterministic variance for the Expo Demo so algorithms show distinct tradeoffs
