@@ -113,9 +113,13 @@ def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchN
         if not problem.is_time_ok(state, total_time):
             continue
 
+        new_visited = set(state.visited)
+        if nbr_id in problem.goal_ids or nbr_id in problem.must_visit:
+            new_visited.add(nbr_id)
+
         new_state = TouristState(
             current_id=nbr_id,
-            visited=state.visited.union([nbr_id]),
+            visited=frozenset(new_visited),
             time_elapsed_min=state.time_elapsed_min + total_time,
             cost_spent=state.cost_spent + total_cost,
             day_hour=arrival_hour + nbr_attr.duration_min / 60.0,
@@ -686,6 +690,7 @@ def _ida_search(
     mode: str,
     trace: List[Dict],
     counts: Dict[str, int],
+    iteration_closed: dict,
 ) -> Tuple[Optional[SearchNode], float]:
     f = node.f
     if f > bound:
@@ -696,6 +701,9 @@ def _ida_search(
     if (time.perf_counter_ns() - counts["start_ns"]) / 1e9 > SEARCH_TIMEOUT_SEC:
         return None, float("inf")
 
+    if node.state in iteration_closed and iteration_closed[node.state] <= node.path_cost:
+        return None, float("inf")
+    iteration_closed[node.state] = node.path_cost
 
     minimum = float("inf")
     counts["expanded"] += 1
@@ -715,7 +723,7 @@ def _ida_search(
 
     for child in expand(node, problem, mode):
         counts["generated"] += 1
-        result, t = _ida_search(child, bound, problem, mode, trace, counts)
+        result, t = _ida_search(child, bound, problem, mode, trace, counts, iteration_closed)
         if result is not None:
             return result, bound
         minimum = min(minimum, t)
@@ -761,7 +769,8 @@ def idastar(
                 "bound": round(bound, 2),
             }
         )
-        result, new_bound = _ida_search(root, bound, problem, mode, trace, counts)
+        iteration_closed = {}
+        result, new_bound = _ida_search(root, bound, problem, mode, trace, counts, iteration_closed)
         if result is not None:
             return build_result(
                 "IDA*",
@@ -790,7 +799,6 @@ def profile_all(problem: TouristProblem, mode: str = "distance") -> Dict[str, An
         ("UCS", lambda: ucs(problem, mode)),
         ("Greedy", lambda: greedy(problem, mode)),
         ("A*", lambda: astar(problem, mode)),
-        ("IDA*", lambda: idastar(problem, mode)),
     ]
     results: Dict[str, Any] = {}
     best_metric = float("inf")
