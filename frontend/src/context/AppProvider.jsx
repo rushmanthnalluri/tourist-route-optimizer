@@ -146,11 +146,16 @@ export function AppProvider({ children }) {
     }
   }
 
+  const setStartIdSafe = useCallback((id) => {
+    setStartId(id);
+    setGoalIds(g => g.filter(x => x !== id));
+  }, []);
+
   const contextValue = useMemo(() => ({
     attractions,
     graph,
     startId,
-    setStartId,
+    setStartId: setStartIdSafe,
     goalIds,
     setGoalIds,
     toggleGoal,
