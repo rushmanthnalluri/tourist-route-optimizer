@@ -76,7 +76,10 @@ class WeatherService:
 
         except Exception as e:
             logger.error(f"Failed to fetch live weather from Open-Meteo: {e}")
-            # Fallback on failure
+            # Fallback on failure and cache it so we don't spam the API
+            self._cache["condition"] = "sunny"
+            self._cache["prob_rain"] = 0.1
+            self._cache_time = time.time()
             return "sunny", 0.1
 
 
