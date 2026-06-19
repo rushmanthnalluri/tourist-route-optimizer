@@ -89,7 +89,7 @@ async def run_search(req: SearchRequest):
         raise HTTPException(status_code=400, detail="Unknown algorithm")
 
     # Defence-in-depth: per-algorithm goal count caps to prevent OOM / timeout crashes
-    GOAL_LIMITS = {"idastar": 4, "dfs": 6, "bfs": 10, "ucs": 10, "astar": 15, "greedy": 20}
+    GOAL_LIMITS = {"idastar": 4, "dfs": 24, "bfs": 12, "ucs": 12, "astar": 18, "greedy": 24}
     goal_cap = GOAL_LIMITS.get(req.algorithm.value)
     if goal_cap and len(req.goal_ids) > goal_cap:
         raise HTTPException(
@@ -118,10 +118,10 @@ async def run_search(req: SearchRequest):
 
 @router.post("/compare")
 async def compare_algorithms(req: SearchRequest):
-    if len(req.goal_ids) > 6:
+    if len(req.goal_ids) > 8:
         raise HTTPException(
             status_code=400,
-            detail="Compare All is limited to 6 goals to prevent server timeout. Please select fewer goals or run algorithms individually."
+            detail="Compare All is limited to 8 goals to prevent server timeout. Please select fewer goals or run algorithms individually."
         )
     problem = make_problem(req)
     profile = profile_all(problem, req.cost_mode)

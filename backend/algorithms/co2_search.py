@@ -22,7 +22,17 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 SEARCH_TIMEOUT_SEC = float(os.getenv("SEARCH_TIMEOUT_SEC", 60.0))
 
+# Hard cap on trace entries per algorithm run.
+# Prevents 100MB+ JSON responses when many goals are selected.
+MAX_TRACE_ENTRIES = 2000
+
+def trace_append(trace: List[Dict], entry: Dict) -> None:
+    """Append to trace only if under the cap. Silently drops when full."""
+    if len(trace) < MAX_TRACE_ENTRIES:
+        trace.append(entry)
+
 COST_MODES = ("distance", "cost", "time")
+
 
 
 def edge_cost(nbr: Tuple[int, float, float, float], mode: str) -> float:
@@ -257,7 +267,7 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
     peak_frontier = 1
     step = 0
 
-    trace.append(
+    trace_append(trace, 
         make_trace_entry(
             step, "BFS", "INIT", root.state.current_id, 0, root.heuristic, 1
         )
@@ -273,7 +283,7 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 
         nodes_expanded += 1
 
-        trace.append(
+        trace_append(trace, 
             make_trace_entry(
                 step,
                 "BFS",
@@ -303,7 +313,7 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
                 closed.add(child.state)
                 frontier.append(child)
                 nodes_generated += 1
-                trace.append(
+                trace_append(trace, 
                     make_trace_entry(
                         step,
                         "BFS",
@@ -352,7 +362,7 @@ def dfs(
     peak_frontier = 1
     step = 0
 
-    trace.append(
+    trace_append(trace, 
         make_trace_entry(
             step, "DFS", "INIT", root.state.current_id, 0, root.heuristic, 1
         )
@@ -370,7 +380,7 @@ def dfs(
             return build_result("DFS", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
 
         if node.depth > depth_limit:
-            trace.append(
+            trace_append(trace, 
                 make_trace_entry(
                     step,
                     "DFS",
@@ -386,7 +396,7 @@ def dfs(
         closed.add(node.state)
         nodes_expanded += 1
 
-        trace.append(
+        trace_append(trace, 
             make_trace_entry(
                 step,
                 "DFS",
@@ -442,7 +452,7 @@ def ucs(problem: TouristProblem, mode: str = "cost") -> SearchResult:
     peak_frontier = 1
     step = 0
 
-    trace.append(make_trace_entry(step, "UCS", "INIT", root.state.current_id, 0, 0, 1))
+    trace_append(trace, make_trace_entry(step, "UCS", "INIT", root.state.current_id, 0, 0, 1))
 
     while heap:
         peak_frontier = max(peak_frontier, len(heap))
@@ -459,7 +469,7 @@ def ucs(problem: TouristProblem, mode: str = "cost") -> SearchResult:
         closed[node.state] = g
         nodes_expanded += 1
 
-        trace.append(
+        trace_append(trace, 
             make_trace_entry(
                 step,
                 "UCS",
@@ -493,7 +503,7 @@ def ucs(problem: TouristProblem, mode: str = "cost") -> SearchResult:
                 counter += 1
                 heapq.heappush(heap, (child.path_cost, counter, child))
                 nodes_generated += 1
-                trace.append(
+                trace_append(trace, 
                     make_trace_entry(
                         step,
                         "UCS",
@@ -534,7 +544,7 @@ def greedy(problem: TouristProblem, mode: str = "distance") -> SearchResult:
     peak_frontier = 1
     step = 0
 
-    trace.append(
+    trace_append(trace, 
         make_trace_entry(step, "Greedy", "INIT", root.state.current_id, 0, h0, 1)
     )
 
@@ -552,7 +562,7 @@ def greedy(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         closed.add(node.state)
         nodes_expanded += 1
 
-        trace.append(
+        trace_append(trace, 
             make_trace_entry(
                 step,
                 "Greedy",
@@ -613,7 +623,7 @@ def astar(problem: TouristProblem, mode: str = "distance") -> SearchResult:
     peak_frontier = 1
     step = 0
 
-    trace.append(make_trace_entry(step, "A*", "INIT", root.state.current_id, 0, h0, 1))
+    trace_append(trace, make_trace_entry(step, "A*", "INIT", root.state.current_id, 0, h0, 1))
 
     while heap:
         peak_frontier = max(peak_frontier, len(heap))
@@ -629,7 +639,7 @@ def astar(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         closed[node.state] = node.path_cost
         nodes_expanded += 1
 
-        trace.append(
+        trace_append(trace, 
             make_trace_entry(
                 step,
                 "A*",
@@ -664,7 +674,7 @@ def astar(problem: TouristProblem, mode: str = "distance") -> SearchResult:
                 counter += 1
                 heapq.heappush(heap, (child.f, child.path_cost, counter, child))
                 nodes_generated += 1
-                trace.append(
+                trace_append(trace, 
                     make_trace_entry(
                         step,
                         "A*",
@@ -713,7 +723,7 @@ def _ida_search(
 
     minimum = float("inf")
     counts["expanded"] += 1
-    trace.append(
+    trace_append(trace, 
         make_trace_entry(
             counts["step"],
             "IDA*",
@@ -752,7 +762,7 @@ def idastar(
     counts = {"expanded": 0, "generated": 1, "step": 0, "start_ns": start_ns}
 
 
-    trace.append(
+    trace_append(trace, 
         make_trace_entry(
             0,
             "IDA*",
@@ -766,7 +776,7 @@ def idastar(
     )
 
     for iteration in range(max_iterations):
-        trace.append(
+        trace_append(trace, 
             {
                 "step": counts["step"],
                 "algorithm": "IDA*",

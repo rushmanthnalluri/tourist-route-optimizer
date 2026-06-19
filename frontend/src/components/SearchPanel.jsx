@@ -25,7 +25,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
     if (!goalIds.length) { setStatus('⚠ Select at least 1 goal'); return }
 
     // Per-algorithm goal count safety limits
-    const GOAL_LIMITS = { dfs: 6, bfs: 10, ucs: 10, astar: 15, greedy: 20, idastar: 4 }
+    const GOAL_LIMITS = { dfs: 24, bfs: 12, ucs: 12, astar: 18, greedy: 24, idastar: 4 }
     const limit = GOAL_LIMITS[algorithm]
     if (limit && goalIds.length > limit) {
       setStatus(`⚠ ${algorithm.toUpperCase()} supports max ${limit} goals. Select fewer or use Greedy/A*.`)
@@ -49,8 +49,8 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
 
   async function compareAll() {
     if (!goalIds.length) return
-    if (goalIds.length > 6) {
-      setStatus('⚠ Compare All is limited to max 6 goals to prevent server timeout.')
+    if (goalIds.length > 8) {
+      setStatus('⚠ Compare All is limited to max 8 goals to prevent server timeout.')
       return
     }
     setLoading(true); setStatus('Comparing all algorithms...')
