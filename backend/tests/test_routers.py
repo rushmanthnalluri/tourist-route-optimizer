@@ -192,3 +192,12 @@ def test_prob_crowd():
         "/api/probabilistic/crowd", json={"observations": ["gps_stationary"]}
     )
     assert res.status_code == 200
+
+
+def test_search_all_large_goals():
+    res = client.post(
+        "/api/search/run",
+        json={"start_id": 0, "goal_ids": list(range(1, 10)), "algorithm": "all"}
+    )
+    assert res.status_code == 400
+    assert "Compare All is limited to 8 goals" in res.json()["detail"]

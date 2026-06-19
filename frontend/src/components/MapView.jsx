@@ -35,6 +35,20 @@ L.Icon.Default.mergeOptions({
   shadowUrl,
 })
 
+function escapeHTML(str) {
+  if (str === null || str === undefined) return ''
+  return String(str).replace(/[&<>"']/g, (m) => {
+    switch (m) {
+      case '&': return '&amp;'
+      case '<': return '&lt;'
+      case '>': return '&gt;'
+      case '"': return '&quot;'
+      case "'": return '&#039;'
+      default: return m
+    }
+  })
+}
+
 function makeNumberIcon(n, color = '#4f46e5', isStart = false, isGoal = false) {
   const bg = isStart ? '#f97316' : isGoal ? '#4f46e5' : color
   return L.divIcon({
@@ -48,7 +62,7 @@ function makeNumberIcon(n, color = '#4f46e5', isStart = false, isGoal = false) {
         font-size:13px;font-weight:700;font-family:Inter,sans-serif;
         border:3px solid white;
         box-shadow:0 2px 8px rgba(0,0,0,0.25);
-      ">${n}</div>`,
+      ">${escapeHTML(n)}</div>`,
     className: '',
     iconSize: [32, 32],
     iconAnchor: [16, 16],
@@ -68,7 +82,7 @@ function makeLabelIcon(text, color = '#4f46e5') {
         font-size:11px;font-weight:600;font-family:Inter,sans-serif;
         white-space:nowrap;
         box-shadow:0 1px 6px rgba(0,0,0,0.15);
-      ">${text}</div>`,
+      ">${escapeHTML(text)}</div>`,
     className: '',
     iconAnchor: [0, -6],
     popupAnchor: [0, -10],
@@ -77,6 +91,7 @@ function makeLabelIcon(text, color = '#4f46e5') {
 
 function FitBounds({ positions }) {
   const map = useMap()
+  const positionsKey = positions.map(p => `${p[0]},${p[1]}`).join(';')
   useEffect(() => {
     if (positions.length >= 2) {
       try {
@@ -85,7 +100,7 @@ function FitBounds({ positions }) {
     } else if (positions.length === 1) {
       map.setView(positions[0], 14)
     }
-  }, [JSON.stringify(positions)])
+  }, [positionsKey])
   return null
 }
 
@@ -104,6 +119,7 @@ export default function MapView({
     : attractions.filter(a => a.id === startId || goalIds.includes(a.id))
 
   const routeCoords = routeAttrs.map(a => [a.lat, a.lng])
+  const routeCoordsKey = routeCoords.map(c => `${c[0]},${c[1]}`).join(';')
   const hasFullRoute = routePath.length >= 2
 
   const boundsPositions = routeCoords.length >= 1 ? routeCoords : []
@@ -158,7 +174,7 @@ export default function MapView({
       isMounted = false
       controller.abort()
     }
-  }, [JSON.stringify(routeCoords), hasFullRoute])
+  }, [routeCoordsKey, hasFullRoute])
 
   return (
     <MapContainer
@@ -230,7 +246,7 @@ export default function MapView({
                   </div>
                 )}
                 <div style={{ fontSize: 11, color: '#64748b' }}>
-                  ₹{a.entry_cost > 0 ? a.entry_cost : 'Free'} · {a.duration_min} min
+                  {a.entry_cost > 0 ? `₹${a.entry_cost}` : 'Free'} · {a.duration_min} min
                 </div>
                 {isStart && <div style={{ fontSize: 11, color: '#f97316', marginTop: 4, fontWeight: 600 }}>📍 Start</div>}
                 {isGoal  && <div style={{ fontSize: 11, color: '#4f46e5', marginTop: 4, fontWeight: 600 }}>🎯 Goal</div>}

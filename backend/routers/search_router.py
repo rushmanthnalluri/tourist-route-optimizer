@@ -81,6 +81,11 @@ async def run_search(req: SearchRequest):
         "idastar": idastar,
     }
     if req.algorithm.value == "all":
+        if len(req.goal_ids) > 8:
+            raise HTTPException(
+                status_code=400,
+                detail="Compare All is limited to 8 goals to prevent server timeout. Please select fewer goals or run algorithms individually."
+            )
         profile = profile_all(problem, req.cost_mode)
         return {"algorithm": "all", "profile": profile}
 

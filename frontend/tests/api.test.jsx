@@ -71,9 +71,9 @@ describe('api.js', () => {
     const cond = retryOpts.retryCondition;
     
     expect(cond({})).toBe(false);
-    expect(cond({ response: { status: 429 } })).toBe(true);
+    expect(cond({ config: { method: 'get' }, response: { status: 429 } })).toBe(true);
     
     mocks.mockAxiosRetry.isNetworkOrIdempotentRequestError.mockReturnValueOnce(true);
-    expect(cond({})).toBe(true);
+    expect(cond({ config: { method: 'get' } })).toBe(true);
   });
 });

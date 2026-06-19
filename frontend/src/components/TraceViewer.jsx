@@ -36,15 +36,21 @@ export default function TraceViewer({ trace = [], title = 'Algorithm Trace', rou
   const timerRef  = useRef(null)
   const listRef   = useRef(null)
 
+  const currentRef = useRef(current)
+  useEffect(() => {
+    currentRef.current = current
+  }, [current])
+
   useEffect(() => { setCurrent(0); setPlaying(false) }, [trace])
 
   useEffect(() => {
     if (playing) {
       timerRef.current = setInterval(() => {
-        setCurrent(c => {
-          if (c >= trace.length - 1) { setPlaying(false); return c }
-          return c + 1
-        })
+        if (currentRef.current >= trace.length - 1) {
+          setPlaying(false)
+        } else {
+          setCurrent(c => c + 1)
+        }
       }, speed)
     }
     return () => clearInterval(timerRef.current)
