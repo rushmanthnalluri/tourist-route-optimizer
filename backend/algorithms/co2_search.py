@@ -737,7 +737,9 @@ def _ida_search(
     )
     counts["step"] += 1
 
-    for child in expand(node, problem, mode):
+    children = expand(node, problem, mode)
+    children.sort(key=lambda c: c.f)
+    for child in children:
         counts["generated"] += 1
         result, t = _ida_search(child, bound, problem, mode, trace, counts, iteration_closed)
         if result is not None:
@@ -801,7 +803,13 @@ def idastar(
         if new_bound == float("inf"):
             break
 
-        bound = new_bound
+        # Avoid float precision "small-step" problem by enforcing a minimum bound step
+        eps = 0.25
+        if mode == "cost":
+            eps = 25.0
+        elif mode == "time":
+            eps = 10.0
+        bound = max(new_bound, bound + eps)
 
     return build_result(
         "IDA*", None, counts["expanded"], counts["generated"], 0, start_ns, trace, mode
