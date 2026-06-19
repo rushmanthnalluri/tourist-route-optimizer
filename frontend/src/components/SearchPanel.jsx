@@ -40,6 +40,10 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
 
   async function compareAll() {
     if (!goalIds.length) return
+    if (goalIds.length > 6) {
+      setStatus('⚠ Compare All is limited to max 6 goals to prevent server timeout.')
+      return
+    }
     setLoading(true); setStatus('Comparing all algorithms...')
     try {
       const payload = { start_id: startId, goal_ids: goalIds, budget_inr: budget, max_time_min: maxTime, algorithm: 'all', cost_mode: costMode }

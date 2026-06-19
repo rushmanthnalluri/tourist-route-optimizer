@@ -107,6 +107,11 @@ async def run_search(req: SearchRequest):
 
 @router.post("/compare")
 async def compare_algorithms(req: SearchRequest):
+    if len(req.goal_ids) > 6:
+        raise HTTPException(
+            status_code=400,
+            detail="Compare All is limited to 6 goals to prevent server timeout. Please select fewer goals or run algorithms individually."
+        )
     problem = make_problem(req)
     profile = profile_all(problem, req.cost_mode)
     return {"comparison": profile, "cost_mode": req.cost_mode}
