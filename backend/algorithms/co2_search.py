@@ -20,7 +20,7 @@ from backend.data.hyderabad_attractions import (
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-SEARCH_TIMEOUT_SEC = float(os.getenv("SEARCH_TIMEOUT_SEC", 5.0))
+SEARCH_TIMEOUT_SEC = float(os.getenv("SEARCH_TIMEOUT_SEC", 60.0))
 
 COST_MODES = ("distance", "cost", "time")
 
