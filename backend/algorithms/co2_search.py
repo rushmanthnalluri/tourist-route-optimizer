@@ -229,6 +229,10 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 
         if node.state in closed:
             continue
+        
+        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+            return build_result("BFS", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
+
         closed.add(node.state)
         nodes_expanded += 1
 
@@ -317,6 +321,10 @@ def dfs(
 
         if node.state in closed:
             continue
+
+        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+            return build_result("DFS", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
+
         if node.depth > depth_limit:
             trace.append(
                 make_trace_entry(
@@ -399,6 +407,10 @@ def ucs(problem: TouristProblem, mode: str = "cost") -> SearchResult:
 
         if node.state in closed and closed[node.state] < g:
             continue
+
+        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+            return build_result("UCS", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
+
 
         closed[node.state] = g
         nodes_expanded += 1
@@ -489,6 +501,10 @@ def greedy(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 
         if node.state in closed:
             continue
+
+        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+            return build_result("Greedy", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
+
         closed.add(node.state)
         nodes_expanded += 1
 
@@ -561,6 +577,10 @@ def astar(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 
         if node.state in closed:
             continue
+
+        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+            return build_result("A*", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
+
         closed[node.state] = node.path_cost
         nodes_expanded += 1
 
@@ -638,6 +658,10 @@ def _ida_search(
     if problem.goal_test(node.state):
         return node, bound
 
+    if (time.perf_counter_ns() - counts["start_ns"]) / 1e9 > 5.0:
+        return None, float("inf")
+
+
     minimum = float("inf")
     counts["expanded"] += 1
     trace.append(
@@ -676,7 +700,8 @@ def idastar(
     )
 
     bound = h0
-    counts = {"expanded": 0, "generated": 1, "step": 0}
+    counts = {"expanded": 0, "generated": 1, "step": 0, "start_ns": start_ns}
+
 
     trace.append(
         make_trace_entry(
