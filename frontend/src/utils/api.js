@@ -2,10 +2,11 @@ import axios from 'axios'
 import axiosRetry from 'axios-retry'
 
 const BASE = import.meta.env.VITE_API_BASE ?? ''
+const TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT || '900000', 10)
 
 const apiClient = axios.create({
   baseURL: BASE,
-  timeout: 900000,
+  timeout: TIMEOUT,
   headers: {
     'Content-Type': 'application/json'
   }

@@ -127,7 +127,8 @@ export default function MapView({
       }
 
       const coordString = dedupedCoords.map(c => `${c[1]},${c[0]}`).join(';')
-      fetch(`https://router.project-osrm.org/route/v1/driving/${coordString}?overview=full&geometries=geojson`, {
+      const osrmBase = import.meta.env.VITE_OSRM_BASE_URL || 'https://router.project-osrm.org'
+      fetch(`${osrmBase}/route/v1/driving/${coordString}?overview=full&geometries=geojson`, {
         signal: controller.signal
       })
         .then(res => {

@@ -36,9 +36,11 @@ class WeatherService:
             return self._cache["condition"], self._cache["prob_rain"]
 
         try:
-            url = f"https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&current=precipitation,weather_code&timezone=Asia/Kolkata"
+            weather_base = os.getenv("WEATHER_API_BASE", "https://api.open-meteo.com")
+            url = f"{weather_base}/v1/forecast?latitude={LAT}&longitude={LON}&current=precipitation,weather_code&timezone=Asia/Kolkata"
+            timeout_sec = float(os.getenv("WEATHER_TIMEOUT_SEC", 5.0))
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, timeout=5.0)
+                response = await client.get(url, timeout=timeout_sec)
                 response.raise_for_status()
                 data = response.json()
 

@@ -21,11 +21,12 @@ class RoutingService:
             coords_list.append(f"{a.lng},{a.lat}")
 
         coords_str = ";".join(coords_list)
-        url = f"http://router.project-osrm.org/table/v1/driving/{coords_str}?annotations=duration,distance"
-
+        osrm_base = os.getenv("OSRM_BASE_URL", "http://router.project-osrm.org")
+        url = f"{osrm_base}/table/v1/driving/{coords_str}?annotations=duration,distance"
+        timeout_sec = float(os.getenv("ROUTING_TIMEOUT_SEC", 10.0))
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, timeout=10.0)
+                response = await client.get(url, timeout=timeout_sec)
                 response.raise_for_status()
                 data = response.json()
 

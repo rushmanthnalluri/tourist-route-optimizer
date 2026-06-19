@@ -6,19 +6,21 @@ from backend.models.state import (
     TouristProblem,
     SearchResult,
 )
-from backend.data.hyderabad_attractions import (
-    ATTRACTION_MAP,
-    get_neighbors,
-    straight_line_distance,
-)
 import sys
 import os
 import time
 import heapq
 from collections import deque
 from typing import List, Dict, Tuple, Optional, Any, Set
+from backend.data.hyderabad_attractions import (
+    ATTRACTION_MAP,
+    get_neighbors,
+    straight_line_distance,
+)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+SEARCH_TIMEOUT_SEC = float(os.getenv("SEARCH_TIMEOUT_SEC", 5.0))
 
 COST_MODES = ("distance", "cost", "time")
 
@@ -234,7 +236,7 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         if node.state in closed:
             continue
         
-        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+        if (time.perf_counter_ns() - start_ns) / 1e9 > SEARCH_TIMEOUT_SEC:
             return build_result("BFS", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
 
         closed.add(node.state)
@@ -326,7 +328,7 @@ def dfs(
         if node.state in closed:
             continue
 
-        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+        if (time.perf_counter_ns() - start_ns) / 1e9 > SEARCH_TIMEOUT_SEC:
             return build_result("DFS", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
 
         if node.depth > depth_limit:
@@ -412,7 +414,7 @@ def ucs(problem: TouristProblem, mode: str = "cost") -> SearchResult:
         if node.state in closed and closed[node.state] < g:
             continue
 
-        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+        if (time.perf_counter_ns() - start_ns) / 1e9 > SEARCH_TIMEOUT_SEC:
             return build_result("UCS", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
 
 
@@ -506,7 +508,7 @@ def greedy(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         if node.state in closed:
             continue
 
-        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+        if (time.perf_counter_ns() - start_ns) / 1e9 > SEARCH_TIMEOUT_SEC:
             return build_result("Greedy", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
 
         closed.add(node.state)
@@ -582,7 +584,7 @@ def astar(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         if node.state in closed:
             continue
 
-        if (time.perf_counter_ns() - start_ns) / 1e9 > 5.0:
+        if (time.perf_counter_ns() - start_ns) / 1e9 > SEARCH_TIMEOUT_SEC:
             return build_result("A*", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
 
         closed[node.state] = node.path_cost
@@ -662,7 +664,7 @@ def _ida_search(
     if problem.goal_test(node.state):
         return node, bound
 
-    if (time.perf_counter_ns() - counts["start_ns"]) / 1e9 > 5.0:
+    if (time.perf_counter_ns() - counts["start_ns"]) / 1e9 > SEARCH_TIMEOUT_SEC:
         return None, float("inf")
 
 
