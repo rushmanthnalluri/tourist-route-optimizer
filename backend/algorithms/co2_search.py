@@ -129,9 +129,15 @@ def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchN
             travel_cost=cost_inr,
         )
 
-        step_g = edge_cost((nbr_id, road_km, time_min, cost_inr), mode) + visit_cost(
-            nbr_id, mode
-        )
+        def get_edge_cost(mode: str) -> float:
+            if mode == "distance":
+                return road_km
+            elif mode == "cost":
+                return cost_inr
+            else:
+                return time_min + wait_time_min
+
+        step_g = get_edge_cost(mode) + visit_cost(nbr_id, mode)
         new_g = node.path_cost + step_g
         h = heuristic(new_state, problem, mode)
 
