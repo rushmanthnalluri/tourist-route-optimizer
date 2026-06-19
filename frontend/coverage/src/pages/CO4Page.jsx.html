@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.79% </span>
+                <span class="strong">61.95% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>55/89</span>
+                <span class='fraction'>57/92</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.57% </span>
+                <span class="strong">52.45% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>30/56</span>
+                <span class='fraction'>32/61</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">61.53% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>15/25</span>
+                <span class='fraction'>16/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.6% </span>
+                <span class="strong">67.56% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>48/71</span>
+                <span class='fraction'>50/74</span>
             </div>
         
             
@@ -431,7 +431,15 @@
 <a name='L366'></a><a href='#L366'>366</a>
 <a name='L367'></a><a href='#L367'>367</a>
 <a name='L368'></a><a href='#L368'>368</a>
-<a name='L369'></a><a href='#L369'>369</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L369'></a><a href='#L369'>369</a>
+<a name='L370'></a><a href='#L370'>370</a>
+<a name='L371'></a><a href='#L371'>371</a>
+<a name='L372'></a><a href='#L372'>372</a>
+<a name='L373'></a><a href='#L373'>373</a>
+<a name='L374'></a><a href='#L374'>374</a>
+<a name='L375'></a><a href='#L375'>375</a>
+<a name='L376'></a><a href='#L376'>376</a>
+<a name='L377'></a><a href='#L377'>377</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -455,6 +463,12 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -688,6 +702,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -799,7 +815,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState } from 'react'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect } from 'react'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts'
 import PageLayout from '../components/PageLayout'
 import TraceViewer from '../components/TraceViewer'
@@ -810,7 +826,7 @@ import { Scale, Swords, CloudRain, Users } from 'lucide-react'
 const CATEGORIES = ['historical', 'nature', 'religious', 'museum', 'entertainment', 'cultural', 'shopping', 'modern']
 &nbsp;
 export default function CO4Page() {
-  const { attractions, routePath, setLoading, setStatus, loading, resolveRoutingIds, startId, goalIds } = useApp()
+  const { attractions, routePath, setLoading, setStatus, loading, resolveRoutingIds, startId, goalIds, liveEnv } = useApp()
   const [budget, setBudget]         = useState(600)
   const [maxTime, setMaxTime]       = useState(400)
   const [totalCost, setTotalCost]   = useState(200)
@@ -823,6 +839,12 @@ export default function CO4Page() {
   const [minimaxResult, setMinimaxResult] = useState(null)
   const [euResult, setEuResult]     = useState(null)
   const [negResult, setNegResult]   = useState(null)
+&nbsp;
+  useEffect(() =&gt; {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (liveEnv &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >liveEnv.prob_rain !== undefined) {</span>
+<span class="cstat-no" title="statement not covered" >      setRainProb(liveEnv.prob_rain)</span>
+    }
+  }, [liveEnv])
 &nbsp;
   function toggleCat(cat) {
     setPrefCats(c =&gt; c.includes(cat) ? c.filter(x =&gt; x !== cat) : <span class="branch-1 cbranch-no" title="branch not covered" >[...c, cat])</span>
@@ -873,7 +895,7 @@ export default function CO4Page() {
   }
 &nbsp;
   async function <span class="fstat-no" title="function not covered" >runNegotiation() {</span>
-<span class="cstat-no" title="statement not covered" >    if (!startId || !goalIds.length) { <span class="cstat-no" title="statement not covered" >setStatus('⚠ Select Start and Goals on the Home page first'); <span class="cstat-no" title="statement not covered" >r</span>eturn }</span></span>
+<span class="cstat-no" title="statement not covered" >    if (startId === null || startId === undefined || !goalIds.length) { <span class="cstat-no" title="statement not covered" >setStatus('⚠ Select Start and Goals on the Home page first'); <span class="cstat-no" title="statement not covered" >r</span>eturn }</span></span>
 <span class="cstat-no" title="statement not covered" >    setLoading(true); <span class="cstat-no" title="statement not covered" >s</span>etStatus('Generating candidate routes from CO2 algorithms...')</span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const compareData = <span class="cstat-no" title="statement not covered" >await api.compareSearch({</span>
@@ -1054,7 +1076,9 @@ export default function CO4Page() {
           EU = P(sunny) · U(sunny) + P(rain) · U(rain). Uses Bayesian probability from CO5.
         &lt;/p&gt;
         &lt;div&gt;
-          &lt;div className="text-xs font-medium text-gray-500 mb-1 block"&gt;Probability of Rain: {(rainProb * 100).toFixed(0)}%&lt;/div&gt;
+          &lt;div className="text-xs font-medium text-gray-500 mb-1 block"&gt;
+            Probability of Rain: {(rainProb * 100).toFixed(0)}% | Probability of Sunny: {((1 - rainProb) * 100).toFixed(0)}%
+          &lt;/div&gt;
           &lt;input title="Input field" aria-label="Input field" id="inp-42348b" type="range" min={0} max={1} step={0.05} value={rainProb}
 <span class="fstat-no" title="function not covered" >            onChange={e</span> =&gt; <span class="cstat-no" title="statement not covered" >setRainProb(+e.target.value)}</span>
             className="w-full accent-amber-500" /&gt;
@@ -1174,7 +1198,7 @@ export default function CO4Page() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-18T13:15:22.496Z
+                at 2026-06-19T04:57:50.841Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

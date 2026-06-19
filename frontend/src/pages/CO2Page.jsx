@@ -253,9 +253,9 @@ export default function CO2Page() {
                   <tr key={alg} className="border-b border-gray-50">
                     <td className="py-1 font-semibold" style={{ color: ALG_COLORS[alg] }}>{alg}</td>
                     <td className="text-right py-1">{d.nodes_expanded}</td>
-                    <td className="text-right py-1">{d.total_distance_km?.toFixed(2)}</td>
+                    <td className="text-right py-1">{d.success ? d.total_distance_km?.toFixed(2) : '—'}</td>
                     <td className="text-right py-1">{d.runtime_ms?.toFixed(1)}</td>
-                    <td className="text-right py-1">{d.optimality_gap_pct != null ? `${d.optimality_gap_pct}%` : '—'}</td>
+                    <td className="text-right py-1">{d.success && d.optimality_gap_pct != null ? `${d.optimality_gap_pct}%` : '—'}</td>
                   </tr>
                 ))}
               </tbody>

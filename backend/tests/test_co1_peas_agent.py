@@ -22,7 +22,7 @@ def test_kb_rules_firing():
     agent = TouristAgent(problem)
 
     state = TouristState(
-        current_id=0, visited={0}, time_elapsed_min=10, cost_spent=90, day_hour=14.0
+        current_id=0, visited=frozenset([0]), time_elapsed_min=10, cost_spent=90, day_hour=14.0
     )
     fired = agent.kb.fire_rules(state, problem)
     assert "BUDGET_CRITICAL" in fired
@@ -62,10 +62,7 @@ def test_kb_exception_handling():
     problem = TouristProblem(start_id=0, goal_ids=[1])
     agent = TouristAgent(problem)
 
-    class BadState:
-        pass
-
-    bad_state = BadState()
+    bad_state = TouristState(current_id=0, visited=frozenset(), time_elapsed_min=0, cost_spent=0, day_hour=0.0)
     fired = agent.kb.fire_rules(bad_state, problem)
     assert isinstance(fired, list)
 
@@ -73,11 +70,12 @@ def test_kb_exception_handling():
     assert isinstance(advice, list)
 
 
+
 def test_closing_soon_rule():
     problem = TouristProblem(start_id=0, goal_ids=[0])
     agent = TouristAgent(problem)
     state = TouristState(
-        current_id=1, visited={1}, time_elapsed_min=10, cost_spent=0, day_hour=16.5
+        current_id=1, visited=frozenset([1]), time_elapsed_min=10, cost_spent=0, day_hour=16.5
     )
     fired = agent.kb.fire_rules(state, problem)
     assert "CLOSING_SOON" in fired

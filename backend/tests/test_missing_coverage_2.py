@@ -55,8 +55,8 @@ def test_state_repr():
 def test_search_node_lt():
     s1 = TouristState(0, frozenset([0]), 0.0, 0.0, 10.0)
     s2 = TouristState(1, frozenset([1]), 0.0, 0.0, 10.0)
-    n1 = SearchNode(s1, None, None, 0.0, 1.0)
-    n2 = SearchNode(s2, None, None, 0.0, 2.0)
+    n1 = SearchNode(s1, None, None, 0.0, 1)
+    n2 = SearchNode(s2, None, None, 0.0, 2)
     assert n1 < n2
     assert not n2 < n1
 

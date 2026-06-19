@@ -30,7 +30,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
         onResult(data.path, data.trace || [])
         setStatus(`✅ ${algorithm.toUpperCase()} — ${data.path.length} stops, ${data.nodes_expanded} expanded`)
       } else {
-        setStatus(`❌ No path found — try relaxing budget/time`)
+        setStatus(`❌ ${data.failure_reason || 'No path found — try relaxing budget/time'}`)
       }
     } catch (e) { setStatus('⚠ Backend error') }
     setLoading(false)

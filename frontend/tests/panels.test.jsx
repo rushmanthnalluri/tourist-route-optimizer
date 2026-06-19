@@ -27,7 +27,7 @@ vi.mock('../src/utils/api.js', () => ({
 
 vi.mock('recharts', () => {
   const React = require('react');
-  const div = (props) => React.createElement('div', props, props.children);
+  const div = ({ children, className }) => React.createElement('div', { className }, children);
   return {
     ResponsiveContainer: div, RadarChart: div, PolarGrid: div, PolarAngleAxis: div,
     Radar: div, BarChart: div, Bar: div, XAxis: div, YAxis: div, Tooltip: div,

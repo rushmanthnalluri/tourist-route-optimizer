@@ -161,6 +161,10 @@ def build_result(
     runtime_ms = (time.perf_counter_ns() - start_ns) / 1e6
 
     if goal_node is None:
+        if runtime_ms >= 5000:
+            failure_reason = "Search timed out after 5 seconds to prevent server overload."
+        else:
+            failure_reason = "No path found within constraints"
         return SearchResult(
             algorithm=algorithm,
             path=[],
@@ -174,7 +178,7 @@ def build_result(
             runtime_ms=runtime_ms,
             trace=trace,
             success=False,
-            failure_reason="No path found within constraints",
+            failure_reason=failure_reason,
         )
 
     path = goal_node.extract_path()
@@ -758,10 +762,16 @@ def profile_all(problem: TouristProblem, mode: str = "distance") -> Dict[str, An
         ("IDA*", lambda: idastar(problem, mode)),
     ]
     results: Dict[str, Any] = {}
-    best_cost = float("inf")
+    best_metric = float("inf")
+
+    def get_metric(r: SearchResult) -> float:
+        if mode == "distance": return r.total_distance_km
+        if mode == "time": return r.total_time_min
+        return r.total_cost
 
     for name, fn in algorithms:
         r = fn()
+        metric_val = get_metric(r)
         results[name] = {
             "success": r.success,
             "path": r.path,
@@ -769,18 +779,22 @@ def profile_all(problem: TouristProblem, mode: str = "distance") -> Dict[str, An
             "total_cost": round(r.total_cost, 2),
             "total_time_min": round(r.total_time_min, 2),
             "total_distance_km": round(r.total_distance_km, 2),
+            "metric_val": metric_val,
             "nodes_expanded": r.nodes_expanded,
             "nodes_generated": r.nodes_generated,
             "runtime_ms": round(r.runtime_ms, 3),
             "failure_reason": r.failure_reason,
         }
-        if r.success and r.total_cost < best_cost:
-            best_cost = r.total_cost
+        if r.success and metric_val < best_metric:
+            best_metric = metric_val
 
     for name in results:
-        if results[name]["success"] and best_cost > 0:
-            gap = (results[name]["total_cost"] - best_cost) / best_cost * 100
+        m = results[name]["metric_val"]
+        if results[name]["success"] and best_metric > 0:
+            gap = (m - best_metric) / best_metric * 100
             results[name]["optimality_gap_pct"] = round(gap, 1)
+        elif results[name]["success"] and best_metric == 0:
+            results[name]["optimality_gap_pct"] = 0.0
         else:
             results[name]["optimality_gap_pct"] = None
 

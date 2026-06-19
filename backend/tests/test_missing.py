@@ -11,16 +11,16 @@ from backend.data.repository import AbstractAttractionRepository
 def test_repository_abc():
     class DummyRepo(AbstractAttractionRepository):
         def get_all_attractions(self):
-            super().get_all_attractions()
+            return super().get_all_attractions()  # type: ignore
 
         def get_attraction(self, attraction_id):
-            super().get_attraction(attraction_id)
+            return super().get_attraction(attraction_id)  # type: ignore
 
         def get_neighbors(self, attraction_id):
-            super().get_neighbors(attraction_id)
+            return super().get_neighbors(attraction_id)  # type: ignore
 
         def get_graph(self):
-            super().get_graph()
+            return super().get_graph()  # type: ignore
 
     d = DummyRepo()
     d.get_all_attractions()

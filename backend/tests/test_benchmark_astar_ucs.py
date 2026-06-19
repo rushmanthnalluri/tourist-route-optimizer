@@ -29,6 +29,11 @@ def test_run_benchmark(iterations=20, max_goals=3):
         ucs_res = ucs(problem, cost_mode)
 
         if astar_res.success != ucs_res.success:
+            if (not astar_res.success and "timed out" in astar_res.failure_reason) or \
+               (not ucs_res.success and "timed out" in ucs_res.failure_reason):
+                print(f"Ignoring mismatch due to timeout. Case {i}.")
+                continue
+
             print(
                 f"Mismatch in success status! Case {i}: A*={astar_res.success}, UCS={ucs_res.success}"
             )

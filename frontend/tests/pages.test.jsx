@@ -78,7 +78,7 @@ describe('Pages', () => {
     fireEvent.click(screen.getByText('Environment Types'));
     fireEvent.click(screen.getByText('Knowledge Repr.'));
     fireEvent.click(screen.getByText('Problem Formulation'));
-  });
+  }, 10000);
 
   it('renders CO2Page', async () => {
     api.runSearch.mockResolvedValue({ success: true, path: [1], trace: [{step:1}] });

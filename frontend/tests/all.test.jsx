@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from '../src/App';
 import { describe, it, expect, vi } from 'vitest';
@@ -20,12 +20,14 @@ vi.mock('../src/utils/api', () => ({
 }));
 
 describe('App Test', () => {
-  it('renders without crashing', () => {
-    render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
-        <App />
-      </MemoryRouter>
-    );
+  it('renders without crashing', async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+          <App />
+        </MemoryRouter>
+      );
+    });
     expect(screen.getAllByText(/HydAI/i)[0]).toBeInTheDocument();
   });
 });

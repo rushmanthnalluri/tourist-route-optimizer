@@ -153,6 +153,7 @@ def test_csp_forward_check_pruning():
     scheduler = TouristCSP(attraction_ids=[0, 1, 2])
     domains = {0: ["morning"], 1: ["morning"], 2: ["morning", "afternoon"]}
     res = scheduler.forward_check(0, "morning", domains)
+    assert res is not None
     assert "morning" not in res[2]
 
 
