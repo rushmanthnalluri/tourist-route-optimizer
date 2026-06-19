@@ -260,7 +260,7 @@ export default function HomePage() {
                   <div className="flex gap-3 mt-3 text-xs text-gray-500">
                     <span className="flex items-center gap-1">
                       <IndianRupee size={11} />
-                      {a.entry_cost > 0 ? `₹${a.entry_cost}` : 'Free'}
+                      {a.entry_cost > 0 ? a.entry_cost : 'Free'}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock size={11} />{a.duration_min} min
