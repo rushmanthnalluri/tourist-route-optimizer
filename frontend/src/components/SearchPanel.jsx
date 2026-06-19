@@ -9,6 +9,8 @@ const COST_MODES = ['distance', 'cost', 'time']
 const ALG_COLORS = {
   astar: '#f97316', bfs: '#3b82f6', dfs: '#22c55e',
   ucs: '#a855f7', greedy: '#ec4899', idastar: '#14b8a6',
+  'A*': '#f97316', 'BFS': '#3b82f6', 'DFS': '#22c55e',
+  'UCS': '#a855f7', 'Greedy': '#ec4899', 'IDA*': '#14b8a6',
 }
 
 export default function SearchPanel({ attractions, routePath, startId, goalIds, onResult, setLoading, setStatus }) {
