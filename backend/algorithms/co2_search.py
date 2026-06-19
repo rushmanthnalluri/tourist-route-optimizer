@@ -60,6 +60,23 @@ def heuristic(state: TouristState, problem: TouristProblem, mode: str) -> float:
     else:
         return (max_dist / 20.0) * 60.0
 
+def greedy_heuristic(state: TouristState, problem: TouristProblem, mode: str) -> float:
+    unvisited_goals = [g for g in problem.goal_ids if g not in state.visited]
+    if not unvisited_goals:
+        return 0.0
+    
+    min_dist = min(straight_line_distance(state.current_id, g) for g in unvisited_goals)
+    
+    # Strongly prefer states that have visited MORE goals
+    penalty = len(unvisited_goals) * 10000.0
+
+    if mode == "distance":
+        return penalty + min_dist
+    elif mode == "cost":
+        return penalty + max(0.0, min_dist * 12.0 - 0.5)
+    else:
+        return penalty + (min_dist / 20.0) * 60.0
+
 
 def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchNode]:
     successors: List[SearchNode] = []
@@ -77,14 +94,22 @@ def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchN
             continue
 
         arrival_hour = state.day_hour + time_min / 60.0
-        if not nbr_attr.is_open(int(arrival_hour)):
-            continue
+        wait_time_min = 0.0
+        
+        h = arrival_hour % 24
+        if not nbr_attr.is_open(int(h)):
+            if h < nbr_attr.opening_time:
+                wait_hours = nbr_attr.opening_time - h
+            else:
+                wait_hours = (24.0 - h) + nbr_attr.opening_time
+            wait_time_min = wait_hours * 60.0
+            arrival_hour += wait_hours
 
         total_cost = cost_inr + nbr_attr.entry_cost
         if not problem.is_budget_ok(state, total_cost):
             continue
 
-        total_time = time_min + nbr_attr.duration_min
+        total_time = time_min + wait_time_min + nbr_attr.duration_min
         if not problem.is_time_ok(state, total_time):
             continue
 
@@ -100,7 +125,7 @@ def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchN
             from_id=state.current_id,
             to_id=nbr_id,
             travel_km=road_km,
-            travel_time_min=time_min,
+            travel_time_min=time_min + wait_time_min,
             travel_cost=cost_inr,
         )
 
@@ -216,7 +241,7 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         heuristic=heuristic(problem.initial_state(), problem, mode),
     )
     frontier: deque = deque([root])
-    closed: Set[TouristState] = set()
+    closed: Set[TouristState] = set([root.state])
     nodes_expanded = 0
     nodes_generated = 1
     peak_frontier = 1
@@ -232,14 +257,10 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
         peak_frontier = max(peak_frontier, len(frontier))
         node = frontier.popleft()
         step += 1
-
-        if node.state in closed:
-            continue
         
         if (time.perf_counter_ns() - start_ns) / 1e9 > SEARCH_TIMEOUT_SEC:
             return build_result("BFS", None, nodes_expanded, nodes_generated, peak_frontier, start_ns, trace, mode)
 
-        closed.add(node.state)
         nodes_expanded += 1
 
         trace.append(
@@ -269,6 +290,7 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 
         for child in expand(node, problem, mode):
             if child.state not in closed:
+                closed.add(child.state)
                 frontier.append(child)
                 nodes_generated += 1
                 trace.append(
@@ -483,7 +505,7 @@ def greedy(problem: TouristProblem, mode: str = "distance") -> SearchResult:
     start_ns = time.perf_counter_ns()
     trace: List[Dict] = []
     init_state = problem.initial_state()
-    h0 = heuristic(init_state, problem, mode)
+    h0 = greedy_heuristic(init_state, problem, mode)
     root = SearchNode(
         state=init_state, parent=None, action=None, path_cost=0, heuristic=h0
     )
@@ -541,6 +563,7 @@ def greedy(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 
         for child in expand(node, problem, mode):
             if child.state not in closed:
+                child.heuristic = greedy_heuristic(child.state, problem, mode)
                 counter += 1
                 heapq.heappush(heap, (child.heuristic, counter, child))
                 nodes_generated += 1
