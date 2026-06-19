@@ -466,9 +466,18 @@ def build_graph(
 GRAPH: Dict[int, List[Tuple[int, float, float, float]]] = build_graph(ATTRACTIONS)
 
 
+# Precomputed pairwise straight-line distance cache to avoid haversine trig overhead during search
+_DISTANCE_CACHE: Dict[Tuple[int, int], float] = {}
+
+def _precompute_distances():
+    for a in ATTRACTIONS:
+        for b in ATTRACTIONS:
+            _DISTANCE_CACHE[(a.id, b.id)] = haversine(a.lat, a.lng, b.lat, b.lng)
+
+_precompute_distances()
+
 def straight_line_distance(a_id: int, b_id: int) -> float:
-    a, b = ATTRACTION_MAP[a_id], ATTRACTION_MAP[b_id]
-    return haversine(a.lat, a.lng, b.lat, b.lng)
+    return _DISTANCE_CACHE.get((a_id, b_id), 0.0)
 
 
 def get_neighbors(node_id: int) -> List[Tuple[int, float, float, float]]:

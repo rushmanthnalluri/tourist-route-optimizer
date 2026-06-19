@@ -56,6 +56,30 @@ def visit_cost(attr_id: int, mode: str) -> float:
     return 0.0
 
 
+def compute_mst_dist(current_id: int, unvisited_goals: List[int]) -> float:
+    nodes = [current_id] + unvisited_goals
+    n = len(nodes)
+    if n <= 1:
+        return 0.0
+    in_mst = [False] * n
+    min_dist = [float('inf')] * n
+    min_dist[0] = 0.0
+    total_mst = 0.0
+    for _ in range(n):
+        u = -1
+        for i in range(n):
+            if not in_mst[i] and (u == -1 or min_dist[i] < min_dist[u]):
+                u = i
+        in_mst[u] = True
+        total_mst += min_dist[u]
+        for v in range(n):
+            if not in_mst[v]:
+                d = straight_line_distance(nodes[u], nodes[v])
+                if d < min_dist[v]:
+                    min_dist[v] = d
+    return total_mst
+
+
 def heuristic(state: TouristState, problem: TouristProblem, mode: str) -> float:
     unvisited_goals = [g for g in problem.goal_ids if g not in state.visited]
     if not unvisited_goals:
@@ -69,6 +93,21 @@ def heuristic(state: TouristState, problem: TouristProblem, mode: str) -> float:
         return max(0.0, max_dist * 12.0 - 0.5)
     else:
         return (max_dist / 20.0) * 60.0
+
+
+def ida_heuristic(state: TouristState, problem: TouristProblem, mode: str) -> float:
+    unvisited_goals = [g for g in problem.goal_ids if g not in state.visited]
+    if not unvisited_goals:
+        return 0.0
+
+    mst_dist = compute_mst_dist(state.current_id, unvisited_goals)
+
+    if mode == "distance":
+        return mst_dist
+    elif mode == "cost":
+        return max(0.0, mst_dist * 12.0 - 0.5)
+    else:
+        return (mst_dist / 20.0) * 60.0
 
 def greedy_heuristic(state: TouristState, problem: TouristProblem, mode: str) -> float:
     unvisited_goals = [g for g in problem.goal_ids if g not in state.visited]
@@ -88,7 +127,7 @@ def greedy_heuristic(state: TouristState, problem: TouristProblem, mode: str) ->
         return penalty + (min_dist / 20.0) * 60.0
 
 
-def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchNode]:
+def expand(node: SearchNode, problem: TouristProblem, mode: str, h_fn=heuristic) -> List[SearchNode]:
     successors: List[SearchNode] = []
     state = node.state
     attr = ATTRACTION_MAP.get(state.current_id)
@@ -153,7 +192,7 @@ def expand(node: SearchNode, problem: TouristProblem, mode: str) -> List[SearchN
 
         step_g = get_edge_cost(mode) + visit_cost(nbr_id, mode)
         new_g = node.path_cost + step_g
-        h = heuristic(new_state, problem, mode)
+        h = h_fn(new_state, problem, mode)
 
         child = SearchNode(
             state=new_state,
@@ -737,7 +776,7 @@ def _ida_search(
     )
     counts["step"] += 1
 
-    children = expand(node, problem, mode)
+    children = expand(node, problem, mode, h_fn=ida_heuristic)
     children.sort(key=lambda c: c.f)
     for child in children:
         counts["generated"] += 1
@@ -755,7 +794,7 @@ def idastar(
     start_ns = time.perf_counter_ns()
     trace: List[Dict] = []
     init_state = problem.initial_state()
-    h0 = heuristic(init_state, problem, mode)
+    h0 = ida_heuristic(init_state, problem, mode)
     root = SearchNode(
         state=init_state, parent=None, action=None, path_cost=0, heuristic=h0
     )
@@ -804,11 +843,12 @@ def idastar(
             break
 
         # Avoid float precision "small-step" problem by enforcing a minimum bound step
-        eps = 0.25
-        if mode == "cost":
-            eps = 25.0
-        elif mode == "time":
-            eps = 10.0
+        # Epsilon is dynamic based on goal count: larger routes need larger steps to converge quickly.
+        goal_count = len(problem.goal_ids)
+        if goal_count <= 2:
+            eps = 0.2 if mode == "distance" else (20.0 if mode == "cost" else 10.0)
+        else:
+            eps = 2.0 if mode == "distance" else (150.0 if mode == "cost" else 45.0)
         bound = max(new_bound, bound + eps)
 
     return build_result(
