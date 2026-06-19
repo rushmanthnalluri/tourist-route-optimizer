@@ -195,7 +195,7 @@ def build_result(
 
     if goal_node is None:
         if runtime_ms >= 5000:
-            failure_reason = "Search timed out after 5 seconds to prevent server overload."
+            failure_reason = f"Search timed out after {SEARCH_TIMEOUT_SEC} seconds to prevent server overload."
         else:
             failure_reason = "No path found within constraints"
         return SearchResult(
