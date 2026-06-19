@@ -106,21 +106,19 @@ class TouristCSP:
         slot_limits = {"morning": 180, "afternoon": 300, "evening": 240}
         limit = slot_limits.get(slot)
         if limit is not None:
-            if attr.duration_min > limit:
-                return (
-                    False,
-                    f"SLOT_DURATION: {attr.name} duration {attr.duration_min}min exceeds {slot} limit of {limit}min",
-                )
+            # If an attraction's duration exceeds the standard limit, we dynamically raise the limit to its duration.
+            # This allows long attractions (like Ramoji Film City) to be scheduled alone in a slot.
+            actual_limit = max(limit, attr.duration_min)
 
             slot_total_duration = sum(
                 ATTRACTION_MAP[i].duration_min
                 for i, s in assignment.items()
                 if s == slot and i != aid and i in ATTRACTION_MAP
             )
-            if slot_total_duration + attr.duration_min > limit:
+            if slot_total_duration + attr.duration_min > actual_limit:
                 return (
                     False,
-                    f"SLOT_DURATION: total duration in {slot} exceeds limit of {limit}min",
+                    f"SLOT_DURATION: total duration in {slot} exceeds limit of {actual_limit}min",
                 )
 
         return True, "OK"
@@ -132,6 +130,13 @@ class TouristCSP:
         total_cost = 0.0
         total_time = 0.0
 
+        # Precompute actual slot limits dynamically based on attraction durations
+        actual_slot_limits = dict(slot_limits)
+        for aid, slot in assignment.items():
+            attr = ATTRACTION_MAP.get(aid)
+            if attr and slot in actual_slot_limits:
+                actual_slot_limits[slot] = max(actual_slot_limits[slot], attr.duration_min)
+
         for aid, slot in assignment.items():
             slot_counts[slot] = slot_counts.get(slot, 0) + 1
             if slot_counts[slot] > 2:
@@ -141,10 +146,7 @@ class TouristCSP:
             if attr is None:
                 continue
 
-            limit = slot_limits.get(slot, 9999)
-            if attr.duration_min > limit:
-                return False
-
+            limit = actual_slot_limits.get(slot, 9999)
             slot_durations[slot] = slot_durations.get(slot, 0.0) + attr.duration_min
             if slot_durations[slot] > limit:
                 return False
@@ -579,14 +581,13 @@ def min_conflicts(
 
         slot_limits = {"morning": 180, "afternoon": 300, "evening": 240}
         limit = slot_limits.get(slot, 9999)
-        if attr.duration_min > limit:
-            conflicts += 2
+        actual_limit = max(limit, attr.duration_min)
         slot_total_duration = sum(
             ATTRACTION_MAP[i].duration_min
             for i, s in assignment.items()
             if s == slot and i != aid and i in ATTRACTION_MAP
         )
-        if slot_total_duration + attr.duration_min > limit:
+        if slot_total_duration + attr.duration_min > actual_limit:
             conflicts += 2
 
         return conflicts
