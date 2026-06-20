@@ -147,4 +147,18 @@ describe('AppContext', () => {
     });
     expect(screen.getByTestId('attractions-len').textContent).toBe('0');
   });
+
+  it('handles non-array local storage', async () => {
+    api.getAttractions.mockResolvedValue([]);
+    api.getGraph.mockResolvedValue({});
+    localStorage.setItem('hydai-custom-places', JSON.stringify({ id: 1000, name: 'Bad shape' }));
+    await act(async () => {
+      render(
+        <AppProvider>
+          <TestComponent />
+        </AppProvider>
+      );
+    });
+    expect(screen.getByTestId('attractions-len').textContent).toBe('0');
+  });
 });

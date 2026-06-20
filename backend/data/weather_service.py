@@ -25,7 +25,7 @@ class WeatherService:
     async def get_live_weather(self) -> Tuple[str, float]:
         """
         Returns a tuple: (weather_condition, prob_rain)
-        weather_condition: 'sunny', 'rainy', 'cloudy'
+        weather_condition: 'sunny', 'rain', 'cloudy'
         prob_rain: 0.0 to 1.0
         """
         # Check cache
@@ -63,7 +63,7 @@ class WeatherService:
                     condition = "cloudy"
                     prob_rain = 0.2
                 else:
-                    condition = "rainy"
+                    condition = "rain"
                     # If it's actively raining, probability is high
                     prob_rain = 0.8
                     if precipitation > 2.0:

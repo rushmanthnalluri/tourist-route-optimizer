@@ -7,18 +7,27 @@ from backend.algorithms.co5_probabilistic import (
 )
 from backend.data.weather_service import weather_service
 from backend.data.live_crowd_service import live_crowd_service
+from backend.data.memory_repository import MemoryAttractionRepository
 from fastapi import APIRouter
-from typing import Optional, Dict
-from pydantic import BaseModel
+from typing import Optional, Dict, List
+from pydantic import BaseModel, Field, field_validator
+from enum import Enum
 import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 router = APIRouter(prefix="/api/probabilistic", tags=["CO5 Probabilistic"])
+repo = MemoryAttractionRepository()
 
 _bn = BayesianNetwork()
 _hmm = TouristHMM()
+
+
+class InferenceMethod(str, Enum):
+    exact = "exact"
+    rejection = "rejection"
+    likelihood_weighting = "likelihood_weighting"
 
 
 class BayesRequest(BaseModel):
@@ -27,16 +36,23 @@ class BayesRequest(BaseModel):
     day_type: str = "weekday"
     weather: str = "sunny"
 
+    @field_validator("attraction_id")
+    @classmethod
+    def validate_attraction_id(cls, v: int) -> int:
+        if repo.get_attraction(v) is None:
+            raise ValueError(f"attraction_id {v} does not exist")
+        return v
+
 
 class InferenceRequest(BaseModel):
     evidence: Dict[str, str]
     query: str = "satisfaction"
-    n_samples: int = 5000
-    method: str = "exact"
+    n_samples: int = Field(5000, ge=1, le=50000)
+    method: InferenceMethod = InferenceMethod.exact
 
 
 class HMMRequest(BaseModel):
-    observations: list
+    observations: List[str] = Field(default_factory=list, max_length=100)
 
 
 @router.post("/bayes-update")
@@ -48,9 +64,9 @@ async def bayes_update(req: BayesRequest):
 
 @router.post("/infer")
 async def infer(req: InferenceRequest):
-    if req.method == "exact":
+    if req.method == InferenceMethod.exact:
         return _bn.infer_satisfaction(req.evidence)
-    elif req.method == "rejection":
+    elif req.method == InferenceMethod.rejection:
         return rejection_sampling(_bn, req.query, req.evidence, req.n_samples)
     else:
         return likelihood_weighting(_bn, req.query, req.evidence, req.n_samples)

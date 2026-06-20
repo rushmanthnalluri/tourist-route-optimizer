@@ -22,6 +22,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
   const [profile, setProfile]     = useState(null)
 
   async function runSearch() {
+    if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
     if (!goalIds.length) { setStatus('⚠ Select at least 1 goal'); return }
 
     // Per-algorithm goal count safety limits
@@ -49,6 +50,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
 
   async function compareAll() {
     if (!goalIds.length) return
+    if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
     if (goalIds.length > 8) {
       setStatus('⚠ Compare All is limited to max 8 goals to prevent server timeout.')
       return
@@ -57,8 +59,14 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
     try {
       const payload = { start_id: startId, goal_ids: goalIds, budget_inr: budget, max_time_min: maxTime, algorithm: 'all', cost_mode: costMode }
       const data = await api.compareSearch(payload)
-      setProfile(data.comparison)
-      setStatus('✅ Comparison done')
+      const comparison = data.comparison || {}
+      setProfile(comparison)
+      const successCount = Object.values(comparison).filter(d => d.success).length
+      if (successCount > 0) {
+        setStatus(`✅ Comparison done — ${successCount} algorithm${successCount === 1 ? '' : 's'} found a route`)
+      } else {
+        setStatus('⚠ No algorithm found a route — increase budget/time or remove distant expensive goals')
+      }
     } catch (e) { setStatus('⚠ Error') }
     setLoading(false)
   }
@@ -194,6 +202,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
                   <th className="text-right">Dist(km)</th>
                   <th className="text-right">ms</th>
                   <th className="text-right">Gap%</th>
+                  <th className="text-left pl-2">Reason</th>
                 </tr>
               </thead>
               <tbody>
@@ -205,6 +214,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
                     <td className="text-right">{d.success && d.total_distance_km > 0 ? d.total_distance_km : '—'}</td>
                     <td className="text-right">{d.runtime_ms}</td>
                     <td className="text-right">{d.optimality_gap_pct != null ? `${d.optimality_gap_pct}%` : '—'}</td>
+                    <td className="pl-2 text-slate-500">{d.success ? 'Route found' : (d.failure_reason || 'No path within constraints')}</td>
                   </tr>
                 ))}
               </tbody>

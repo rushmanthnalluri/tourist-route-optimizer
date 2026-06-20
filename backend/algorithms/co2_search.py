@@ -377,7 +377,7 @@ def bfs(problem: TouristProblem, mode: str = "distance") -> SearchResult:
 
 
 def dfs(
-    problem: TouristProblem, mode: str = "distance", depth_limit: int = None
+    problem: TouristProblem, mode: str = "distance", depth_limit: Optional[int] = None
 ) -> SearchResult:
     # Scale depth limit by number of goals: each goal may need ~4 hops to reach.
     # Cap at 30 to prevent combinatorial explosion — with 30 depth, worst case is
@@ -745,7 +745,7 @@ def _ida_search(
     mode: str,
     trace: List[Dict],
     counts: Dict[str, int],
-    iteration_closed: dict,
+    iteration_closed: Dict[TouristState, float],
 ) -> Tuple[Optional[SearchNode], float]:
     f = node.f
     if f > bound:
@@ -826,7 +826,7 @@ def idastar(
                 "bound": round(bound, 2),
             }
         )
-        iteration_closed = {}
+        iteration_closed: Dict[TouristState, float] = {}
         result, new_bound = _ida_search(root, bound, problem, mode, trace, counts, iteration_closed)
         if result is not None:
             return build_result(

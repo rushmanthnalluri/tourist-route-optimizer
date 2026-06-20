@@ -9,7 +9,7 @@ import { Scale, Swords, CloudRain, Users } from 'lucide-react'
 const CATEGORIES = ['historical', 'nature', 'religious', 'museum', 'entertainment', 'cultural', 'shopping', 'modern']
 
 export default function CO4Page() {
-  const { attractions, routePath, setLoading, setStatus, loading, resolveRoutingIds, startId, goalIds, liveEnv } = useApp()
+  const { attractions, routePath, setLoading, setStatus, loading, resolveRoutingId, resolveRoutingIds, startId, goalIds, liveEnv } = useApp()
   const [budget, setBudget]         = useState(600)
   const [maxTime, setMaxTime]       = useState(400)
   const [totalCost, setTotalCost]   = useState(200)
@@ -79,16 +79,21 @@ export default function CO4Page() {
 
   async function runNegotiation() {
     if (startId === null || startId === undefined || !goalIds.length) { setStatus('⚠ Select Start and Goals on the Home page first'); return }
+    const resolvedGoalIds = resolveRoutingIds(goalIds)
+    if (!resolvedGoalIds.length) { setStatus('⚠ Select at least 1 routable goal on the Home page'); return }
+    if (resolvedGoalIds.length > 8) { setStatus('⚠ Negotiation is limited to 8 goals max (compare-all limit).'); return }
     setLoading(true); setStatus('Generating candidate routes from CO2 algorithms...')
     try {
       const compareData = await api.compareSearch({
-        start_id: startId, goal_ids: goalIds, cost_mode: 'distance', avoid_crowds: false
+        start_id: resolveRoutingId(startId), goal_ids: resolvedGoalIds,
+        budget_inr: budget, max_time_min: maxTime,
+        cost_mode: 'distance', avoid_crowds: false
       })
       const candidate_routes = Object.entries(compareData.comparison || {}).map(([alg, res]) => ({
         algorithm: alg,
         path: res.path,
-        cost: res.cost_inr,
-        time: res.time_min
+        total_cost: res.total_cost,
+        total_time_min: res.total_time_min,
       })).filter(r => r.path && r.path.length > 0)
       
       if (!candidate_routes.length) {

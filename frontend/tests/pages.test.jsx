@@ -57,7 +57,9 @@ vi.mock('../src/context/AppContext', async (importOriginal) => {
       loading: false, statusMsg: 'Ready', setStartId: vi.fn(), toggleGoalId: vi.fn(),
       toggleGoal: vi.fn(), handleMapPick: vi.fn(), mapPickActive: false, addCustomPlace: vi.fn(),
       startMapPick: vi.fn(), cancelMapPick: vi.fn(), setStatus: vi.fn(), setLoading: vi.fn(),
-      routingPayload: vi.fn(() => ({})), removeCustomPlace: vi.fn(),
+      routingPayload: vi.fn((extra = {}) => ({ start_id: 1, goal_ids: [1], ...extra })),
+      removeCustomPlace: vi.fn(),
+      resolveRoutingId: vi.fn((id) => id),
       resolveRoutingIds: vi.fn((ids) => ids)
     })
   };

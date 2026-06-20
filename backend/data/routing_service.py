@@ -1,4 +1,3 @@
-from algorithms import co2_search
 import httpx
 import logging
 import os

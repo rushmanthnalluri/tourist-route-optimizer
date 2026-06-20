@@ -6,17 +6,28 @@ from backend.algorithms.co4_decision import (
 )
 from fastapi import APIRouter
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 import sys
 import os
+from backend.data.memory_repository import MemoryAttractionRepository
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 router = APIRouter(prefix="/api/decision", tags=["CO4 Decision"])
+repo = MemoryAttractionRepository()
+
+
+def validate_attraction_ids(ids: List[int], field_name: str) -> List[int]:
+    if len(ids) != len(set(ids)):
+        raise ValueError(f"{field_name} must be unique")
+    for aid in ids:
+        if repo.get_attraction(aid) is None:
+            raise ValueError(f"{field_name} contains unknown attraction_id {aid}")
+    return ids
 
 
 class UtilityRequest(BaseModel):
-    path: List[int]
+    path: List[int] = Field(..., min_length=1)
     total_cost: float = Field(..., ge=0)
     total_time_min: float = Field(..., ge=0)
     time_slot: str = "afternoon"
@@ -24,21 +35,36 @@ class UtilityRequest(BaseModel):
     budget_inr: float = Field(2000.0, gt=0)
     max_time_min: float = Field(480.0, gt=0)
 
+    @field_validator("path")
+    @classmethod
+    def validate_path(cls, v: List[int]) -> List[int]:
+        return validate_attraction_ids(v, "path")
+
 
 class MinimaxRequest(BaseModel):
-    attractions: List[int]
-    depth_limit: int = 4
-    budget_inr: float = 2000.0
-    max_time_min: float = 480.0
+    attractions: List[int] = Field(..., min_length=1, max_length=30)
+    depth_limit: int = Field(4, ge=1, le=8)
+    budget_inr: float = Field(2000.0, gt=0)
+    max_time_min: float = Field(480.0, gt=0)
     preferred_categories: Optional[List[str]] = None
+
+    @field_validator("attractions")
+    @classmethod
+    def validate_attractions(cls, v: List[int]) -> List[int]:
+        return validate_attraction_ids(v, "attractions")
 
 
 class ExpectedUtilityRequest(BaseModel):
-    attraction_ids: List[int]
-    weather_prob_rain: float = 0.3
+    attraction_ids: List[int] = Field(..., min_length=1, max_length=30)
+    weather_prob_rain: float = Field(0.3, ge=0, le=1)
     preferred_categories: Optional[List[str]] = None
-    budget_inr: float = 2000.0
-    max_time_min: float = 480.0
+    budget_inr: float = Field(2000.0, gt=0)
+    max_time_min: float = Field(480.0, gt=0)
+
+    @field_validator("attraction_ids")
+    @classmethod
+    def validate_attraction_ids_field(cls, v: List[int]) -> List[int]:
+        return validate_attraction_ids(v, "attraction_ids")
 
 
 @router.post("/utility")
