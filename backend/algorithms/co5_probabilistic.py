@@ -8,6 +8,14 @@ from typing import Dict, List, Tuple, Any, Optional
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
+def normalize_weather(weather: Optional[str]) -> Optional[str]:
+    return "rain" if weather == "rainy" else weather
+
+
+def normalize_day_type(day_type: Optional[str]) -> Optional[str]:
+    return "weekend" if day_type == "holiday" else day_type
+
+
 def bayes_rule(prior: float, likelihood: float, evidence_prob: float) -> float:
     if evidence_prob == 0:
         return 0.0
@@ -17,6 +25,8 @@ def bayes_rule(prior: float, likelihood: float, evidence_prob: float) -> float:
 def bayes_update_crowd(
     time_slot: str, day_type: str, weather: str, attraction_id: int
 ) -> Dict[str, Any]:
+    weather = normalize_weather(weather) or "sunny"
+
     attr = ATTRACTION_MAP.get(attraction_id)
     if attr is None:
         return {}
@@ -180,6 +190,16 @@ class BayesianNetwork:
         self.trace = []
         self._log("START_INFERENCE", evidence=evidence)
 
+        evidence = {**evidence}
+        if "weather" in evidence:
+            normalized_weather = normalize_weather(evidence["weather"])
+            if normalized_weather is not None:
+                evidence["weather"] = normalized_weather
+        if "day_type" in evidence:
+            normalized_day = normalize_day_type(evidence["day_type"])
+            if normalized_day is not None:
+                evidence["day_type"] = normalized_day
+
         known_weather = evidence.get("weather")
         known_time = evidence.get("time_slot")
         known_day = evidence.get("day_type")
@@ -253,6 +273,8 @@ class BayesianNetwork:
         time_slot: Optional[str] = None,
         day_type: Optional[str] = None,
     ) -> Dict[str, float]:
+        weather = normalize_weather(weather)
+        day_type = normalize_day_type(day_type)
         weather_vals = [weather] if weather else list(self.cpt_weather.keys())
         time_vals = [time_slot] if time_slot else list(self.cpt_time.keys())
         day_vals = [day_type] if day_type else list(self.cpt_day.keys())
@@ -260,11 +282,11 @@ class BayesianNetwork:
         crowd_total = {"low": 0.0, "medium": 0.0, "high": 0.0}
 
         for w in weather_vals:
-            p_w = self.cpt_weather[w]
+            p_w = self.cpt_weather.get(w, 0.0)
             for t in time_vals:
-                p_t = self.cpt_time[t]
+                p_t = self.cpt_time.get(t, 0.0)
                 for d in day_vals:
-                    p_d = self.cpt_day[d]
+                    p_d = self.cpt_day.get(d, 0.0)
                     crowd_dist = self.cpt_crowd.get(
                         (w, t, d), {"low": 0.33, "medium": 0.34, "high": 0.33}
                     )
@@ -286,6 +308,15 @@ def rejection_sampling(
     seed: int = 42,
 ) -> Dict[str, Any]:
     random.seed(seed)
+    evidence = {**evidence}
+    if "weather" in evidence:
+        normalized = normalize_weather(evidence["weather"])
+        if normalized is not None:
+            evidence["weather"] = normalized
+    if "day_type" in evidence:
+        normalized = normalize_day_type(evidence["day_type"])
+        if normalized is not None:
+            evidence["day_type"] = normalized
     counts: Dict[str, int] = {}
     accepted = 0
     rejected = 0
@@ -351,6 +382,15 @@ def likelihood_weighting(
     seed: int = 42,
 ) -> Dict[str, Any]:
     random.seed(seed)
+    evidence = {**evidence}
+    if "weather" in evidence:
+        normalized = normalize_weather(evidence["weather"])
+        if normalized is not None:
+            evidence["weather"] = normalized
+    if "day_type" in evidence:
+        normalized = normalize_day_type(evidence["day_type"])
+        if normalized is not None:
+            evidence["day_type"] = normalized
     weighted_counts: Dict[str, float] = {}
 
     for _ in range(n_samples):

@@ -155,3 +155,9 @@ async def root():
         ],
         "docs": "/docs",
     }
+
+
+@app.get("/api/health", tags=["Health"])
+async def health_check():
+    """Lightweight health check — used by the frontend to verify connectivity."""
+    return {"status": "ok"}

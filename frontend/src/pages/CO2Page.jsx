@@ -26,6 +26,9 @@ const ALG_COLORS = {
   ucs: '#a855f7', greedy: '#ec4899', idastar: '#14b8a6',
 }
 
+const GOAL_LIMITS = { dfs: 24, bfs: 12, ucs: 12, astar: 18, greedy: 24, idastar: 4 }
+const COMPARE_GOAL_LIMIT = 8
+
 export default function CO2Page() {
   const { attractions, startId, goalIds, routePath, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
   const [algorithm, setAlgorithm] = useState('astar')
@@ -60,12 +63,19 @@ export default function CO2Page() {
   async function runSearch() {
     if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
     if (!goalIds.length) { setStatus('⚠ Select at least 1 goal on the Home page'); return }
+    const payload = routingPayload({
+      budget_inr: budget, max_time_min: maxTime,
+      algorithm, cost_mode: costMode,
+    })
+    if (!payload.goal_ids.length) { setStatus('⚠ Select at least 1 routable goal on the Home page'); return }
+    const limit = GOAL_LIMITS[algorithm]
+    if (limit && payload.goal_ids.length > limit) {
+      setStatus(`⚠ ${algorithm.toUpperCase()} supports max ${limit} goals. Select fewer goals or choose another algorithm.`)
+      return
+    }
     setLoading(true); setStatus(`Running ${algorithm.toUpperCase()}...`)
     try {
-      const data = await api.runSearch(routingPayload({
-        budget_inr: budget, max_time_min: maxTime,
-        algorithm, cost_mode: costMode,
-      }))
+      const data = await api.runSearch(payload)
       setResult(data)
       if (data.success && data.path) {
         setRoutePath(data.path)
@@ -81,22 +91,34 @@ export default function CO2Page() {
   async function compareAll() {
     if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
     if (!goalIds.length) { setStatus('⚠ Select at least 1 goal on the Home page'); return }
+    const payload = routingPayload({
+      budget_inr: budget, max_time_min: maxTime,
+      algorithm: 'all', cost_mode: costMode,
+    })
+    if (!payload.goal_ids.length) { setStatus('⚠ Select at least 1 routable goal on the Home page'); return }
+    if (payload.goal_ids.length > COMPARE_GOAL_LIMIT) {
+      setStatus(`⚠ Compare All is limited to max ${COMPARE_GOAL_LIMIT} goals to prevent server timeout.`)
+      return
+    }
     setLoading(true); setStatus('Comparing all algorithms...')
     try {
-      const data = await api.compareSearch(routingPayload({
-        budget_inr: budget, max_time_min: maxTime,
-        algorithm: 'all', cost_mode: costMode,
-      }))
-      setProfile(data.comparison)
-      setStatus('✅ Comparison done')
+      const data = await api.compareSearch(payload)
+      const comparison = data.comparison || {}
+      setProfile(comparison)
+      const successCount = Object.values(comparison).filter(d => d.success).length
+      if (successCount > 0) {
+        setStatus(`✅ Comparison done — ${successCount} algorithm${successCount === 1 ? '' : 's'} found a route`)
+      } else {
+        setStatus('⚠ No algorithm found a route — increase budget/time or remove distant expensive goals')
+      }
     } catch (e) { setStatus('⚠ Error') }
     setLoading(false)
   }
 
-  const chartData = profile ? Object.entries(profile).map(([alg, d]) => ({
+  const chartData = useMemo(() => profile ? Object.entries(profile).map(([alg, d]) => ({
     alg, expanded: d.nodes_expanded, time: d.runtime_ms,
     dist: d.total_distance_km, success: d.success,
-  })) : []
+  })) : [], [profile])
 
   return (
     <PageLayout
@@ -210,6 +232,14 @@ export default function CO2Page() {
 
       {profile && chartData.length > 0 && (
         <div className="card p-4 space-y-3">
+          {!bestAlgorithm && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-lg text-xs">
+              <strong className="font-bold">No feasible route found.</strong>
+              <p className="mt-0.5">
+                Try increasing budget/time or removing distant expensive goals.
+              </p>
+            </div>
+          )}
           {bestAlgorithm && (
             <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 rounded-lg text-xs flex items-center justify-between">
               <div>
@@ -246,6 +276,7 @@ export default function CO2Page() {
                   <th className="text-right py-1 font-semibold">Dist (km)</th>
                   <th className="text-right py-1 font-semibold">Runtime (ms)</th>
                   <th className="text-right py-1 font-semibold">Gap %</th>
+                  <th className="text-left py-1 pl-3 font-semibold">Reason</th>
                 </tr>
               </thead>
               <tbody>
@@ -256,6 +287,7 @@ export default function CO2Page() {
                     <td className="text-right py-1">{d.success ? d.total_distance_km?.toFixed(2) : '—'}</td>
                     <td className="text-right py-1">{d.runtime_ms?.toFixed(1)}</td>
                     <td className="text-right py-1">{d.success && d.optimality_gap_pct != null ? `${d.optimality_gap_pct}%` : '—'}</td>
+                    <td className="py-1 pl-3 text-[11px] text-gray-400">{d.success ? 'Route found' : (d.failure_reason || 'No path within constraints')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -264,7 +296,7 @@ export default function CO2Page() {
         </div>
       )}
 
-      {result?.trace && (
+      {result?.trace?.length > 0 && (
         <TraceViewer trace={result.trace} title={`${algorithm.toUpperCase()} Trace`} routePath={routePath} attractions={attractions} />
       )}
     </PageLayout>

@@ -9,7 +9,7 @@ describe('geo.js', () => {
   });
 
   it('nearestAttractionId works with empty array', () => {
-    expect(nearestAttractionId(0, 0, [])).toBe(0);
+    expect(nearestAttractionId(0, 0, [])).toBe(null);
   });
 
   it('nearestAttractionId works with items', () => {

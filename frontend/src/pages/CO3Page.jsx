@@ -25,8 +25,10 @@ export default function CO3Page() {
 
   async function runCSP() {
     if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
-    const ids = resolveRoutingIds([startId, ...goalIds])
-    if (ids.length < 2) { setStatus('⚠ Select at least 1 goal on the Home page'); return }
+    if (!goalIds.length) { setStatus('⚠ Select at least 1 goal on the Home page'); return }
+    // CSP only schedules attractions — do not include the start as a schedulable visit
+    const ids = resolveRoutingIds(goalIds)
+    if (!ids.length) { setStatus('⚠ No routable goals selected'); return }
     setLoading(true); setStatus('Running CSP...')
     try {
       const data = await api.scheduleCSP({
@@ -36,7 +38,11 @@ export default function CO3Page() {
       })
       setResult(data)
       if (data.success && data.schedule) {
-        const path = Object.keys(data.schedule).map(Number)
+        // Sort by slot order so the route path follows morning → afternoon → evening
+        const SLOT_ORDER = { morning: 0, afternoon: 1, evening: 2 }
+        const path = Object.entries(data.schedule)
+          .sort(([, a], [, b]) => (SLOT_ORDER[a.slot] ?? 99) - (SLOT_ORDER[b.slot] ?? 99))
+          .map(([id]) => Number(id))
         setRoutePath(path)
         setTraceSteps(data.trace || [])
       }
@@ -95,13 +101,16 @@ export default function CO3Page() {
               ['LCV (Least Constraining Value)', useLCV, setUseLCV],
               ['Forward Checking', useFC, setUseFC],
               ['AC-3 (Arc Consistency)', useAC3, setUseAC3],
-            ].map(([label, val, setter]) => (
-              <label key={label} className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-                <input title="Input field" aria-label="Input field" id="inp-4d6f7d" type="checkbox" checked={val} onChange={e => setter(e.target.checked)}
-                  className="accent-emerald-500 rounded" />
-                {label}
-              </label>
-            ))}
+            ].map(([label, val, setter]) => {
+              const safeId = `inp-co3-${label.replace(/[^a-z0-9]/gi, '-').toLowerCase()}`
+              return (
+                <label key={label} htmlFor={safeId} className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+                  <input title={label} aria-label={label} id={safeId} type="checkbox" checked={val} onChange={e => setter(e.target.checked)}
+                    className="accent-emerald-500 rounded" />
+                  {label}
+                </label>
+              )
+            })}
           </div>
         </div>
       )}

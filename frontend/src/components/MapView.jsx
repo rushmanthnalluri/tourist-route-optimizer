@@ -1,29 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
-
-function displayAttraction(id, attractions, startId, goalIds) {
-  const direct = attractions.find(a => a.id === id)
-  if (direct && !direct.isCustom) {
-    const start = attractions.find(a => a.id === startId)
-    if (start?.isCustom && start.snapToId === id) return start
-    for (const gid of goalIds) {
-      const g = attractions.find(a => a.id === gid)
-      if (g?.isCustom && g.snapToId === id) return g
-    }
-  }
-  return direct
-}
-
-function MapClickPicker({ active, onPick }) {
-  useMapEvents({
-    click(e) {
-      if (active && onPick) onPick(e.latlng.lat, e.latlng.lng)
-    },
-  })
-  return null
-}
-
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
 import iconUrl from 'leaflet/dist/images/marker-icon.png'
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
@@ -47,6 +24,28 @@ function escapeHTML(str) {
       default: return m
     }
   })
+}
+
+function displayAttraction(id, attractions, startId, goalIds) {
+  const direct = attractions.find(a => a.id === id)
+  if (direct && !direct.isCustom) {
+    const start = attractions.find(a => a.id === startId)
+    if (start?.isCustom && start.snapToId === id) return start
+    for (const gid of goalIds) {
+      const g = attractions.find(a => a.id === gid)
+      if (g?.isCustom && g.snapToId === id) return g
+    }
+  }
+  return direct
+}
+
+function MapClickPicker({ active, onPick }) {
+  useMapEvents({
+    click(e) {
+      if (active && onPick) onPick(e.latlng.lat, e.latlng.lng)
+    },
+  })
+  return null
 }
 
 function makeNumberIcon(n, color = '#4f46e5', isStart = false, isGoal = false) {

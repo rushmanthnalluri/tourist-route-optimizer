@@ -31,6 +31,12 @@ class SearchAlgorithm(str, Enum):
     all = "all"
 
 
+class CostMode(str, Enum):
+    distance = "distance"
+    cost = "cost"
+    time = "time"
+
+
 class SearchRequest(BaseModel):
     start_id: int
     goal_ids: List[int] = Field(..., min_length=1, max_length=30)
@@ -38,7 +44,7 @@ class SearchRequest(BaseModel):
     max_time_min: float = Field(480.0, gt=0)
     start_hour: float = 9.0
     algorithm: SearchAlgorithm = SearchAlgorithm.astar
-    cost_mode: str = "distance"
+    cost_mode: CostMode = CostMode.distance
 
     @field_validator("goal_ids")
     @classmethod
@@ -86,7 +92,7 @@ async def run_search(req: SearchRequest):
                 status_code=400,
                 detail="Compare All is limited to 8 goals to prevent server timeout. Please select fewer goals or run algorithms individually."
             )
-        profile = profile_all(problem, req.cost_mode)
+        profile = profile_all(problem, req.cost_mode.value)
         return {"algorithm": "all", "profile": profile}
 
     algo_func = algo_map.get(req.algorithm.value)
@@ -103,7 +109,7 @@ async def run_search(req: SearchRequest):
                    f"Select fewer goals or use A* / Greedy for larger routes."
         )
 
-    result = algo_func(problem, req.cost_mode)
+    result = algo_func(problem, req.cost_mode.value)
     return {
         "algorithm": req.algorithm,
         "success": result.success,
@@ -129,8 +135,8 @@ async def compare_algorithms(req: SearchRequest):
             detail="Compare All is limited to 8 goals to prevent server timeout. Please select fewer goals or run algorithms individually."
         )
     problem = make_problem(req)
-    profile = profile_all(problem, req.cost_mode)
-    return {"comparison": profile, "cost_mode": req.cost_mode}
+    profile = profile_all(problem, req.cost_mode.value)
+    return {"comparison": profile, "cost_mode": req.cost_mode.value}
 
 
 @router.get("/live-traffic")

@@ -1,12 +1,19 @@
 from fastapi import APIRouter
 from typing import List, Optional
 from pydantic import BaseModel, Field, field_validator
+from enum import Enum
 from backend.algorithms.co6_hybrid import HybridTouristPlanner
 from backend.data.memory_repository import MemoryAttractionRepository
 
 repo = MemoryAttractionRepository()
 
 router = APIRouter(prefix="/api/hybrid", tags=["CO6 Hybrid"])
+
+
+class CostMode(str, Enum):
+    distance = "distance"
+    cost = "cost"
+    time = "time"
 
 
 class HybridRequest(BaseModel):
@@ -19,7 +26,7 @@ class HybridRequest(BaseModel):
     avoid_crowds: bool = False
     weather: str = "sunny"
     day_type: str = "weekday"
-    cost_mode: str = "distance"
+    cost_mode: CostMode = CostMode.distance
 
     @field_validator("goal_ids")
     @classmethod
@@ -51,6 +58,6 @@ async def hybrid_plan(req: HybridRequest):
         avoid_crowds=req.avoid_crowds,
         weather=req.weather,
         day_type=req.day_type,
-        cost_mode=req.cost_mode,
+        cost_mode=req.cost_mode.value,
     )
     return planner.run()

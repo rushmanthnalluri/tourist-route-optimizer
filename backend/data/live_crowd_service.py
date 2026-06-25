@@ -35,7 +35,7 @@ class LiveCrowdService:
         weather_mult_indoor = 1.0
         weather_mult_outdoor = 1.0
 
-        if condition == "rainy":
+        if condition == "rain":
             weather_mult_outdoor = 0.3
             weather_mult_indoor = 1.3
         elif condition == "sunny":
@@ -75,9 +75,9 @@ class LiveCrowdService:
 
             if condition == "sunny" and a.weather_sensitivity > 0.5:
                 new_rating += 0.2
-            elif condition == "rainy" and a.weather_sensitivity > 0.5:
+            elif condition == "rain" and a.weather_sensitivity > 0.5:
                 new_rating -= 0.4
-            elif condition == "rainy" and a.weather_sensitivity <= 0.5:
+            elif condition == "rain" and a.weather_sensitivity <= 0.5:
                 new_rating += 0.1
 
             if new_prob > 0.8:

@@ -127,7 +127,7 @@ export default function TraceViewer({ trace = [], title = 'Algorithm Trace', rou
         />
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-t border-gray-100 shrink-0">
         <button
           onClick={() => { setCurrent(0); setPlaying(false) }}
           className="btn-ghost px-2 py-1.5 text-xs"
@@ -140,6 +140,7 @@ export default function TraceViewer({ trace = [], title = 'Algorithm Trace', rou
           onClick={() => setPlaying(p => !p)}
           className="btn-primary py-1.5 px-3 text-xs flex-1"
           title={playing ? 'Pause' : 'Play'}
+          aria-label={playing ? 'Pause playback' : 'Play trace'}
         >
           {playing ? <><Pause size={12} /> Pause</> : <><Play size={12} /> Play</>}
         </button>

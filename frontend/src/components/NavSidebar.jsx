@@ -64,11 +64,12 @@ export default function NavSidebar() {
     setLoading(true); setStatus('Simulating Live Crowds...')
     try {
       const data = await api.getLiveCrowds()
-      setLiveEnv({
+      setLiveEnv(prev => ({
+        ...prev,
         weather: data.weather,
         time_slot: data.time_slot,
         day_type: data.day_type
-      })
+      }))
       setStatus(`✅ ${data.message}`)
     } catch (e) {
       setStatus('⚠ Failed to fetch live crowds')

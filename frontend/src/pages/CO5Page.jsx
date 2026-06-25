@@ -9,23 +9,28 @@ const HMM_OBS = ['gps_stationary', 'gps_moving', 'ticket_scanned', 'photo_taken'
 
 export default function CO5Page() {
   const { attractions, setLoading, setStatus, loading, liveEnv } = useApp()
+  // Only builtin attractions are valid for Bayes update (backend validates IDs 0–24)
+  const builtinAttractions = React.useMemo(
+    () => attractions.filter(a => !a.isCustom),
+    [attractions]
+  )
   const [weather, setWeather]     = useState('sunny')
   const [timeSlot, setTimeSlot]   = useState('afternoon')
   const [dayType, setDayType]     = useState('weekday')
-  const [attractionId, setAttrId] = useState(0)
-
-  useEffect(() => {
-    if (liveEnv) {
-      setWeather(liveEnv.weather)
-      setTimeSlot(liveEnv.time_slot)
-      setDayType(liveEnv.day_type)
-    }
-  }, [liveEnv])
+  const [attractionId, setAttrId] = useState(() => builtinAttractions[0]?.id ?? 0)
   const [method, setMethod]       = useState('exact')
   const [hmmObs, setHmmObs]       = useState([...HMM_OBS])
   const [bayesResult, setBayesResult]   = useState(null)
   const [inferResult, setInferResult]   = useState(null)
   const [hmmResult, setHmmResult]       = useState(null)
+
+  useEffect(() => {
+    if (liveEnv) {
+      if (liveEnv.weather !== undefined)   setWeather(liveEnv.weather)
+      if (liveEnv.time_slot !== undefined) setTimeSlot(liveEnv.time_slot)
+      if (liveEnv.day_type !== undefined)  setDayType(liveEnv.day_type)
+    }
+  }, [liveEnv])
 
   function toggleObs(obs) {
     setHmmObs(o => o.includes(obs) ? o.filter(x => x !== obs) : [...o, obs])
@@ -106,7 +111,7 @@ export default function CO5Page() {
           ].map(([label, val, setter, opts]) => (
             <div key={label}>
               <div className="text-xs font-medium text-gray-500 mb-1 block">{label}</div>
-              <select title="Select dropdown" aria-label="Select dropdown" id="sel-665735" value={val} onChange={e => setter(e.target.value)}
+              <select title={label} aria-label={label} id={`sel-co5-${label.toLowerCase().replace(/\s+/g, '-')}`} value={val} onChange={e => setter(e.target.value)}
                 className="inp text-sm">
                 {opts.map(o => <option key={o}>{o}</option>)}
               </select>
@@ -127,7 +132,7 @@ export default function CO5Page() {
           <div className="text-xs font-medium text-gray-500 mb-1 block">Attraction</div>
           <select title="Select dropdown" aria-label="Select dropdown" id="sel-40fd7c" value={attractionId} onChange={e => setAttrId(+e.target.value)}
             className="inp text-sm">
-            {attractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+            {builtinAttractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
           </select>
         </div>
         <button onClick={runBayes} disabled={loading}
