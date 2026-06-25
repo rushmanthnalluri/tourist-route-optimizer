@@ -60,7 +60,7 @@ export function AppProvider({ children }) {
   const enrichCustom = useCallback(
     (place, builtins) => {
       const snapToId = nearestAttractionId(place.lat, place.lng, builtins)
-      const snapName = builtins.find(a => a.id === snapToId)?.name
+      const snapName = snapToId != null ? builtins.find(a => a.id === snapToId)?.name : undefined
       return {
         ...place,
         snapToId,
@@ -81,13 +81,19 @@ export function AppProvider({ children }) {
     return [...builtinAttractions, ...enriched]
   }, [builtinAttractions, customPlaces, enrichCustom])
 
+  // O(1) lookup map — rebuilt only when attractions list changes
+  const attractionMap = useMemo(
+    () => new Map(attractions.map(a => [a.id, a])),
+    [attractions]
+  )
+
   const toggleGoal = useCallback((id) => {
     setGoalIds(g => (g.includes(id) ? g.filter(x => x !== id) : [...g, id]))
   }, [])
 
   const getAttraction = useCallback(
-    (id) => attractions.find(a => a.id === id),
-    [attractions]
+    (id) => attractionMap.get(id),
+    [attractionMap]
   )
 
   const resolveRoutingId = useCallback(

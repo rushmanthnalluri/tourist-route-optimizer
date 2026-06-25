@@ -98,7 +98,7 @@ export default function ProbabilisticPanel({ attractions, routePath, setLoading,
                 <button onClick={fetchLiveWeather} className="text-[9px] bg-slate-700 hover:bg-slate-600 px-1 rounded text-slate-300">Live</button>
               )}
             </div>
-            <select title="Select dropdown" aria-label="Select dropdown" id="sel-71d0c4" value={val} onChange={e => setter(e.target.value)}
+            <select title={label} aria-label={label} id={`sel-prob-${label.toLowerCase().replace(/\s+/g, '-')}`} value={val} onChange={e => setter(e.target.value)}
               className="w-full bg-slate-800 text-xs px-1.5 py-1.5 rounded border border-slate-700 mt-0.5">
               {opts.map(o => <option key={o}>{o}</option>)}
             </select>

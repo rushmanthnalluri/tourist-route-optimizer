@@ -72,7 +72,7 @@ async def infer(req: InferenceRequest):
         return likelihood_weighting(_bn, req.query, req.evidence, req.n_samples)
 
 
-@router.post("/crowd")
+@router.get("/crowd")
 async def infer_crowd(
     weather: Optional[str] = None,
     time_slot: Optional[str] = None,
@@ -84,6 +84,7 @@ async def infer_crowd(
 @router.post("/hmm")
 async def hmm_track(req: HMMRequest):
     return _hmm.sensor_fusion(req.observations)
+
 
 
 @router.get("/live-weather")

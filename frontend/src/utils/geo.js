@@ -12,8 +12,8 @@ export function haversineKm(lat1, lng1, lat2, lng2) {
 }
 
 export function nearestAttractionId(lat, lng, attractions) {
-  if (!attractions.length) return 0
-  let best = attractions[0]
+  if (!attractions || !attractions.length) return null
+  let best = null
   let bestD = Infinity
   for (const a of attractions) {
     if (a.isCustom) continue
@@ -23,5 +23,5 @@ export function nearestAttractionId(lat, lng, attractions) {
       best = a
     }
   }
-  return best.id
+  return best ? best.id : null
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts'
 import PageLayout from '../components/PageLayout'
-import TraceViewer from '../components/TraceViewer'
 import { useApp } from '../context/AppContext'
 import { api } from '../utils/api'
 import { Scale, Swords, CloudRain, Users } from 'lucide-react'
@@ -87,7 +86,7 @@ export default function CO4Page() {
       const compareData = await api.compareSearch({
         start_id: resolveRoutingId(startId), goal_ids: resolvedGoalIds,
         budget_inr: budget, max_time_min: maxTime,
-        cost_mode: 'distance', avoid_crowds: false
+        cost_mode: 'distance',
       })
       const candidate_routes = Object.entries(compareData.comparison || {}).map(([alg, res]) => ({
         algorithm: alg,

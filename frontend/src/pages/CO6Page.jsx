@@ -15,7 +15,7 @@ const STAGES = [
 ]
 
 export default function CO6Page() {
-  const { attractions, routePath, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
+  const { attractions, routePath, startId, goalIds, setRoutePath, setTraceSteps, setLoading, setStatus, loading, routingPayload } = useApp()
   const [budget, setBudget]         = useState(600)
   const [maxTime, setMaxTime]       = useState(400)
   const [startHour, setStartHour]   = useState(9)
@@ -53,6 +53,8 @@ export default function CO6Page() {
     setLoading(true); setStatus('Simulating Live Crowds...')
     try {
       const data = await api.getLiveCrowds()
+      if (data.weather) setWeather(data.weather)
+      if (data.day_type) setDayType(data.day_type)
       setStatus(`✅ ${data.message}`)
     } catch (e) {
       setStatus('⚠ Failed to fetch live crowds')
@@ -61,6 +63,7 @@ export default function CO6Page() {
   }
 
   async function runHybrid() {
+    if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
     if (!goalIds.length) { setStatus('⚠ Select goals first'); return }
     setLoading(true); setStatus('Running full hybrid pipeline...')
     try {

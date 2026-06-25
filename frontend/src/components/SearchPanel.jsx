@@ -49,8 +49,8 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
   }
 
   async function compareAll() {
-    if (!goalIds.length) return
     if (startId === null || startId === undefined) { setStatus('⚠ Select Start on the Home page first'); return }
+    if (!goalIds.length) return
     if (goalIds.length > 8) {
       setStatus('⚠ Compare All is limited to max 8 goals to prevent server timeout.')
       return
@@ -223,7 +223,7 @@ export default function SearchPanel({ attractions, routePath, startId, goalIds, 
         </div>
       )}
 
-      {result?.trace && (
+      {result?.trace?.length > 0 && (
         <TraceViewer trace={result.trace} title={`${algorithm.toUpperCase()} Trace`} routePath={routePath} attractions={attractions} />
       )}
     </div>

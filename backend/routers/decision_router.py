@@ -4,7 +4,7 @@ from backend.algorithms.co4_decision import (
     expected_utility,
     multi_agent_negotiate,
 )
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field, field_validator
 import sys
@@ -106,9 +106,16 @@ async def get_expected_utility(req: ExpectedUtilityRequest):
 
 
 class NegotiateRequest(BaseModel):
-    routes: List[Dict[str, Any]]
+    routes: List[Dict[str, Any]] = Field(..., min_length=1)
 
 
 @router.post("/negotiate")
 async def run_negotiate(req: NegotiateRequest):
-    return multi_agent_negotiate(req.routes)
+    # Filter out routes with missing/None paths to prevent TypeErrors in algorithm
+    valid_routes = [r for r in req.routes if r.get("path") and len(r["path"]) > 0]
+    if not valid_routes:
+        raise HTTPException(
+            status_code=400,
+            detail="No valid routes with paths provided for negotiation.",
+        )
+    return multi_agent_negotiate(valid_routes)

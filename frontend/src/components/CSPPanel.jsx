@@ -16,8 +16,8 @@ export default function CSPPanel({ attractions, routePath, goalIds, startId, set
   const [result, setResult]     = useState(null)
 
   async function runCSP() {
-    const ids = [startId, ...goalIds].filter((v, i, a) => a.indexOf(v) === i)
-    if (ids.length < 2) { setStatus('⚠ Select goals first'); return }
+    const ids = [startId, ...goalIds].filter(v => v != null).filter((v, i, a) => a.indexOf(v) === i)
+    if (ids.length < 2) { setStatus('⚠ Select a start and at least one goal first'); return }
     setLoading(true); setStatus('Running CSP...')
     try {
       const payload = {
@@ -62,13 +62,16 @@ export default function CSPPanel({ attractions, routePath, goalIds, startId, set
         {algorithm === 'backtracking' && (
           <div className="grid grid-cols-2 gap-x-4 gap-y-1">
             {[['MRV', useMRV, setUseMRV], ['LCV', useLCV, setUseLCV],
-              ['Forward Check', useFC, setUseFC], ['AC-3', useAC3, setUseAC3]].map(([label, val, setter]) => (
-              <label key={label} className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input title="Input field" aria-label="Input field" id="inp-4aaa3e" type="checkbox" checked={val} onChange={e => setter(e.target.checked)}
+            ['Forward Check', useFC, setUseFC], ['AC-3', useAC3, setUseAC3]].map(([label, val, setter]) => {
+            const safeId = `inp-csp-${label.replace(/[^a-z0-9]/gi, '-').toLowerCase()}`
+            return (
+              <label key={label} htmlFor={safeId} className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                <input title={label} aria-label={label} id={safeId} type="checkbox" checked={val} onChange={e => setter(e.target.checked)}
                   className="accent-green-500" />
                 {label}
               </label>
-            ))}
+            )
+          })}
           </div>
         )}
 

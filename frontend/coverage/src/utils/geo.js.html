@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>0/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>0/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/15</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -92,57 +92,57 @@
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-export function haversineKm(lat1, lng1, lat2, lng2) {
-  const R = 6371
-  const dLat = ((lat2 - lat1) * Math.PI) / 180
-  const dLng = ((lng2 - lng1) * Math.PI) / 180
+export function <span class="fstat-no" title="function not covered" >haversineKm(</span>lat1, lng1, lat2, lng2) {
+  const R = <span class="cstat-no" title="statement not covered" >6371</span>
+  const dLat = <span class="cstat-no" title="statement not covered" >((lat2 - lat1) * Math.PI) / 180</span>
+  const dLng = <span class="cstat-no" title="statement not covered" >((lng2 - lng1) * Math.PI) / 180</span>
   const a =
-    Math.sin(dLat / 2) ** 2 +
+<span class="cstat-no" title="statement not covered" >    Math.sin(dLat / 2) ** 2 +</span>
     Math.cos((lat1 * Math.PI) / 180) *
       Math.cos((lat2 * Math.PI) / 180) *
       Math.sin(dLng / 2) ** 2
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+<span class="cstat-no" title="statement not covered" >  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))</span>
 }
 &nbsp;
-export function nearestAttractionId(lat, lng, attractions) {
-  if (!attractions.length) return 0
-  let best = attractions[0]
-  let bestD = Infinity
-  for (const a of attractions) {
-    if (a.isCustom) continue
-    const d = haversineKm(lat, lng, a.lat, a.lng)
-    if (d &lt; bestD) {
-      bestD = d
-      best = a
+export function <span class="fstat-no" title="function not covered" >nearestAttractionId(</span>lat, lng, attractions) {
+<span class="cstat-no" title="statement not covered" >  if (!attractions || !attractions.length) <span class="cstat-no" title="statement not covered" >return null</span></span>
+  let best = <span class="cstat-no" title="statement not covered" >null</span>
+  let bestD = <span class="cstat-no" title="statement not covered" >Infinity</span>
+<span class="cstat-no" title="statement not covered" >  for (const a of attractions) {</span>
+<span class="cstat-no" title="statement not covered" >    if (a.isCustom) <span class="cstat-no" title="statement not covered" >continue</span></span>
+    const d = <span class="cstat-no" title="statement not covered" >haversineKm(lat, lng, a.lat, a.lng)</span>
+<span class="cstat-no" title="statement not covered" >    if (d &lt; bestD) {</span>
+<span class="cstat-no" title="statement not covered" >      bestD = d</span>
+<span class="cstat-no" title="statement not covered" >      best = a</span>
     }
   }
-  return best.id
+<span class="cstat-no" title="statement not covered" >  return best ? best.id : null</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -151,7 +151,7 @@ export function nearestAttractionId(lat, lng, attractions) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-19T04:57:50.841Z
+                at 2026-06-25T05:00:07.909Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -115,10 +115,10 @@ export default function CO2Page() {
     setLoading(false)
   }
 
-  const chartData = profile ? Object.entries(profile).map(([alg, d]) => ({
+  const chartData = useMemo(() => profile ? Object.entries(profile).map(([alg, d]) => ({
     alg, expanded: d.nodes_expanded, time: d.runtime_ms,
     dist: d.total_distance_km, success: d.success,
-  })) : []
+  })) : [], [profile])
 
   return (
     <PageLayout
@@ -296,7 +296,7 @@ export default function CO2Page() {
         </div>
       )}
 
-      {result?.trace && (
+      {result?.trace?.length > 0 && (
         <TraceViewer trace={result.trace} title={`${algorithm.toUpperCase()} Trace`} routePath={routePath} attractions={attractions} />
       )}
     </PageLayout>
