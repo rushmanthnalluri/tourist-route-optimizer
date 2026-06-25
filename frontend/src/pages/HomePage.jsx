@@ -4,14 +4,7 @@ import { MapPin, Star, Clock, IndianRupee, Search, ChevronRight,
          Cpu, Calendar, GitMerge, Brain, Zap, Plus, X } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 
-const CO_CARDS = [
-  { to:'/co1', co:'CO1', title:'PEAS Agent Model',    sub:'Problem formulation · Knowledge graphs · Rule sets',  color:'bg-slate-100 border-slate-200',  icon:'🤖', tc:'text-slate-700' },
-  { to:'/co2', co:'CO2', title:'Search Algorithms',   sub:'BFS · DFS · UCS · A* · Greedy · IDA*',               color:'bg-blue-50 border-blue-200',     icon:'🔍', tc:'text-blue-700' },
-  { to:'/co3', co:'CO3', title:'CSP Scheduling',      sub:'Backtracking · AC-3 · MRV · LCV · Min-Conflicts',    color:'bg-emerald-50 border-emerald-200',icon:'📅', tc:'text-emerald-700' },
-  { to:'/co4', co:'CO4', title:'Decision Theory',     sub:'Utility · Minimax · Alpha-Beta · Expected Utility',   color:'bg-amber-50 border-amber-200',   icon:'⚖️', tc:'text-amber-700' },
-  { to:'/co5', co:'CO5', title:'Probabilistic AI',    sub:'Bayes Rule · Bayesian Network · HMM · Sampling',      color:'bg-violet-50 border-violet-200', icon:'🧠', tc:'text-violet-700' },
-  { to:'/co6', co:'CO6', title:'Hybrid Pipeline',     sub:'Search + CSP + Probabilistic + Decision + Ethics',    color:'bg-orange-50 border-orange-200', icon:'⚡', tc:'text-orange-700' },
-]
+
 
 const CATEGORY_COLORS = {
   historical:    'bg-amber-100 text-amber-700',
@@ -88,30 +81,30 @@ export default function HomePage() {
               Use the sidebar to search destinations (e.g. Charminar) and set Start / Goal.
             </p>
           </div>
-          <button
-            onClick={() => navigate('/co6')}
-            className="btn-primary ml-4 shrink-0"
-          >
-            <Zap size={15} /> Run Full Pipeline
-          </button>
-        </div>
-
-        <div className="grid grid-cols-3 gap-3 mt-5">
-          {CO_CARDS.map(c => (
-            <button
-              key={c.to}
-              onClick={() => navigate(c.to)}
-              className={`text-left p-3 rounded-xl border ${c.color} hover:shadow-md transition-all group`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xl">{c.icon}</span>
-                <ChevronRight size={14} className="text-gray-400 group-hover:translate-x-0.5 transition-transform" />
+          <div className="flex flex-col items-end gap-3 ml-4 shrink-0">
+            <div className="bg-gray-50 rounded-xl border border-gray-200 p-3 flex flex-col gap-2 min-w-[250px]">
+              <div className="flex justify-between items-center text-sm">
+                <span className="font-medium text-gray-500">Start Location:</span>
+                <span className="font-semibold text-gray-900">{attractions.find(a => a.id === startId)?.name || 'Not selected'}</span>
               </div>
-              <div className={`text-xs font-bold mt-2 ${c.tc}`}>{c.co}</div>
-              <div className="text-sm font-semibold text-gray-800 mt-0.5">{c.title}</div>
-              <div className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">{c.sub}</div>
+              <div className="flex justify-between items-start text-sm">
+                <span className="font-medium text-gray-500">Goals ({goalIds.length}):</span>
+                <span className="font-semibold text-gray-900 text-right max-w-[150px]">
+                  {goalIds.length > 0 
+                    ? goalIds.map(id => attractions.find(a => a.id === id)?.name?.split(' ')[0]).join(', ') 
+                    : 'None selected'}
+                </span>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => navigate('/co6')}
+              disabled={goalIds.length === 0}
+              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Zap size={15} /> Run Full Pipeline
             </button>
-          ))}
+          </div>
         </div>
       </div>
 
@@ -199,24 +192,6 @@ export default function HomePage() {
             )}
           </div>
 
-          <div className="mt-auto border-t border-gray-100 pt-3 space-y-1.5 text-xs text-gray-500">
-            <div>
-              <span className="font-medium text-gray-700">Start: </span>
-              {attractions.find(a => a.id === startId)?.name || '—'}
-            </div>
-            <div>
-              <span className="font-medium text-gray-700">Goals ({goalIds.length}): </span>
-              {goalIds.map(id => attractions.find(a => a.id === id)?.name?.split(' ')[0]).join(', ') || '—'}
-            </div>
-            {goalIds.length > 0 && (
-              <button
-                onClick={() => navigate('/co2')}
-                className="btn-primary w-full mt-2 text-xs py-2"
-              >
-                <Cpu size={13} /> Find Route →
-              </button>
-            )}
-          </div>
         </div>
 
         <div className="flex-1 md:overflow-y-auto p-4 z-0">
