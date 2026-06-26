@@ -1,4 +1,4 @@
-# Hyderabad Tourist Route Optimizer
+# Hyderabad Tourist Route Optimizer.
 AI-powered route planner — Search, CSP, Decision Theory, Probabilistic Reasoning
 
 🚀 **Live Web App:** [https://rushmanthnalluri.github.io/tourist-route-optimizer/](https://rushmanthnalluri.github.io/tourist-route-optimizer/)
